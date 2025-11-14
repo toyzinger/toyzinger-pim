@@ -20,7 +20,8 @@ export class ToastService {
   readonly toasts$ = this.toasts.asReadonly();
   readonly removingToasts$ = this.removingToasts.asReadonly();
 
-  show(message: string, type: ToastType = 'info', duration: number = 5000) {
+  // Show a toast notification
+  private show(message: string, type: ToastType = 'info', duration: number = 5000) {
     const id = this.generateId();
     const toast: Toast = { id, message, type, duration };
 
@@ -33,22 +34,27 @@ export class ToastService {
     }
   }
 
+  // Show a success toast
   success(message: string, duration?: number) {
     this.show(message, 'success', duration);
   }
 
+  // Show a warning toast
   warning(message: string, duration?: number) {
     this.show(message, 'warning', duration);
   }
 
+  // Show a danger/error toast
   danger(message: string, duration?: number) {
     this.show(message, 'danger', duration);
   }
 
+  // Show an info toast
   info(message: string, duration?: number) {
     this.show(message, 'info', duration);
   }
 
+  // Remove a toast with animation
   remove(id: string) {
     // Add to removing set to trigger animation
     this.removingToasts.update(set => new Set(set).add(id));
@@ -64,10 +70,12 @@ export class ToastService {
     }, 300); // Match animation duration
   }
 
+  // Clear all toasts at once
   clear() {
     this.toasts.set([]);
   }
 
+  // Generate a unique ID for each toast
   private generateId(): string {
     return `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
