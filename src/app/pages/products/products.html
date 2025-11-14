@@ -3,5 +3,102 @@
   <section class="products__content">
     <h1>Products</h1>
     <p>Manage your product catalog</p>
+
+    <form class="product-form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Product Name *</label>
+        <input
+          type="text"
+          id="name"
+          [(ngModel)]="product().name"
+          name="name"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="sku">SKU</label>
+        <input
+          type="text"
+          id="sku"
+          [(ngModel)]="product().sku"
+          name="sku"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="collection">Collection</label>
+        <input
+          type="text"
+          id="collection"
+          [(ngModel)]="product().collection"
+          name="collection"
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="franchiseId">Franchise ID</label>
+          <input
+            type="number"
+            id="franchiseId"
+            [(ngModel)]="product().franchiseId"
+            name="franchiseId"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="manufacturerId">Manufacturer ID</label>
+          <input
+            type="number"
+            id="manufacturerId"
+            [(ngModel)]="product().manufacturerId"
+            name="manufacturerId"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="yearReleased">Year Released</label>
+          <input
+            type="number"
+            id="yearReleased"
+            [(ngModel)]="product().yearReleased"
+            name="yearReleased"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="size">Size</label>
+          <input
+            type="text"
+            id="size"
+            [(ngModel)]="product().size"
+            name="size"
+          />
+        </div>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label>
+          <input
+            type="checkbox"
+            [(ngModel)]="product().isActive"
+            name="isActive"
+          />
+          Active
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="isLoading()">
+          {{ isLoading() ? 'Saving...' : 'Add Product' }}
+        </button>
+        <button type="button" (click)="resetForm()" [disabled]="isLoading()">
+          Reset
+        </button>
+      </div>
+    </form>
   </section>
 </main>

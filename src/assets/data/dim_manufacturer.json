@@ -1,0 +1,6 @@
+[
+  { "id": 1, "label": { "en": "manu_en_01", "es": "manu_es_01" } },
+  { "id": 2, "label": { "en": "manu_en_02", "es": "manu_es_02" } },
+  { "id": 3, "label": { "en": "manu_en_03", "es": "manu_es_03" } },
+  { "id": 4, "label": { "en": "manu_en_04", "es": "manu_es_04" } }
+]

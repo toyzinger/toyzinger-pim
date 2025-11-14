@@ -1,0 +1,6 @@
+[
+  { "id": 1, "label": { "en": "franchise_en_01", "es": "franchise_es_01" } },
+  { "id": 2, "label": { "en": "franchise_en_02", "es": "franchise_es_02" } },
+  { "id": 3, "label": { "en": "franchise_en_03", "es": "franchise_es_03" } },
+  { "id": 4, "label": { "en": "franchise_en_04", "es": "franchise_es_04" } }
+]
