@@ -1,0 +1,26 @@
+@use '../../../styles/variables' as *;
+
+.images {
+  display: flex;
+  height: calc(100vh - 50px);
+  overflow: hidden;
+
+  &__content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+  }
+
+  h1 {
+    color: $color-primary;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: $color-text-medium;
+  }
+
+  app-sidemenu {
+    display: block;
+  }
+}

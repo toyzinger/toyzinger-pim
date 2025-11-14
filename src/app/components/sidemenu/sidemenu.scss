@@ -1,0 +1,9 @@
+@use '../../../styles/variables' as *;
+
+.sidemenu {
+  width: 250px;
+  height: 100%;
+  background-color: $color-bg-medium;
+  border-right: 1px solid $color-bg-light;
+  padding: 1rem;
+}
