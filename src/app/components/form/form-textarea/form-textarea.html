@@ -1,0 +1,15 @@
+<div class="form__group">
+  @if (label()) {
+    <label class="form__label" [attr.for]="id()">{{ label() }}</label>
+  }
+  <textarea
+    class="form__textarea"
+    [id]="id()"
+    [value]="value()"
+    (input)="onInput($event)"
+    [placeholder]="placeholder()"
+    [required]="required()"
+    [disabled]="disabled()"
+    [rows]="rows()"
+  ></textarea>
+</div>

@@ -1,13 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Sidemenu } from '../../components/sidemenu/sidemenu';
+import { Sidebar } from '../../components/sidebar/sidebar';
 import { ProductService } from '../../services/product.service';
 import { ToastService } from '../../services/toast.service';
 import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-products',
-  imports: [Sidemenu, FormsModule],
+  imports: [Sidebar, FormsModule],
   templateUrl: './products.html',
   styleUrl: './products.scss',
 })

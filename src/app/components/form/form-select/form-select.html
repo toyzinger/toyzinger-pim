@@ -1,0 +1,23 @@
+<div class="form__group">
+  @if (label()) {
+    <label class="form__label" [attr.for]="id()">{{ label() }}</label>
+  }
+  <div class="form__select-container">
+    <select
+      class="form__select"
+      [class.form__select--isplaceholder]="isPlaceholderSelected()"
+      [id]="id()"
+      [value]="value()"
+      (change)="onChange($event)"
+      [required]="required()"
+      [disabled]="disabled()"
+    >
+      @if (placeholder()) {
+        <option value="" disabled selected>{{ placeholder() }}</option>
+      }
+      @for (option of options(); track option.value) {
+        <option [value]="option.value">{{ option.label }}</option>
+      }
+    </select>
+  </div>
+</div>

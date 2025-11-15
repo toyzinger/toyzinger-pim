@@ -1,0 +1,30 @@
+@use '../../../styles/variables' as *;
+
+.sidebar {
+  width: 250px;
+  height: 100%;
+  background-color: $color-bg-medium;
+  border-right: 1px solid $color-bg-light;
+  padding: 1rem;
+  position: relative;
+  flex-shrink: 0;
+
+  &__resizer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    background-color: transparent;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $color-primary;
+    }
+
+    &:active {
+      background-color: $color-primary;
+    }
+  }
+}

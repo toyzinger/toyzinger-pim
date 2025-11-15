@@ -1,0 +1,15 @@
+<div class="form__group">
+  @if (label()) {
+    <label class="form__label" [attr.for]="id()">{{ label() }}</label>
+  }
+  <input
+    class="form__input"
+    [type]="type()"
+    [id]="id()"
+    [value]="value()"
+    (input)="onInput($event)"
+    [placeholder]="placeholder()"
+    [required]="required()"
+    [disabled]="disabled()"
+  />
+</div>

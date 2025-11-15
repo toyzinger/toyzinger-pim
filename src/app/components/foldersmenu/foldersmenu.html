@@ -1,0 +1,54 @@
+<div class="foldersmenu">
+  <div class="foldersmenu__header">
+    <h3 class="foldersmenu__title">Folders</h3>
+    <button class="foldersmenu__add-btn" type="button" title="Create folder">
+      <span class="material-icons">create_new_folder</span>
+    </button>
+  </div>
+
+  <div class="foldersmenu__tree">
+    @for (folder of getRootFolders(); track folder.id) {
+      <div class="foldersmenu__item">
+        <div
+          class="foldersmenu__folder"
+          [class.foldersmenu__folder--selected]="isSelected(folder.id!)"
+          (click)="selectFolder(folder)"
+        >
+          <button
+            class="foldersmenu__toggle"
+            (click)="toggleFolder(folder); $event.stopPropagation()"
+            type="button"
+          >
+            <span class="material-icons">
+              {{ isExpanded(folder.id!) ? 'expand_more' : 'chevron_right' }}
+            </span>
+          </button>
+
+          <span class="material-icons foldersmenu__icon">
+            {{ folder.icon || 'folder' }}
+          </span>
+
+          <span class="foldersmenu__name">{{ folder.name }}</span>
+        </div>
+
+        @if (isExpanded(folder.id!)) {
+          <div class="foldersmenu__children">
+            @for (subfolder of getSubfolders(folder.id!); track subfolder.id) {
+              <div
+                class="foldersmenu__folder foldersmenu__folder--child"
+                [class.foldersmenu__folder--selected]="isSelected(subfolder.id!)"
+                (click)="selectFolder(subfolder)"
+              >
+                <span class="material-icons foldersmenu__icon">
+                  {{ subfolder.icon || 'folder' }}
+                </span>
+                <span class="foldersmenu__name">{{ subfolder.name }}</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+
