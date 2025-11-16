@@ -1,0 +1,17 @@
+<div class="foldersmenu-rename">
+  <app-form-input
+    label="Folder Name"
+    placeholder="Enter new folder name"
+    [(value)]="folderName"
+    (keydown.enter)="onRenameFolder()"
+  />
+
+  <div class="foldersmenu-rename__actions">
+    <button class="btn-secondary" type="button" (click)="onCancel()">
+      Cancel
+    </button>
+    <button class="btn-primary" type="button" (click)="onRenameFolder()">
+      Rename
+    </button>
+  </div>
+</div>

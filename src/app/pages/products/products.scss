@@ -88,42 +88,8 @@
     gap: 1rem;
     margin-top: 2rem;
 
-    button {
-      padding: 0.75rem 2rem;
-      border-radius: 4px;
-      font-weight: 500;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-
-      &[type="submit"] {
-        background-color: $color-primary;
-        color: $color-bg-dark;
-
-        &:hover:not(:disabled) {
-          opacity: 0.9;
-        }
-
-        &:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-      }
-
-      &[type="button"] {
-        background-color: transparent;
-        border: 1px solid $color-text-medium;
-        color: $color-text-medium;
-
-        &:hover:not(:disabled) {
-          border-color: $color-text-light;
-          color: $color-text-light;
-        }
-
-        &:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-      }
+    > button {
+      flex: 1;
     }
   }
 

@@ -1,0 +1,23 @@
+<div class="foldersmenu-new">
+  <app-form-input
+    label="Folder Name"
+    placeholder="Enter folder name"
+    [(value)]="newFolderName"
+    (keydown.enter)="onCreateFolder()"
+  />
+
+  <app-form-input
+    label="Parent Folder"
+    [value]="selectedFolderName()"
+    [disabled]="true"
+  />
+
+  <div class="foldersmenu-new__actions">
+    <button class="btn-secondary" type="button" (click)="onCancel()">
+      Cancel
+    </button>
+    <button class="btn-primary" type="button" (click)="onCreateFolder()">
+      Create
+    </button>
+  </div>
+</div>

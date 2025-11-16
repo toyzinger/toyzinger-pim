@@ -92,10 +92,10 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" [disabled]="isLoading()">
+        <button class="btn-primary" type="submit" [disabled]="isLoading()">
           {{ isLoading() ? 'Saving...' : 'Add Product' }}
         </button>
-        <button type="button" (click)="resetForm()" [disabled]="isLoading()">
+        <button class="btn-secondary" type="button" (click)="resetForm()" [disabled]="isLoading()">
           Reset
         </button>
       </div>

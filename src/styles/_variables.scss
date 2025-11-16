@@ -9,12 +9,24 @@ $color-warning: #ffd966;
 $color-danger: #e57373;
 $color-info: #64b5f6;
 
+// Grayscale (from lighter to darker)
+$gray-100: #FFFFFF;
+$gray-200: #E0E0E0;
+$gray-300: #C5C6C7;
+$gray-400: #909293;
+$gray-500: #66676A;
+$gray-600: #434547;
+$gray-700: #2A2E32;
+$gray-800: #272B2F;
+$gray-900: #212529;
+$gray-1000: #000000;
+
 // Text colors (from lighter to darker)
-$color-text-light: #FFFFFF;
-$color-text-medium: #C5C6C7;
-$color-text-dark: #909293;
+$color-text-light: $gray-100;
+$color-text-medium: $gray-300;
+$color-text-dark: $gray-400;
 
 // Background colors (from lighter to darker)
-$color-bg-light: #2A2E32;
-$color-bg-medium: #272B2F;
-$color-bg-dark: #212529;
+$color-bg-light: $gray-700;
+$color-bg-medium: $gray-800;
+$color-bg-dark: $gray-900;

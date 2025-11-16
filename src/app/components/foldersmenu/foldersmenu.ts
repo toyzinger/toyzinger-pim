@@ -2,11 +2,13 @@ import { Component, inject, signal, input } from '@angular/core';
 import { FolderService } from '../../services/folder.service';
 import { Folder, ItemType } from '../../models/folder.model';
 import { ToastService } from '../../services/toast.service';
-import { FormsModule } from '@angular/forms';
+import { FoldersmenuNew } from './foldersmenu-new/foldersmenu-new';
+import { FoldersmenuRename } from './foldersmenu-rename/foldersmenu-rename';
+import { FoldersmenuDelete } from './foldersmenu-delete/foldersmenu-delete';
 
 @Component({
   selector: 'app-foldersmenu',
-  imports: [FormsModule],
+  imports: [FoldersmenuNew, FoldersmenuRename, FoldersmenuDelete],
   templateUrl: './foldersmenu.html',
   styleUrl: './foldersmenu.scss',
 })
@@ -19,7 +21,6 @@ export class Foldersmenu {
   folders = signal<Folder[]>([]);
   selectedFolder = signal<Folder | null>(null);
   expandedFolders = signal<Set<string>>(new Set());
-  newFolderName = signal<string>('');
   // Show Actions Menus
   actionMenuTitle = signal<string>('');
   showNewFolderMenu = signal<boolean>(false);
@@ -96,23 +97,59 @@ export class Foldersmenu {
     return this.folders().filter(f => f.parentId === parentId);
   }
 
-  async createFolder() {
-    const name = this.newFolderName().trim();
-    if (!name) {
-      this.toastService.warning('Folder name cannot be empty');
+  async onCreateFolder(name: string) {
+    if (!name || !name.trim()) {
+      this.closeActionsMenus();
       return;
     }
+
+    const folderName = name.trim();
     const parentId = this.selectedFolder()?.id;
+
     await this.folderService.createFolder({
-      name,
+      name: folderName,
       parentId,
       order: this.folders().length,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
+
     await this.loadFolders();
-    this.newFolderName.set('');
-    this.showNewFolderMenu.set(false);
-    this.toastService.success(`Folder "${name}" created`);
+    this.closeActionsMenus();
+    this.toastService.success(`Folder "${folderName}" created`);
+  }
+
+  async onRenameFolder(name: string) {
+    const selectedFolder = this.selectedFolder();
+    if (!selectedFolder || !name || !name.trim()) {
+      this.closeActionsMenus();
+      return;
+    }
+
+    const folderName = name.trim();
+    await this.folderService.updateFolder(selectedFolder.id!, {
+      ...selectedFolder,
+      name: folderName,
+      updatedAt: new Date(),
+    });
+
+    await this.loadFolders();
+    this.closeActionsMenus();
+    this.toastService.success(`Folder renamed to "${folderName}"`);
+  }
+
+  async onDeleteFolder() {
+    const selectedFolder = this.selectedFolder();
+    if (!selectedFolder) {
+      this.closeActionsMenus();
+      return;
+    }
+
+    await this.folderService.deleteFolder(selectedFolder.id!);
+
+    this.selectedFolder.set(null);
+    await this.loadFolders();
+    this.closeActionsMenus();
+    this.toastService.success(`Folder "${selectedFolder.name}" deleted`);
   }
 }

@@ -22,45 +22,21 @@
   &__actions {
     width: 100%;
     display: flex;
-    background-color: $color-bg-dark;
-    border-radius: 4px;
-    border: 1px solid $color-text-dark;
-    overflow: hidden;
+    gap: 0.5rem;
   }
 
   &__action-btn {
-    flex:1;
-    background: none;
-    border: none;
-    color: $color-text-light;
-    cursor: pointer;
-    padding: 0.50rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.2s;
-    border-right: 1px solid $color-text-dark;
-
-    &:hover {
-      color: $color-primary;
-    }
-
-    &:last-child {
-      border-right: none;
-    }
-
-    .material-icons {
-      font-size: 1.25rem;
-    }
+    flex: 1;
+    border-radius: 4px;
   }
 
   // FOLDERS ACTION MENU
   &__action-menu {
     width: 100%;
-    background-color: $color-bg-dark;
     border-radius: 4px;
-    border: 1px solid $color-text-dark;
+    border: 1px solid $gray-600;
     padding: 0.50rem;
+    margin-bottom: 1rem;
 
     &-header {
       width: 100%;
@@ -72,27 +48,14 @@
       h4 {
         font-size: 0.9rem;
         color: $color-text-light;
-      }
-
-      button {
-        color: $color-text-light;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: color 0.2s;
-
-        &:hover {
-          color: $color-primary;
-        }
-
-        .material-icons {
-          font-size: 1.25rem;
-        }
+        margin: 0;
       }
     }
   }
 
+  &__close-btn {
+    padding: 0.25rem;
+  }
 
   // FOLDERS TREE
   &__tree {
@@ -132,19 +95,8 @@
   }
 
   &__toggle {
-    background: none;
-    border: none;
-    padding: 0;
+    padding: 0.25rem;
     margin-right: 0.25rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: $color-text-light;
-
-    .material-icons {
-      font-size: 1.25rem;
-    }
   }
 
   &__icon {

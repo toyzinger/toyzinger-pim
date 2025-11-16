@@ -4,19 +4,19 @@
     <h3 class="foldersmenu__title">Folders</h3>
     <div class="foldersmenu__actions">
       <button
-        class="foldersmenu__action-btn"
+        class="foldersmenu__action-btn btn-tertiary"
         title="Create folder"
         (click)="openNewFolderMenu()">
         <span class="material-icons">create_new_folder</span>
       </button>
       <button
-        class="foldersmenu__action-btn"
+        class="foldersmenu__action-btn btn-tertiary"
         title="Rename folder"
         (click)="openRenameMenu()">
         <span class="material-icons">edit</span>
       </button>
       <button
-        class="foldersmenu__action-btn"
+        class="foldersmenu__action-btn btn-tertiary"
         title="Delete folder"
         (click)="openDeleteMenu()">
         <span class="material-icons">delete</span>
@@ -28,24 +28,30 @@
     <div class="foldersmenu__action-menu">
       <div class="foldersmenu__action-menu-header">
         <h4>{{ actionMenuTitle() }}</h4>
-        <button (click)="closeActionsMenus()">
+        <button class="foldersmenu__close-btn btn-tertiary btn-icon" (click)="closeActionsMenus()">
           <span class="material-icons">close</span>
         </button>
       </div>
       @if (showNewFolderMenu()) {
-        <div class="foldersmenu__action-menu-content">
-          New Folder Menu
-        </div>
+        <app-foldersmenu-new
+          [selectedFolder]="selectedFolder()"
+          (createFolder)="onCreateFolder($event)"
+          (cancel)="closeActionsMenus()"
+        />
       }
       @if (showRenameMenu()) {
-        <div class="foldersmenu__action-menu-content">
-          Rename Folder Menu
-        </div>
+        <app-foldersmenu-rename
+          [selectedFolder]="selectedFolder()"
+          (renameFolder)="onRenameFolder($event)"
+          (cancel)="closeActionsMenus()"
+        />
       }
       @if (showDeleteMenu()) {
-        <div class="foldersmenu__action-menu-content">
-          Delete Folder Menu
-        </div>
+        <app-foldersmenu-delete
+          [selectedFolder]="selectedFolder()"
+          (deleteFolder)="onDeleteFolder()"
+          (cancel)="closeActionsMenus()"
+        />
       }
     </div>
   }
@@ -59,7 +65,7 @@
           (click)="selectFolder(folder)"
         >
           <button
-            class="foldersmenu__toggle"
+            class="foldersmenu__toggle btn-tertiary btn-icon"
             (click)="toggleFolder(folder); $event.stopPropagation()"
             type="button"
           >
