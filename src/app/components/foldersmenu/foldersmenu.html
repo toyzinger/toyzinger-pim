@@ -1,10 +1,54 @@
 <div class="foldersmenu">
+
   <div class="foldersmenu__header">
     <h3 class="foldersmenu__title">Folders</h3>
-    <button class="foldersmenu__add-btn" type="button" title="Create folder">
-      <span class="material-icons">create_new_folder</span>
-    </button>
+    <div class="foldersmenu__actions">
+      <button
+        class="foldersmenu__action-btn"
+        title="Create folder"
+        (click)="openNewFolderMenu()">
+        <span class="material-icons">create_new_folder</span>
+      </button>
+      <button
+        class="foldersmenu__action-btn"
+        title="Rename folder"
+        (click)="openRenameMenu()">
+        <span class="material-icons">edit</span>
+      </button>
+      <button
+        class="foldersmenu__action-btn"
+        title="Delete folder"
+        (click)="openDeleteMenu()">
+        <span class="material-icons">delete</span>
+      </button>
+    </div>
   </div>
+
+  @if (showNewFolderMenu() || showRenameMenu() || showDeleteMenu()) {
+    <div class="foldersmenu__action-menu">
+      <div class="foldersmenu__action-menu-header">
+        <h4>{{ actionMenuTitle() }}</h4>
+        <button (click)="closeActionsMenus()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      @if (showNewFolderMenu()) {
+        <div class="foldersmenu__action-menu-content">
+          New Folder Menu
+        </div>
+      }
+      @if (showRenameMenu()) {
+        <div class="foldersmenu__action-menu-content">
+          Rename Folder Menu
+        </div>
+      }
+      @if (showDeleteMenu()) {
+        <div class="foldersmenu__action-menu-content">
+          Delete Folder Menu
+        </div>
+      }
+    </div>
+  }
 
   <div class="foldersmenu__tree">
     @for (folder of getRootFolders(); track folder.id) {

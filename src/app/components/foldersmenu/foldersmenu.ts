@@ -1,24 +1,61 @@
 import { Component, inject, signal, input } from '@angular/core';
 import { FolderService } from '../../services/folder.service';
 import { Folder, ItemType } from '../../models/folder.model';
+import { ToastService } from '../../services/toast.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-foldersmenu',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './foldersmenu.html',
   styleUrl: './foldersmenu.scss',
 })
 export class Foldersmenu {
   private folderService = inject(FolderService);
+  private toastService = inject(ToastService);
 
   itemType = input<ItemType>();
 
   folders = signal<Folder[]>([]);
   selectedFolder = signal<Folder | null>(null);
   expandedFolders = signal<Set<string>>(new Set());
+  newFolderName = signal<string>('');
+  // Show Actions Menus
+  actionMenuTitle = signal<string>('');
+  showNewFolderMenu = signal<boolean>(false);
+  showRenameMenu = signal<boolean>(false);
+  showDeleteMenu = signal<boolean>(false);
 
   async ngOnInit() {
     await this.loadFolders();
+  }
+
+  // Folders Actions Menus
+  openNewFolderMenu() {
+    this.showNewFolderMenu.set(true);
+    this.showRenameMenu.set(false);
+    this.showDeleteMenu.set(false);
+    this.actionMenuTitle.set('Create New Folder');
+  }
+
+  openRenameMenu() {
+    this.showRenameMenu.set(true);
+    this.showNewFolderMenu.set(false);
+    this.showDeleteMenu.set(false);
+    this.actionMenuTitle.set('Rename Folder');
+  }
+
+  openDeleteMenu() {
+    this.showDeleteMenu.set(true);
+    this.showNewFolderMenu.set(false);
+    this.showRenameMenu.set(false);
+    this.actionMenuTitle.set('Delete Folder');
+  }
+
+  closeActionsMenus() {
+    this.showNewFolderMenu.set(false);
+    this.showRenameMenu.set(false);
+    this.showDeleteMenu.set(false);
   }
 
   async loadFolders() {
@@ -59,7 +96,13 @@ export class Foldersmenu {
     return this.folders().filter(f => f.parentId === parentId);
   }
 
-  async createFolder(name: string, parentId?: string) {
+  async createFolder() {
+    const name = this.newFolderName().trim();
+    if (!name) {
+      this.toastService.warning('Folder name cannot be empty');
+      return;
+    }
+    const parentId = this.selectedFolder()?.id;
     await this.folderService.createFolder({
       name,
       parentId,
@@ -68,5 +111,8 @@ export class Foldersmenu {
       updatedAt: new Date(),
     });
     await this.loadFolders();
+    this.newFolderName.set('');
+    this.showNewFolderMenu.set(false);
+    this.toastService.success(`Folder "${name}" created`);
   }
 }
