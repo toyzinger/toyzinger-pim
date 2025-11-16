@@ -8,10 +8,10 @@ import { Foldersmenu } from '../foldersmenu/foldersmenu';
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
-  width = signal(250); // Initial width in pixels
+  width = signal(350); // Initial width in pixels
   private isResizing = false;
   private minWidth = 200;
-  private maxWidth = 600;
+  private maxWidth = 700;
 
   onResizeStart(event: MouseEvent) {
     event.preventDefault();

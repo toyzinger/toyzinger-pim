@@ -5,10 +5,11 @@ import { ToastService } from '../../services/toast.service';
 import { FoldersmenuNew } from './foldersmenu-new/foldersmenu-new';
 import { FoldersmenuRename } from './foldersmenu-rename/foldersmenu-rename';
 import { FoldersmenuDelete } from './foldersmenu-delete/foldersmenu-delete';
+import { FoldersmenuItem } from './foldersmenu-item/foldersmenu-item';
 
 @Component({
   selector: 'app-foldersmenu',
-  imports: [FoldersmenuNew, FoldersmenuRename, FoldersmenuDelete],
+  imports: [FoldersmenuNew, FoldersmenuRename, FoldersmenuDelete, FoldersmenuItem],
   templateUrl: './foldersmenu.html',
   styleUrl: './foldersmenu.scss',
 })
@@ -21,7 +22,7 @@ export class Foldersmenu {
   folders = signal<Folder[]>([]);
   selectedFolder = signal<Folder | null>(null);
   expandedFolders = signal<Set<string>>(new Set());
-  // Show Actions Menus
+  // Action menus state
   actionMenuTitle = signal<string>('');
   showNewFolderMenu = signal<boolean>(false);
   showRenameMenu = signal<boolean>(false);
@@ -31,7 +32,7 @@ export class Foldersmenu {
     await this.loadFolders();
   }
 
-  // Folders Actions Menus
+  // Action menus handlers
   openNewFolderMenu() {
     this.showNewFolderMenu.set(true);
     this.showRenameMenu.set(false);
@@ -81,20 +82,8 @@ export class Foldersmenu {
     this.selectedFolder.set(folder);
   }
 
-  isExpanded(folderId: string): boolean {
-    return this.expandedFolders().has(folderId);
-  }
-
-  isSelected(folderId: string): boolean {
-    return this.selectedFolder()?.id === folderId;
-  }
-
   getRootFolders(): Folder[] {
     return this.folders().filter(f => !f.parentId);
-  }
-
-  getSubfolders(parentId: string): Folder[] {
-    return this.folders().filter(f => f.parentId === parentId);
   }
 
   async onCreateFolder(name: string) {
@@ -104,25 +93,30 @@ export class Foldersmenu {
     }
 
     const folderName = name.trim();
-    const parentId = this.selectedFolder()?.id;
+    const selectedFolder = this.selectedFolder();
 
-    await this.folderService.createFolder({
+    const newFolder: Omit<Folder, 'id'> = {
       name: folderName,
-      parentId,
       order: this.folders().length,
       createdAt: new Date(),
       updatedAt: new Date(),
-    });
+    };
+
+    // Only add parentId if there's a selected folder
+    if (selectedFolder?.id) {
+      newFolder.parentId = selectedFolder.id;
+    }
+
+    await this.folderService.createFolder(newFolder);
 
     await this.loadFolders();
-    this.closeActionsMenus();
     this.toastService.success(`Folder "${folderName}" created`);
   }
 
   async onRenameFolder(name: string) {
     const selectedFolder = this.selectedFolder();
     if (!selectedFolder || !name || !name.trim()) {
-      this.closeActionsMenus();
+      this.toastService.danger('Invalid folder name');
       return;
     }
 
@@ -134,22 +128,20 @@ export class Foldersmenu {
     });
 
     await this.loadFolders();
-    this.closeActionsMenus();
     this.toastService.success(`Folder renamed to "${folderName}"`);
   }
 
   async onDeleteFolder() {
     const selectedFolder = this.selectedFolder();
     if (!selectedFolder) {
-      this.closeActionsMenus();
+      this.toastService.danger('No folder selected to delete');
       return;
-    }
+    };
 
     await this.folderService.deleteFolder(selectedFolder.id!);
 
     this.selectedFolder.set(null);
     await this.loadFolders();
-    this.closeActionsMenus();
     this.toastService.success(`Folder "${selectedFolder.name}" deleted`);
   }
 }

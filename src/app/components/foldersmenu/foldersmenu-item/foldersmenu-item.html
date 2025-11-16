@@ -1,0 +1,44 @@
+<div class="foldersmenu-item">
+  <div
+    class="foldersmenu-item__folder"
+    [class.foldersmenu-item__folder--selected]="isSelected()"
+    [style.padding-left.rem]="level() * 1"
+    (click)="onSelectFolder($event)"
+  >
+    @if (hasChildren()) {
+      <button
+        class="foldersmenu-item__toggle btn-tertiary btn-icon"
+        (click)="onToggleFolder($event)"
+        type="button"
+      >
+        <span class="material-icons">
+          {{ isExpanded() ? 'expand_more' : 'chevron_right' }}
+        </span>
+      </button>
+    } @else {
+      <span class="foldersmenu-item__spacer"></span>
+    }
+
+    <span class="material-icons foldersmenu-item__icon">
+      folder
+    </span>
+
+    <span class="foldersmenu-item__name">{{ folder().name }}</span>
+  </div>
+
+  @if (isExpanded() && hasChildren()) {
+    <div class="foldersmenu-item__children">
+      @for (subfolder of getSubfolders(); track subfolder.id) {
+        <app-foldersmenu-item
+          [folder]="subfolder"
+          [allFolders]="allFolders()"
+          [selectedFolderId]="selectedFolderId()"
+          [expandedFolderIds]="expandedFolderIds()"
+          [level]="level() + 1"
+          (folderSelected)="folderSelected.emit($event)"
+          (folderToggled)="folderToggled.emit($event)"
+        />
+      }
+    </div>
+  }
+</div>

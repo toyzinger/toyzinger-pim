@@ -1,10 +1,7 @@
 export interface Folder {
   id?: string;
   name: string;
-  description?: string;
   parentId?: string;
-  color?: string;
-  icon?: string;
   order: number;
   createdAt: Date;
   updatedAt: Date;
