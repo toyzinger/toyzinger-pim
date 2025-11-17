@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { Folder, SPECIAL_FOLDERS } from '../../../models/folder.model';
+import { Folder, SPECIAL_FOLDERS } from '../../../features/folders/folder.model';
 
 @Component({
   selector: 'app-foldersmenu-item',

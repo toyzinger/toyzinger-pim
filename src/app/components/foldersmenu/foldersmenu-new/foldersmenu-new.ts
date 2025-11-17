@@ -1,5 +1,5 @@
-import { Component, input, output, signal, computed } from '@angular/core';
-import { Folder } from '../../../models/folder.model';
+import { Component, input, output, computed, signal } from '@angular/core';
+import { Folder } from '../../../features/folders/folder.model';
 import { FormInput } from '../../form/form-input/form-input';
 
 @Component({

@@ -12,7 +12,7 @@ import {
   getDoc,
   updateDoc,
 } from '@angular/fire/firestore';
-import { Folder, FolderItem, ItemType } from '../models/folder.model';
+import { Folder, FolderItem, ItemType } from './folder.model';
 
 const FOLDERS_COLLECTION = 'folders';
 const FOLDER_ITEMS_COLLECTION = 'folder_items';

@@ -1,6 +1,6 @@
 import { Component, inject, signal, input } from '@angular/core';
-import { FolderService } from '../../services/folder.service';
-import { Folder, ItemType, SPECIAL_FOLDERS } from '../../models/folder.model';
+import { FolderService } from '../../features/folders/folders.firebase';
+import { Folder, ItemType, SPECIAL_FOLDERS } from '../../features/folders/folder.model';
 import { ToastService } from '../../services/toast.service';
 import { FoldersmenuNew } from './foldersmenu-new/foldersmenu-new';
 import { FoldersmenuRename } from './foldersmenu-rename/foldersmenu-rename';
