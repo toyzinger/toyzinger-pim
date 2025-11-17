@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { Folder } from '../../../models/folder.model';
+import { Folder, SPECIAL_FOLDERS } from '../../../models/folder.model';
 
 @Component({
   selector: 'app-foldersmenu-item',
@@ -18,7 +18,20 @@ export class FoldersmenuItem {
   folderToggled = output<Folder>();
 
   getSubfolders(): Folder[] {
-    return this.allFolders().filter(f => f.parentId === this.folder().id);
+    const currentFolder = this.folder();
+
+    // For Root folder, show all root-level folders (those without parentId)
+    if (currentFolder.id === SPECIAL_FOLDERS.ROOT) {
+      return this.allFolders().filter(f => !f.parentId && !f.isVirtual);
+    }
+
+    // For Unassigned folder, no children
+    if (currentFolder.id === SPECIAL_FOLDERS.UNASSIGNED) {
+      return [];
+    }
+
+    // Regular folders: show children
+    return this.allFolders().filter(f => f.parentId === currentFolder.id);
   }
 
   isExpanded(): boolean {

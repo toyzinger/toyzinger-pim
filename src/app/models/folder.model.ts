@@ -5,7 +5,14 @@ export interface Folder {
   order: number;
   createdAt: Date;
   updatedAt: Date;
+  isVirtual?: boolean; // For special folders like Root, Unassigned
 }
+
+// Special folder IDs
+export const SPECIAL_FOLDERS = {
+  ROOT: 'root',
+  UNASSIGNED: 'unassigned',
+} as const;
 
 export type ItemType = 'product' | 'image';
 

@@ -27,11 +27,19 @@
   &__toggle {
     padding: 0.25rem;
     margin-right: 0.25rem;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__spacer {
-    width: 32px; // Same width as toggle button
+    width: 32px;
+    height: 32px;
     flex-shrink: 0;
+    margin-right: 0.25rem;
   }
 
   &__icon {

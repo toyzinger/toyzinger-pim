@@ -1,6 +1,6 @@
 import { Component, inject, signal, input } from '@angular/core';
 import { FolderService } from '../../services/folder.service';
-import { Folder, ItemType } from '../../models/folder.model';
+import { Folder, ItemType, SPECIAL_FOLDERS } from '../../models/folder.model';
 import { ToastService } from '../../services/toast.service';
 import { FoldersmenuNew } from './foldersmenu-new/foldersmenu-new';
 import { FoldersmenuRename } from './foldersmenu-rename/foldersmenu-rename';
@@ -34,6 +34,13 @@ export class Foldersmenu {
 
   // Action menus handlers
   openNewFolderMenu() {
+    const selected = this.selectedFolder();
+    // Don't allow creating folders inside Unassigned
+    if (selected?.id === SPECIAL_FOLDERS.UNASSIGNED) {
+      this.toastService.warning('Cannot create folders inside Unassigned');
+      return;
+    }
+
     this.showNewFolderMenu.set(true);
     this.showRenameMenu.set(false);
     this.showDeleteMenu.set(false);
@@ -41,6 +48,13 @@ export class Foldersmenu {
   }
 
   openRenameMenu() {
+    const selected = this.selectedFolder();
+    // Don't allow renaming virtual folders
+    if (selected?.isVirtual) {
+      this.toastService.warning('Cannot rename special folders');
+      return;
+    }
+
     this.showRenameMenu.set(true);
     this.showNewFolderMenu.set(false);
     this.showDeleteMenu.set(false);
@@ -48,6 +62,13 @@ export class Foldersmenu {
   }
 
   openDeleteMenu() {
+    const selected = this.selectedFolder();
+    // Don't allow deleting virtual folders
+    if (selected?.isVirtual) {
+      this.toastService.warning('Cannot delete special folders');
+      return;
+    }
+
     this.showDeleteMenu.set(true);
     this.showNewFolderMenu.set(false);
     this.showRenameMenu.set(false);
@@ -62,7 +83,29 @@ export class Foldersmenu {
 
   async loadFolders() {
     const allFolders = await this.folderService.getFolders();
-    this.folders.set(allFolders);
+
+    // Create virtual folders
+    const virtualFolders: Folder[] = [
+      {
+        id: SPECIAL_FOLDERS.UNASSIGNED,
+        name: 'Unassigned',
+        order: -2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isVirtual: true,
+      },
+      {
+        id: SPECIAL_FOLDERS.ROOT,
+        name: 'All Folders',
+        order: -1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isVirtual: true,
+      },
+    ];
+
+    // Combine virtual and real folders
+    this.folders.set([...virtualFolders, ...allFolders]);
   }
 
   async toggleFolder(folder: Folder) {
@@ -83,7 +126,9 @@ export class Foldersmenu {
   }
 
   getRootFolders(): Folder[] {
-    return this.folders().filter(f => !f.parentId);
+    // Only return virtual folders at root level
+    // Real root folders (without parentId) will be shown inside "All Folders"
+    return this.folders().filter(f => f.isVirtual);
   }
 
   async onCreateFolder(name: string) {
@@ -95,6 +140,11 @@ export class Foldersmenu {
     const folderName = name.trim();
     const selectedFolder = this.selectedFolder();
 
+    // Don't allow creating inside Root - create at root level instead
+    const parentId = selectedFolder?.id === SPECIAL_FOLDERS.ROOT
+      ? undefined
+      : selectedFolder?.id;
+
     const newFolder: Omit<Folder, 'id'> = {
       name: folderName,
       order: this.folders().length,
@@ -102,9 +152,9 @@ export class Foldersmenu {
       updatedAt: new Date(),
     };
 
-    // Only add parentId if there's a selected folder
-    if (selectedFolder?.id) {
-      newFolder.parentId = selectedFolder.id;
+    // Only add parentId if there's a selected folder (and it's not Root)
+    if (parentId) {
+      newFolder.parentId = parentId;
     }
 
     await this.folderService.createFolder(newFolder);
