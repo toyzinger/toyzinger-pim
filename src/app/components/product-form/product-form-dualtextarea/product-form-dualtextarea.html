@@ -6,16 +6,27 @@
     [disabled]="disabled()"
   />
 
-  <button
-    type="button"
-    class="dual-textarea__copy-btn btn-tertiary btn-sm"
-    (click)="copyToEnglish()"
-    [disabled]="disabled() || !valueEs().trim()"
-    title="Copy to English"
-  >
-    <span class="material-icons-outlined">content_copy</span>
-    Copy to English
-  </button>
+  <div class="dual-textarea__actions">
+    <button
+      type="button"
+      class="dual-textarea__action-btn btn-tertiary btn-sm"
+      (click)="copyToEnglish()"
+      [disabled]="disabled() || !valueEs().trim()"
+      title="Copy to English"
+    >
+      <span class="material-icons-outlined">content_copy</span>
+    </button>
+
+    <button
+      type="button"
+      class="dual-textarea__action-btn btn-tertiary btn-sm"
+      (click)="translate()"
+      [disabled]="disabled() || !valueEs().trim()"
+      title="Translate"
+    >
+      <span class="material-icons-outlined">translate</span>
+    </button>
+  </div>
 
   <app-form-textarea
     [label]="labelEn()"

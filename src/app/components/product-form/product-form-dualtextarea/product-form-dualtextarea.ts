@@ -23,4 +23,9 @@ export class ProductFormDualtextarea {
   copyToEnglish(): void {
     this.valueEn.set(this.valueEs());
   }
+
+  // Translate text (placeholder for future implementation)
+  translate(): void {
+    console.log('Translate functionality - Coming soon');
+  }
 }
