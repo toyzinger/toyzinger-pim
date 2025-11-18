@@ -18,7 +18,6 @@ export class ProductForm {
   loading = input<boolean>(false);
 
   submitProduct = output<Partial<Product>>();
-  cancel = output<void>();
 
   // Form fields
   name = signal<string>('');
@@ -125,7 +124,8 @@ export class ProductForm {
       productData.accessories = acc;
     }
 
-    this.submitProduct.emit(productData);
+    console.log('onSubmit', productData);
+    // this.submitProduct.emit(productData);
   }
 
   resetForm(): void {

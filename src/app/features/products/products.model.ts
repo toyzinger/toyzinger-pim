@@ -6,7 +6,7 @@ export interface Product {
   franchise?: MultilingualString;
   manufacturer?: MultilingualString;
   yearReleased?: number;
-  collection: string;
+  collection?: string;
   size?: string;
   accessories?: MultilingualStringArray;
   toyDescription?: MultilingualString;
