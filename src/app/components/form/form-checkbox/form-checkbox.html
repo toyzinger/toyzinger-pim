@@ -1,0 +1,13 @@
+<div class="form__group">
+  <label class="form__checkbox-label">
+    <input
+      type="checkbox"
+      class="form__checkbox-input"
+      [id]="id()"
+      [checked]="checked()"
+      (change)="onChange($event)"
+      [disabled]="disabled()"
+    />
+    <span>{{ label() }}</span>
+  </label>
+</div>

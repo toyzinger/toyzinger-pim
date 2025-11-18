@@ -1,10 +1,11 @@
 <div class="dual-textarea">
+  <!-- ====================== SPANISH TEXTAREA ========================= -->
   <app-form-textarea
-    [label]="labelEs()"
+    label="SPANISH"
     [(value)]="valueEs"
     [disabled]="disabled()"
   />
-
+  <!-- ====================== ACTIONS ========================= -->
   <div class="dual-textarea__actions">
     <button
       type="button"
@@ -36,10 +37,11 @@
       <span class="material-icons-outlined">layers_clear</span>
     </button>
   </div>
-
+  <!-- ====================== ENGLISH TEXTAREA ========================= -->
   <app-form-textarea
-    [label]="labelEn()"
+    label="ENGLISH"
     [(value)]="valueEn"
     [disabled]="disabled()"
   />
+  <!-- ====================== END ========================= -->
 </div>

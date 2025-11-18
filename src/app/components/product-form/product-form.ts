@@ -5,10 +5,11 @@ import { FormComponents } from '../form/form';
 import { ProductFormFranchise } from "./product-form-franchise/product-form-franchise";
 import { ProductFormManufacturer } from "./product-form-manufacturer/product-form-manufacturer";
 import { ProductFormDualtextarea } from './product-form-dualtextarea/product-form-dualtextarea';
+import { ProductFormAccessories } from './product-form-accessories/product-form-accessories';
 
 @Component({
   selector: 'app-product-form',
-  imports: [FormComponents, ProductFormFranchise, ProductFormManufacturer, ProductFormDualtextarea],
+  imports: [FormComponents, ProductFormFranchise, ProductFormManufacturer, ProductFormDualtextarea, ProductFormAccessories],
   templateUrl: './product-form.html',
   styleUrl: './product-form.scss',
 })
@@ -30,20 +31,13 @@ export class ProductForm {
   // Multilingual fields
   franchise = signal<MultilingualString | undefined>(undefined);
   manufacturer = signal<MultilingualString | undefined>(undefined);
-
-  // Multilingual fields (English)
+  toyDescription_es = signal<string>('');
   toyDescription_en = signal<string>('');
+  characterDescription_es = signal<string>('');
   characterDescription_en = signal<string>('');
 
-  // Multilingual fields (Spanish)
-  toyDescription_es = signal<string>('');
-  characterDescription_es = signal<string>('');
-
-  // Accessories (English)
-  accessories_en = signal<string>('');
-
-  // Accessories (Spanish)
-  accessories_es = signal<string>('');
+  // Accessories
+  accessories = signal<{ en: string[]; es: string[] }>({ en: [], es: [] });
 
   constructor() {
     // Load product data when product changes
@@ -77,8 +71,10 @@ export class ProductForm {
       this.characterDescription_es.set(prod.characterDescription.es || '');
     }
     if (prod.accessories) {
-      this.accessories_en.set(prod.accessories.en?.join('\n') || '');
-      this.accessories_es.set(prod.accessories.es?.join('\n') || '');
+      this.accessories.set({
+        en: prod.accessories.en || [],
+        es: prod.accessories.es || [],
+      });
     }
   }
 
@@ -123,14 +119,10 @@ export class ProductForm {
       };
     }
 
-    // Parse accessories (newline separated)
-    const accEn = this.accessories_en().trim();
-    const accEs = this.accessories_es().trim();
-    if (accEn || accEs) {
-      productData.accessories = {
-        en: accEn ? accEn.split('\n').map(a => a.trim()).filter(a => a) : [],
-        es: accEs ? accEs.split('\n').map(a => a.trim()).filter(a => a) : [],
-      };
+    // Add accessories if provided
+    const acc = this.accessories();
+    if (acc.en.length > 0 || acc.es.length > 0) {
+      productData.accessories = acc;
     }
 
     this.submitProduct.emit(productData);
@@ -153,7 +145,6 @@ export class ProductForm {
     this.toyDescription_es.set('');
     this.characterDescription_en.set('');
     this.characterDescription_es.set('');
-    this.accessories_en.set('');
-    this.accessories_es.set('');
+    this.accessories.set({ en: [], es: [] });
   }
 }

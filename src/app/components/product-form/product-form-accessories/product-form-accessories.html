@@ -1,0 +1,107 @@
+<div class="accessories">
+  <div class="accessories__grid">
+
+    <!-- ====================== HEADER ========================= -->
+    <div class="accessories__header">Spanish</div>
+    <div class="accessories__header">English</div>
+    <div class="accessories__header accessories__header--actions"></div>
+    <!-- ====================== ACCESORIOS EXISTENTES ========================= -->
+    @for (item of accessories().es; track $index) {
+      <div class="accessories__cell">
+        @if (isEditing($index)) {
+          <input
+            class="accessories__input accessories__input--edit"
+            type="text"
+            [value]="accessories().es[$index]"
+            (blur)="saveEdit($index, 'es', $any($event.target).value)"
+            (keydown.enter)="saveEdit($index, 'es', $any($event.target).value)"
+            (keydown.escape)="cancelEdit()"
+            [disabled]="disabled()"
+            autofocus
+          />
+        } @else {
+          <span class="accessories__text">{{ item || '—' }}</span>
+        }
+      </div>
+
+      <div class="accessories__cell">
+        @if (isEditing($index)) {
+          <input
+            class="accessories__input accessories__input--edit"
+            type="text"
+            [value]="accessories().en[$index]"
+            (blur)="saveEdit($index, 'en', $any($event.target).value)"
+            (keydown.enter)="saveEdit($index, 'en', $any($event.target).value)"
+            (keydown.escape)="cancelEdit()"
+            [disabled]="disabled()"
+          />
+        } @else {
+          <span class="accessories__text">{{ accessories().en[$index] || '—' }}</span>
+        }
+      </div>
+
+      <div class="accessories__cell accessories__cell--actions">
+        <button
+          type="button"
+          class="accessories__btn"
+          (click)="togleEdit($index)"
+          [disabled]="disabled()"
+          title="Edit"
+        >
+          @if (isEditing($index)) {
+            <span class="material-icons-outlined">edit_off</span>
+          } @else {
+            <span class="material-icons-outlined">edit</span>
+          }
+        </button>
+        <button
+          type="button"
+          class="accessories__btn accessories__btn--danger"
+          (click)="removeAccessory($index)"
+          [disabled]="disabled()"
+          title="Delete"
+        >
+          <span class="material-icons-outlined">delete</span>
+        </button>
+      </div>
+    }
+    <!-- ====================== NEW ACCESSORY ========================= -->
+    <div class="accessories__cell">
+      <input
+        #newAccessoryInput
+        class="accessories__input"
+        type="text"
+        placeholder="Add Spanish..."
+        [value]="newAccessoryEs()"
+        (input)="newAccessoryEs.set($any($event.target).value)"
+        (keydown.enter)="addAccessory()"
+        [disabled]="disabled()"
+      />
+    </div>
+
+    <div class="accessories__cell">
+      <input
+        class="accessories__input"
+        type="text"
+        placeholder="Add English..."
+        [value]="newAccessoryEn()"
+        (input)="newAccessoryEn.set($any($event.target).value)"
+        (keydown.enter)="addAccessory()"
+        [disabled]="disabled()"
+      />
+    </div>
+
+    <div class="accessories__cell accessories__cell--actions">
+      <button
+        type="button"
+        class="accessories__btn accessories__btn--primary"
+        (click)="addAccessory()"
+        [disabled]="disabled()"
+        title="Add accessory"
+      >
+        <span class="material-icons-outlined">add</span>
+      </button>
+    </div>
+    <!-- ====================== END ========================= -->
+  </div>
+</div>

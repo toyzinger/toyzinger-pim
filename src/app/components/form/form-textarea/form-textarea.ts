@@ -34,7 +34,7 @@ export class FormTextarea implements OnDestroy {
       if (!isPlatformBrowser(this.platformId)) {
         return;
       }
-      console.log('here we are')
+
       const container = this.editorElement()?.nativeElement;
       if (container && !this.editor) {
         this.initEditor(container);

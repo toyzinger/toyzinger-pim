@@ -9,8 +9,6 @@ import { FormComponents } from '../../form/form';
 })
 export class ProductFormDualtextarea {
   // Inputs
-  labelEn = input<string>('English');
-  labelEs = input<string>('Spanish');
   disabled = input<boolean>(false);
 
   // Two-way binding for both textareas
