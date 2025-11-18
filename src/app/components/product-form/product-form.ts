@@ -4,10 +4,11 @@ import { MultilingualString } from '../../features/languages/languages.model';
 import { FormComponents } from '../form/form';
 import { ProductFormFranchise } from "./product-form-franchise/product-form-franchise";
 import { ProductFormManufacturer } from "./product-form-manufacturer/product-form-manufacturer";
+import { ProductFormDualtextarea } from './product-form-dualtextarea/product-form-dualtextarea';
 
 @Component({
   selector: 'app-product-form',
-  imports: [FormComponents, ProductFormFranchise, ProductFormManufacturer],
+  imports: [FormComponents, ProductFormFranchise, ProductFormManufacturer, ProductFormDualtextarea],
   templateUrl: './product-form.html',
   styleUrl: './product-form.scss',
 })

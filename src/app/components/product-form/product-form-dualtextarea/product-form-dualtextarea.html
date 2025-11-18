@@ -1,0 +1,26 @@
+<div class="dual-textarea">
+  <app-form-textarea
+    [label]="labelEs()"
+    [placeholder]="placeholderEs()"
+    [(value)]="valueEs"
+    [disabled]="disabled()"
+  />
+
+  <button
+    type="button"
+    class="dual-textarea__copy-btn btn-tertiary btn-sm"
+    (click)="copyToEnglish()"
+    [disabled]="disabled() || !valueEs().trim()"
+    title="Copy to English"
+  >
+    <span class="material-icons-outlined">content_copy</span>
+    Copy to English
+  </button>
+
+  <app-form-textarea
+    [label]="labelEn()"
+    [placeholder]="placeholderEn()"
+    [(value)]="valueEn"
+    [disabled]="disabled()"
+  />
+</div>

@@ -1,8 +1,9 @@
-import { Component, input, output, model } from '@angular/core';
+import { Component, input, model, effect, viewChild, ElementRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-form-textarea',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: 'form-textarea.html',
   styleUrl: '../form.scss',
 })
@@ -18,8 +19,23 @@ export class FormTextarea {
   // Two-way binding with model signal
   value = model<string>('');
 
-  onInput(event: Event) {
-    const target = event.target as HTMLTextAreaElement;
-    this.value.set(target.value);
+  // ViewChild to access textarea element
+  textarea = viewChild<ElementRef<HTMLTextAreaElement>>('textareaElement');
+
+  constructor() {
+    // Watch for value changes and resize accordingly
+    effect(() => {
+      const val = this.value();
+      const textareaEl = this.textarea()?.nativeElement;
+      if (textareaEl) {
+        // Use setTimeout to ensure DOM is updated
+        setTimeout(() => this.resizeTextarea(textareaEl));
+      }
+    });
+  }
+
+  private resizeTextarea(element: HTMLTextAreaElement): void {
+    element.style.height = 'auto';
+    element.style.height = `${element.scrollHeight}px`;
   }
 }

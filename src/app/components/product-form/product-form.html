@@ -51,25 +51,20 @@
         [disabled]="loading()"
       />
     </div>
-
-    <h3 class="product-form__section-title">Toy Descriptions</h3>
-
-    <div class="product-form__row">
-      <app-form-textarea
-        label="English"
-        placeholder="Enter toy description in English"
-        [(value)]="toyDescription_en"
-        [disabled]="loading()"
-      />
-
-      <app-form-textarea
-        label="Spanish"
-        placeholder="Enter toy description in Spanish"
-        [(value)]="toyDescription_es"
-        [disabled]="loading()"
-      />
-    </div>
   </div> <!-- End of: .product-form__section -->
+
+  <div class="product-form__section">
+    <h3 class="product-form__section-title">Toy Descriptions</h3>
+    <app-product-form-dualtextarea
+      labelEn="English"
+      labelEs="Spanish"
+      placeholderEn="Enter toy description in English"
+      placeholderEs="Enter toy description in Spanish"
+      [(valueEn)]="toyDescription_en"
+      [(valueEs)]="toyDescription_es"
+      [disabled]="loading()"
+    />
+  </div>
 
 
   <div class="product-form__section">

@@ -3,10 +3,10 @@
     <label class="form__label" [attr.for]="id()">{{ label() }}</label>
   }
   <textarea
+    #textareaElement
     class="form__textarea"
     [id]="id()"
-    [value]="value()"
-    (input)="onInput($event)"
+    [(ngModel)]="value"
     [placeholder]="placeholder()"
     [required]="required()"
     [disabled]="disabled()"
