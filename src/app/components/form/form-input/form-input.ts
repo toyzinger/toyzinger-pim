@@ -16,7 +16,7 @@ export class FormInput {
   disabled = input<boolean>(false);
 
   // Two-way binding with model signal
-  value = model<string>('');
+  value = model<string | number | undefined>('');
 
   onInput(event: Event) {
     const target = event.target as HTMLInputElement;

@@ -3,8 +3,8 @@ import { MultilingualStringArray, MultilingualString } from '../languages/langua
 export interface Product {
   id?: string;
   name: string;
-  franchiseId?: number | string;
-  manufacturerId?: number | string;
+  franchise?: MultilingualString;
+  manufacturer?: MultilingualString;
   yearReleased?: number;
   collection: string;
   size?: string;
@@ -12,9 +12,9 @@ export interface Product {
   toyDescription?: MultilingualString;
   characterDescription?: MultilingualString;
   images?: ProductImage[];
+  //
   createdAt?: Date;
   updatedAt?: Date;
-  //
   isActive: boolean;
   sku?: string;
 }

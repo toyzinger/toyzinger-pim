@@ -1,6 +1,23 @@
 [
-  { "id": 1, "label": { "en": "manu_en_01", "es": "manu_es_01" } },
-  { "id": 2, "label": { "en": "manu_en_02", "es": "manu_es_02" } },
-  { "id": 3, "label": { "en": "manu_en_03", "es": "manu_es_03" } },
-  { "id": 4, "label": { "en": "manu_en_04", "es": "manu_es_04" } }
+  { "id": 1010, "label": { "en": "Bandai", "es": "Bandai" } },
+  { "id": 1020, "label": { "en": "Figma", "es": "Figma" } },
+  { "id": 1030, "label": { "en": "Funko", "es": "Funko" } },
+  { "id": 1040, "label": { "en": "Galoob", "es": "Galoob" } },
+  { "id": 1050, "label": { "en": "Hasbro", "es": "Hasbro" } },
+  { "id": 1060, "label": { "en": "Hot Toys", "es": "Hot Toys" } },
+  { "id": 1070, "label": { "en": "Kenner", "es": "Kenner" } },
+  { "id": 1080, "label": { "en": "LEGO", "es": "LEGO" } },
+  { "id": 1090, "label": { "en": "LJN", "es": "LJN" } },
+  { "id": 1100, "label": { "en": "Mattel", "es": "Mattel" } },
+  { "id": 1110, "label": { "en": "McFarlane Toys", "es": "McFarlane Toys" } },
+  { "id": 1120, "label": { "en": "NECA", "es": "NECA" } },
+  { "id": 1130, "label": { "en": "Playmates", "es": "Playmates" } },
+  { "id": 1140, "label": { "en": "Sentinel Toys", "es": "Sentinel Toys" } },
+  { "id": 1150, "label": { "en": "Takara", "es": "Takara" } },
+  { "id": 1160, "label": { "en": "Tomy", "es": "Tomy" } },
+  { "id": 1170, "label": { "en": "Takara-Tomy", "es": "Takara-Tomy" } },
+  { "id": 1180, "label": { "en": "Tamashii Nations", "es": "Tamashii Nations" }},
+  { "id": 1190, "label": { "en": "Toybiz", "es": "Toybiz" }},
+  { "id": 1200, "label": { "en": "Tyco", "es": "Tyco" } },
+  { "id": 1210, "label": { "en": "Yolanda", "es": "Yolanda" } }
 ]
