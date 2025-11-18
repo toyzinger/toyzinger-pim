@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ToastService } from '../../services/toast.service';
+import { ToastService } from '../../features/toast/toast.service';
 
 @Component({
   selector: 'app-home',

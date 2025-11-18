@@ -1,3 +1,11 @@
+// Special folder IDs
+export const SPECIAL_FOLDERS = {
+  ROOT: 'root',
+  UNASSIGNED: 'unassigned',
+} as const;
+
+export type ItemType = 'product' | 'image';
+
 export interface Folder {
   id?: string;
   name: string;
@@ -7,14 +15,6 @@ export interface Folder {
   updatedAt: Date;
   isVirtual?: boolean; // For special folders like Root, Unassigned
 }
-
-// Special folder IDs
-export const SPECIAL_FOLDERS = {
-  ROOT: 'root',
-  UNASSIGNED: 'unassigned',
-} as const;
-
-export type ItemType = 'product' | 'image';
 
 export interface FolderItem {
   id?: string;

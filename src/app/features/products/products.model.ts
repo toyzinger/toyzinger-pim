@@ -1,4 +1,4 @@
-import { MultilingualStringArray, MultilingualString } from './language.model';
+import { MultilingualStringArray, MultilingualString } from '../languages/languages.model';
 
 export interface Product {
   id?: string;

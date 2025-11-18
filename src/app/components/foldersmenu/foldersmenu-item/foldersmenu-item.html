@@ -11,7 +11,7 @@
         (click)="onToggleFolder($event)"
         type="button"
       >
-        <span class="material-icons">
+        <span class="material-icons-outlined">
           {{ isExpanded() ? 'expand_more' : 'chevron_right' }}
         </span>
       </button>
@@ -19,8 +19,8 @@
       <span class="foldersmenu-item__spacer"></span>
     }
 
-    <span class="material-icons foldersmenu-item__icon">
-      folder
+    <span class="material-icons-outlined foldersmenu-item__icon">
+      {{ getFolderIcon() }}
     </span>
 
     <span class="foldersmenu-item__name">{{ folder().name }}</span>

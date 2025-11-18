@@ -13,11 +13,11 @@
   />
 
   <div class="foldersmenu-new__actions">
-    <button class="btn-secondary" type="button" (click)="onCancel()">
+    <button class="btn-secondary" type="button" (click)="onCancel()" [disabled]="loading()">
       Cancel
     </button>
-    <button class="btn-primary" type="button" (click)="onCreateFolder()">
-      Create
+    <button class="btn-primary" type="button" (click)="onCreateFolder()" [disabled]="loading()">
+      {{ loading() ? 'Creating...' : 'Create' }}
     </button>
   </div>
 </div>

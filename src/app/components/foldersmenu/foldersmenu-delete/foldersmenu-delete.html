@@ -9,11 +9,11 @@
   </div>
 
   <div class="foldersmenu-delete__actions">
-    <button class="btn-secondary" type="button" (click)="onCancel()">
+    <button class="btn-secondary" type="button" (click)="onCancel()" [disabled]="loading()">
       Cancel
     </button>
-    <button class="btn-danger" type="button" (click)="onDeleteFolder()">
-      Delete
+    <button class="btn-danger" type="button" (click)="onDeleteFolder()" [disabled]="loading()">
+      {{ loading() ? 'Deleting...' : 'Delete' }}
     </button>
   </div>
 </div>

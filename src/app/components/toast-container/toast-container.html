@@ -1,29 +1,29 @@
 <div class="toast-container">
-  @for (toast of toastService.toasts$(); track toast.id) {
+  @for (toast of toastService.toasts(); track toast.id) {
     <div
       class="toast toast--{{ toast.type }}"
-      [class.toast--removing]="toastService.removingToasts$().has(toast.id)"
+      [class.toast--removing]="toastService.removingToasts().has(toast.id)"
       (click)="removeToast(toast.id)"
     >
       <div class="toast__icon">
         @switch (toast.type) {
           @case ('success') {
-            <span class="material-icons">check_circle</span>
+            <span class="material-icons-outlined">check_circle</span>
           }
           @case ('warning') {
-            <span class="material-icons">warning</span>
+            <span class="material-icons-outlined">warning</span>
           }
           @case ('danger') {
-            <span class="material-icons">error</span>
+            <span class="material-icons-outlined">error</span>
           }
           @case ('info') {
-            <span class="material-icons">info</span>
+            <span class="material-icons-outlined">info</span>
           }
         }
       </div>
       <div class="toast__message">{{ toast.message }}</div>
       <button class="toast__close btn-tertiary btn-icon" (click)="removeToast(toast.id)" type="button">
-        <span class="material-icons">close</span>
+        <span class="material-icons-outlined">close</span>
       </button>
     </div>
   }

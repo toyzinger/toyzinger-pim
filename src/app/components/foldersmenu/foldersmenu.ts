@@ -1,7 +1,7 @@
-import { Component, inject, signal, input } from '@angular/core';
-import { FolderService } from '../../features/folders/folders.firebase';
-import { Folder, ItemType, SPECIAL_FOLDERS } from '../../features/folders/folder.model';
-import { ToastService } from '../../services/toast.service';
+import { Component, inject, input, signal } from '@angular/core';
+import { FoldersStore } from '../../features/folders/folders.store';
+import { Folder, ItemType, SPECIAL_FOLDERS } from '../../features/folders/folders.model';
+import { ToastService } from '../../features/toast/toast.service';
 import { FoldersmenuNew } from './foldersmenu-new/foldersmenu-new';
 import { FoldersmenuRename } from './foldersmenu-rename/foldersmenu-rename';
 import { FoldersmenuDelete } from './foldersmenu-delete/foldersmenu-delete';
@@ -14,22 +14,25 @@ import { FoldersmenuItem } from './foldersmenu-item/foldersmenu-item';
   styleUrl: './foldersmenu.scss',
 })
 export class Foldersmenu {
-  private folderService = inject(FolderService);
+  private foldersStore = inject(FoldersStore);
   private toastService = inject(ToastService);
 
   itemType = input<ItemType>();
 
-  folders = signal<Folder[]>([]);
-  selectedFolder = signal<Folder | null>(null);
-  expandedFolders = signal<Set<string>>(new Set());
-  // Action menus state
+  // Expose store state to template
+  folders = this.foldersStore.allFolders;
+  selectedFolder = this.foldersStore.selectedFolder;
+  expandedFolders = this.foldersStore.expandedFolderIds;
+  loading = this.foldersStore.loading;
+
+  // Action menus state (local UI state)
   actionMenuTitle = signal<string>('');
   showNewFolderMenu = signal<boolean>(false);
   showRenameMenu = signal<boolean>(false);
   showDeleteMenu = signal<boolean>(false);
 
   async ngOnInit() {
-    await this.loadFolders();
+    await this.foldersStore.loadFolders();
   }
 
   // Action menus handlers
@@ -81,54 +84,16 @@ export class Foldersmenu {
     this.showDeleteMenu.set(false);
   }
 
-  async loadFolders() {
-    const allFolders = await this.folderService.getFolders();
-
-    // Create virtual folders
-    const virtualFolders: Folder[] = [
-      {
-        id: SPECIAL_FOLDERS.UNASSIGNED,
-        name: 'Unassigned',
-        order: -2,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        isVirtual: true,
-      },
-      {
-        id: SPECIAL_FOLDERS.ROOT,
-        name: 'All Folders',
-        order: -1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        isVirtual: true,
-      },
-    ];
-
-    // Combine virtual and real folders
-    this.folders.set([...virtualFolders, ...allFolders]);
-  }
-
-  async toggleFolder(folder: Folder) {
-    const expanded = this.expandedFolders();
-    const newExpanded = new Set(expanded);
-
-    if (newExpanded.has(folder.id!)) {
-      newExpanded.delete(folder.id!);
-    } else {
-      newExpanded.add(folder.id!);
-    }
-
-    this.expandedFolders.set(newExpanded);
+  toggleFolder(folder: Folder) {
+    this.foldersStore.toggleFolder(folder.id!);
   }
 
   selectFolder(folder: Folder) {
-    this.selectedFolder.set(folder);
+    this.foldersStore.selectFolder(folder);
   }
 
   getRootFolders(): Folder[] {
-    // Only return virtual folders at root level
-    // Real root folders (without parentId) will be shown inside "All Folders"
-    return this.folders().filter(f => f.isVirtual);
+    return this.foldersStore.rootFolders();
   }
 
   async onCreateFolder(name: string) {
@@ -157,10 +122,12 @@ export class Foldersmenu {
       newFolder.parentId = parentId;
     }
 
-    await this.folderService.createFolder(newFolder);
-
-    await this.loadFolders();
-    this.toastService.success(`Folder "${folderName}" created`);
+    try {
+      await this.foldersStore.createFolder(newFolder);
+      this.toastService.success(`Folder "${folderName}" created`);
+    } catch (error) {
+      this.toastService.danger('Failed to create folder');
+    }
   }
 
   async onRenameFolder(name: string) {
@@ -171,14 +138,15 @@ export class Foldersmenu {
     }
 
     const folderName = name.trim();
-    await this.folderService.updateFolder(selectedFolder.id!, {
-      ...selectedFolder,
-      name: folderName,
-      updatedAt: new Date(),
-    });
 
-    await this.loadFolders();
-    this.toastService.success(`Folder renamed to "${folderName}"`);
+    try {
+      await this.foldersStore.updateFolder(selectedFolder.id!, {
+        name: folderName,
+      });
+      this.toastService.success(`Folder renamed to "${folderName}"`);
+    } catch (error) {
+      this.toastService.danger('Failed to rename folder');
+    }
   }
 
   async onDeleteFolder() {
@@ -186,12 +154,13 @@ export class Foldersmenu {
     if (!selectedFolder) {
       this.toastService.danger('No folder selected to delete');
       return;
-    };
+    }
 
-    await this.folderService.deleteFolder(selectedFolder.id!);
-
-    this.selectedFolder.set(null);
-    await this.loadFolders();
-    this.toastService.success(`Folder "${selectedFolder.name}" deleted`);
+    try {
+      await this.foldersStore.deleteFolder(selectedFolder.id!);
+      this.toastService.success(`Folder "${selectedFolder.name}" deleted`);
+    } catch (error) {
+      this.toastService.danger('Failed to delete folder');
+    }
   }
 }

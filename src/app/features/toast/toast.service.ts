@@ -1,24 +1,27 @@
 import { Injectable, signal } from '@angular/core';
-
-type ToastType = 'success' | 'warning' | 'danger' | 'info';
-
-interface Toast {
-  id: string;
-  message: string;
-  type: ToastType;
-  duration?: number;
-}
+import { Toast, ToastType } from './toast.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToastService {
-  private toasts = signal<Toast[]>([]);
-  private removingToasts = signal<Set<string>>(new Set());
+  // ========================================
+  // STATE (Private signals)
+  // ========================================
 
-  // Expose toasts as readonly
-  readonly toasts$ = this.toasts.asReadonly();
-  readonly removingToasts$ = this.removingToasts.asReadonly();
+  private _toasts = signal<Toast[]>([]);
+  private _removingToasts = signal<Set<string>>(new Set());
+
+  // ========================================
+  // SELECTORS (Public readonly)
+  // ========================================
+
+  readonly toasts = this._toasts.asReadonly();
+  readonly removingToasts = this._removingToasts.asReadonly();
+
+  // ========================================
+  // ACTIONS
+  // ========================================
 
   // Show a toast notification
   private show(message: string, type: ToastType = 'info', duration: number = 5000) {
@@ -26,7 +29,7 @@ export class ToastService {
     const toast: Toast = { id, message, type, duration };
 
     // Add toast to array
-    this.toasts.update(toasts => [...toasts, toast]);
+    this._toasts.update(toasts => [...toasts, toast]);
 
     // Auto remove after duration
     if (duration > 0) {
@@ -57,12 +60,12 @@ export class ToastService {
   // Remove a toast with animation
   remove(id: string) {
     // Add to removing set to trigger animation
-    this.removingToasts.update(set => new Set(set).add(id));
+    this._removingToasts.update(set => new Set(set).add(id));
 
     // Wait for animation to complete before actually removing
     setTimeout(() => {
-      this.toasts.update(toasts => toasts.filter(t => t.id !== id));
-      this.removingToasts.update(set => {
+      this._toasts.update(toasts => toasts.filter(t => t.id !== id));
+      this._removingToasts.update(set => {
         const newSet = new Set(set);
         newSet.delete(id);
         return newSet;
@@ -72,8 +75,12 @@ export class ToastService {
 
   // Clear all toasts at once
   clear() {
-    this.toasts.set([]);
+    this._toasts.set([]);
   }
+
+  // ========================================
+  // HELPERS
+  // ========================================
 
   // Generate a unique ID for each toast
   private generateId(): string {

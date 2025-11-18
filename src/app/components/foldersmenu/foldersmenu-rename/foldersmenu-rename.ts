@@ -1,6 +1,7 @@
-import { Component, input, output, signal, effect } from '@angular/core';
-import { Folder } from '../../../features/folders/folder.model';
+import { Component, input, output, signal, effect, inject } from '@angular/core';
+import { Folder } from '../../../features/folders/folders.model';
 import { FormInput } from '../../form/form-input/form-input';
+import { FoldersStore } from '../../../features/folders/folders.store';
 
 @Component({
   selector: 'app-foldersmenu-rename',
@@ -9,16 +10,22 @@ import { FormInput } from '../../form/form-input/form-input';
   styleUrl: './foldersmenu-rename.scss',
 })
 export class FoldersmenuRename {
-  selectedFolder = input<Folder | null>(null);
+  private foldersStore = inject(FoldersStore);
+
   renameFolder = output<string>();
   cancel = output<void>();
 
   folderName = signal<string>('');
+  selectedFolder = this.foldersStore.selectedFolder;
+  loading = this.foldersStore.loading;
 
   constructor() {
     effect(() => {
       const folder = this.selectedFolder();
-      if (folder) {
+      const isLoading = this.loading();
+
+      // Update folder name when folder changes or after loading completes
+      if (folder && !isLoading) {
         this.folderName.set(folder.name);
       }
     });
@@ -26,7 +33,7 @@ export class FoldersmenuRename {
 
   onRenameFolder() {
     const name = this.folderName().trim();
-    if (name && name !== this.selectedFolder()?.name) {
+    if (name && name !== this.selectedFolder()?.name && !this.loading()) {
       this.renameFolder.emit(name);
     }
   }

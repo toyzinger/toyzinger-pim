@@ -7,19 +7,19 @@
         class="foldersmenu__action-btn btn-tertiary"
         title="Create folder"
         (click)="openNewFolderMenu()">
-        <span class="material-icons">create_new_folder</span>
+        <span class="material-icons-outlined">add</span>
       </button>
       <button
         class="foldersmenu__action-btn btn-tertiary"
         title="Rename folder"
         (click)="openRenameMenu()">
-        <span class="material-icons">edit</span>
+        <span class="material-icons-outlined">edit</span>
       </button>
       <button
         class="foldersmenu__action-btn btn-tertiary"
         title="Delete folder"
         (click)="openDeleteMenu()">
-        <span class="material-icons">delete</span>
+        <span class="material-icons-outlined">delete</span>
       </button>
     </div>
   </div>
@@ -29,26 +29,23 @@
       <div class="foldersmenu__action-menu-header">
         <h4>{{ actionMenuTitle() }}</h4>
         <button class="foldersmenu__close-btn btn-tertiary btn-icon" (click)="closeActionsMenus()">
-          <span class="material-icons">close</span>
+          <span class="material-icons-outlined">close</span>
         </button>
       </div>
       @if (showNewFolderMenu()) {
         <app-foldersmenu-new
-          [selectedFolder]="selectedFolder()"
           (createFolder)="onCreateFolder($event)"
           (cancel)="closeActionsMenus()"
         />
       }
       @if (showRenameMenu()) {
         <app-foldersmenu-rename
-          [selectedFolder]="selectedFolder()"
           (renameFolder)="onRenameFolder($event)"
           (cancel)="closeActionsMenus()"
         />
       }
       @if (showDeleteMenu()) {
         <app-foldersmenu-delete
-          [selectedFolder]="selectedFolder()"
           (deleteFolder)="onDeleteFolder()"
           (cancel)="closeActionsMenus()"
         />

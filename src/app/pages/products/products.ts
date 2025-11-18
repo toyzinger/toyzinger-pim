@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Sidebar } from '../../components/sidebar/sidebar';
-import { ProductService } from '../../services/product.service';
-import { ToastService } from '../../services/toast.service';
-import { Product } from '../../models/product.model';
+import { ProductsFirebase } from '../../features/products/products.firebase';
+import { ToastService } from '../../features/toast/toast.service';
+import { Product } from '../../features/products/products.model';
 
 @Component({
   selector: 'app-products',
@@ -12,7 +12,7 @@ import { Product } from '../../models/product.model';
   styleUrl: './products.scss',
 })
 export class Products {
-  private productService = inject(ProductService);
+  private productService = inject(ProductsFirebase);
   private toastService = inject(ToastService);
 
   product = signal<Partial<Product>>({

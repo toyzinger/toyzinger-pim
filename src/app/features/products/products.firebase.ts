@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, limit } from '@angular/fire/firestore';
-import { Product } from '../models/product.model';
+import { Product } from './products.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProductService {
+export class ProductsFirebase {
   private firestore = inject(Firestore);
   private readonly COLLECTION_NAME = 'products';
 

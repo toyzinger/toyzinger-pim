@@ -7,11 +7,11 @@
   />
 
   <div class="foldersmenu-rename__actions">
-    <button class="btn-secondary" type="button" (click)="onCancel()">
+    <button class="btn-secondary" type="button" (click)="onCancel()" [disabled]="loading()">
       Cancel
     </button>
-    <button class="btn-primary" type="button" (click)="onRenameFolder()">
-      Rename
+    <button class="btn-primary" type="button" (click)="onRenameFolder()" [disabled]="loading()">
+      {{ loading() ? 'Renaming...' : 'Rename' }}
     </button>
   </div>
 </div>

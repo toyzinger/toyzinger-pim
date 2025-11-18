@@ -12,7 +12,7 @@ import {
   getDoc,
   updateDoc,
 } from '@angular/fire/firestore';
-import { Folder, FolderItem, ItemType } from './folder.model';
+import { Folder, FolderItem, ItemType } from './folders.model';
 
 const FOLDERS_COLLECTION = 'folders';
 const FOLDER_ITEMS_COLLECTION = 'folder_items';
@@ -20,7 +20,7 @@ const FOLDER_ITEMS_COLLECTION = 'folder_items';
 @Injectable({
   providedIn: 'root',
 })
-export class FolderService {
+export class FoldersFirebase {
   private firestore = inject(Firestore);
 
   // ========================================

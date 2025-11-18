@@ -1,5 +1,5 @@
-import { Component, input, output } from '@angular/core';
-import { Folder, SPECIAL_FOLDERS } from '../../../features/folders/folder.model';
+import { Component, computed, input, output } from '@angular/core';
+import { Folder, SPECIAL_FOLDERS } from '../../../features/folders/folders.model';
 
 @Component({
   selector: 'app-foldersmenu-item',
@@ -44,6 +44,19 @@ export class FoldersmenuItem {
 
   hasChildren(): boolean {
     return this.getSubfolders().length > 0;
+  }
+
+  // Get folder icon based on state
+  getFolderIcon(): string {
+    const currentFolder = this.folder();
+
+    // Special folders get special icon
+    if (currentFolder.isVirtual) {
+      return 'folder_special';
+    }
+
+    // Regular folders: open if expanded, closed otherwise
+    return this.isExpanded() ? 'folder_open' : 'folder';
   }
 
   onSelectFolder(event: Event) {

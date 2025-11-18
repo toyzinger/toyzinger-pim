@@ -1,6 +1,7 @@
-import { Component, input, output, computed } from '@angular/core';
-import { Folder } from '../../../features/folders/folder.model';
+import { Component, input, output, computed, inject } from '@angular/core';
+import { Folder } from '../../../features/folders/folders.model';
 import { FormInput } from '../../form/form-input/form-input';
+import { FoldersStore } from '../../../features/folders/folders.store';
 
 @Component({
   selector: 'app-foldersmenu-delete',
@@ -9,14 +10,19 @@ import { FormInput } from '../../form/form-input/form-input';
   styleUrl: './foldersmenu-delete.scss',
 })
 export class FoldersmenuDelete {
-  selectedFolder = input<Folder | null>(null);
+  private foldersStore = inject(FoldersStore);
+
   deleteFolder = output<void>();
   cancel = output<void>();
 
+  selectedFolder = this.foldersStore.selectedFolder;
   folderName = computed(() => this.selectedFolder()?.name || '');
+  loading = this.foldersStore.loading;
 
   onDeleteFolder() {
-    this.deleteFolder.emit();
+    if (!this.loading()) {
+      this.deleteFolder.emit();
+    }
   }
 
   onCancel() {
