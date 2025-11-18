@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-@use 'styles/reset';
 @use 'styles/variables' as *;
+@use 'styles/reset';
 @use 'styles/buttons';
+@use 'styles/richtext';
 
 body {
   background-color: $color-bg-dark;

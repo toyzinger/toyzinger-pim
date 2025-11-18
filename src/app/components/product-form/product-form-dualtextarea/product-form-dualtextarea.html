@@ -1,7 +1,6 @@
 <div class="dual-textarea">
   <app-form-textarea
     [label]="labelEs()"
-    [placeholder]="placeholderEs()"
     [(value)]="valueEs"
     [disabled]="disabled()"
   />
@@ -14,7 +13,7 @@
       [disabled]="disabled() || !valueEs().trim()"
       title="Copy to English"
     >
-      <span class="material-icons-outlined">content_copy</span>
+      <span class="material-icons-outlined">move_down</span>
     </button>
 
     <button
@@ -26,11 +25,20 @@
     >
       <span class="material-icons-outlined">translate</span>
     </button>
+
+    <button
+      type="button"
+      class="dual-textarea__action-btn btn-tertiary btn-sm"
+      (click)="clear()"
+      [disabled]="disabled() || (!valueEs().trim() && !valueEn().trim())"
+      title="Clear both textareas"
+    >
+      <span class="material-icons-outlined">layers_clear</span>
+    </button>
   </div>
 
   <app-form-textarea
     [label]="labelEn()"
-    [placeholder]="placeholderEn()"
     [(value)]="valueEn"
     [disabled]="disabled()"
   />

@@ -11,8 +11,6 @@ export class ProductFormDualtextarea {
   // Inputs
   labelEn = input<string>('English');
   labelEs = input<string>('Spanish');
-  placeholderEn = input<string>('Enter text in English');
-  placeholderEs = input<string>('Enter text in Spanish');
   disabled = input<boolean>(false);
 
   // Two-way binding for both textareas
@@ -27,5 +25,11 @@ export class ProductFormDualtextarea {
   // Translate text (placeholder for future implementation)
   translate(): void {
     console.log('Translate functionality - Coming soon');
+  }
+
+  // Clear both textareas
+  clear(): void {
+    this.valueEs.set('');
+    this.valueEn.set('');
   }
 }

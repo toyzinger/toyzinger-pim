@@ -2,14 +2,71 @@
   @if (label()) {
     <label class="form__label" [attr.for]="id()">{{ label() }}</label>
   }
-  <textarea
-    #textareaElement
-    class="form__textarea"
-    [id]="id()"
-    [(ngModel)]="value"
-    [placeholder]="placeholder()"
-    [required]="required()"
-    [disabled]="disabled()"
-    [rows]="rows()"
-  ></textarea>
+
+  <!-- Rich Text Editor -->
+  <div class="richtext">
+    <div class="richtext__toolbar">
+      <button
+        type="button"
+        class="richtext__button"
+        (click)="toggleBold()"
+        [class.richtext__button--active]="isBold()"
+        [disabled]="disabled()"
+        title="Bold"
+      >
+        <span class="material-icons-outlined">format_bold</span>
+      </button>
+
+      <button
+        type="button"
+        class="richtext__button"
+        (click)="toggleItalic()"
+        [class.richtext__button--active]="isItalic()"
+        [disabled]="disabled()"
+        title="Italic"
+      >
+        <span class="material-icons-outlined">format_italic</span>
+      </button>
+
+      <button
+        type="button"
+        class="richtext__button"
+        (click)="toggleStrike()"
+        [class.richtext__button--active]="isStrike()"
+        [disabled]="disabled()"
+        title="Strikethrough"
+      >
+        <span class="material-icons-outlined">strikethrough_s</span>
+      </button>
+
+      <div class="richtext__separator"></div>
+
+      <button
+        type="button"
+        class="richtext__button"
+        (click)="toggleBulletList()"
+        [class.richtext__button--active]="isBulletList()"
+        [disabled]="disabled()"
+        title="Bullet List"
+      >
+        <span class="material-icons-outlined">format_list_bulleted</span>
+      </button>
+
+      <button
+        type="button"
+        class="richtext__button"
+        (click)="toggleOrderedList()"
+        [class.richtext__button--active]="isOrderedList()"
+        [disabled]="disabled()"
+        title="Numbered List"
+      >
+        <span class="material-icons-outlined">format_list_numbered</span>
+      </button>
+    </div>
+
+    <div
+      #editorElement
+      class="richtext__editor"
+    ></div>
+  </div>
 </div>

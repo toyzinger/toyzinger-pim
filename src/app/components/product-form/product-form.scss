@@ -3,25 +3,23 @@
 .product-form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   max-width: 1200px;
 
   &__section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 1.5rem;
+    padding: 1rem;
     background-color: $color-bg-light;
     border-radius: 8px;
   }
 
   &__section-title {
-    margin: 0 0 0.5rem 0;
     font-size: 1.1rem;
     font-weight: 600;
     color: $color-primary;
     border-bottom: 1px solid $gray-700;
-    padding-bottom: 0.5rem;
   }
 
   &__row {
