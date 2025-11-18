@@ -95,7 +95,6 @@ export class ProductsStore {
     this._error.set(null);
     try {
       const id = await this.productsService.addProduct(product);
-
       // Optimistic update
       const newProduct: Product = { ...product, id };
       this._products.update(products => [...products, newProduct]);

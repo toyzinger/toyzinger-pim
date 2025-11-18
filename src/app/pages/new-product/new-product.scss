@@ -1,0 +1,19 @@
+@use '../../../styles/variables' as *;
+
+.new-product {
+  .new-product__content {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  h1 {
+    color: $color-primary;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: $color-text-medium;
+    margin-bottom: 2rem;
+  }
+}

@@ -1,0 +1,10 @@
+<main class="new-product">
+  <section class="new-product__content">
+    <h1>New Product</h1>
+    <p>Create a new product in the catalog</p>
+    <app-product-form
+      (submitProduct)="onSubmitProduct($event)"
+      [loading]="loading()"
+    ></app-product-form>
+  </section>
+</main>

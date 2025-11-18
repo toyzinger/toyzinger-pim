@@ -17,7 +17,7 @@ export class ProductForm {
   product = input<Product | null>(null);
   loading = input<boolean>(false);
 
-  submitProduct = output<Partial<Product>>();
+  submitProduct = output<Omit<Product, 'id'>>();
 
   // Form fields
   name = signal<string>('');
@@ -82,7 +82,7 @@ export class ProductForm {
       return;
     }
 
-    const productData: Partial<Product> = {
+    const productData: Omit<Product, 'id'> = {
       name: this.name().trim(),
       collection: this.collection().trim(),
       sku: this.sku().trim() || undefined,
@@ -124,8 +124,7 @@ export class ProductForm {
       productData.accessories = acc;
     }
 
-    console.log('onSubmit', productData);
-    // this.submitProduct.emit(productData);
+    this.submitProduct.emit(productData);
   }
 
   resetForm(): void {

@@ -1,10 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ToastService } from '../../features/toast/toast.service';
-import { ProductForm } from '../../components/product-form/product-form';
 
 @Component({
   selector: 'app-home',
-  imports: [ProductForm],
+  imports: [],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
