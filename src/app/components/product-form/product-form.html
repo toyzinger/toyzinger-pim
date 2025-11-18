@@ -90,14 +90,6 @@
 
   <div class="product-form__actions">
     <button
-      type="button"
-      class="btn-secondary"
-      (click)="onCancel()"
-      [disabled]="loading()"
-    >
-      Cancel
-    </button>
-    <button
       type="submit"
       class="btn-primary"
       [disabled]="loading() || !name().trim()"

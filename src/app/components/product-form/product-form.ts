@@ -128,10 +128,6 @@ export class ProductForm {
     this.submitProduct.emit(productData);
   }
 
-  onCancel(): void {
-    this.cancel.emit();
-  }
-
   resetForm(): void {
     this.name.set('');
     this.collection.set('');
