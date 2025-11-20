@@ -3,9 +3,12 @@
     <h1>Add Images</h1>
     <p>Upload and manage your product images</p>
 
-    <div class="drop-zone" [class.drag-over]="isDragOver" (dragover)="onDragOver($event)"
+    <input type="file" #fileInput accept=".jpg,.jpeg,.png,.gif,.webp,.svg" multiple (change)="onFileSelected($event)"
+      style="display: none;">
+
+    <div class="drop-zone" [class.drag-over]="isDragOver" (click)="fileInput.click()" (dragover)="onDragOver($event)"
       (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
-      <p>Drag and drop images here</p>
+      <p>Drag and drop images here or click to browse</p>
     </div>
   </section>
 </main>

@@ -10,9 +10,15 @@ import { join } from 'node:path';
 import uploadRouter from './api/upload.routes';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
+const uploadsFolder = join(process.cwd(), 'uploads');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+
+/**
+ * Serve uploaded files
+ */
+app.use('/uploads', express.static(uploadsFolder));
 
 /**
  * Example Express Rest API endpoints can be defined here.
