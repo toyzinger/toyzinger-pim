@@ -15,7 +15,7 @@
     align-items: center;
   }
 
-  &__icon-container {
+  &__icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,12 +24,12 @@
     background-color: $color-text-light;
     border-radius: 50%;
     padding: 0.35rem;
-  }
 
-  &__icon {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
   }
 
   &__nav {
@@ -47,6 +47,17 @@
     &:hover,
     &.active {
       color: $color-primary;
+    }
+  }
+
+  &__buttons {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+
+    button {
+
     }
   }
 }

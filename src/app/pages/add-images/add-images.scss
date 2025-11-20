@@ -1,0 +1,40 @@
+@use '../../../styles/variables' as *;
+
+.add-images {
+  &__content {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  h1 {
+    color: $color-primary;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: $color-text-medium;
+  }
+
+  .drop-zone {
+    border: 2px dashed $gray-500;
+    border-radius: 8px;
+    padding: 3rem;
+    text-align: center;
+    margin-top: 2rem;
+    transition: all 0.3s ease;
+    background-color: $color-bg-light;
+    cursor: pointer;
+
+    &.drag-over {
+      border-color: $color-primary;
+      background-color: rgba($color-primary, 0.05);
+    }
+
+    p {
+      margin: 0;
+      font-size: 1.1rem;
+      color: $color-text-medium;
+    }
+  }
+}

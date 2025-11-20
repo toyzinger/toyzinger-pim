@@ -7,6 +7,8 @@ import {
 import express from 'express';
 import { join } from 'node:path';
 
+import uploadRouter from './api/upload.routes';
+
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
@@ -23,6 +25,7 @@ const angularApp = new AngularNodeAppEngine();
  * });
  * ```
  */
+app.use('/api', uploadRouter);
 
 /**
  * Serve static files from /browser

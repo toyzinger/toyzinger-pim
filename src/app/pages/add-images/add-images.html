@@ -1,0 +1,11 @@
+<main class="add-images">
+  <section class="add-images__content">
+    <h1>Add Images</h1>
+    <p>Upload and manage your product images</p>
+
+    <div class="drop-zone" [class.drag-over]="isDragOver" (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+      <p>Drag and drop images here</p>
+    </div>
+  </section>
+</main>
