@@ -1,0 +1,144 @@
+@use '../../../styles/variables' as *;
+
+.upload-images {
+  &__content {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  h1 {
+    color: $color-primary;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    color: $color-primary;
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: $color-text-medium;
+  }
+
+  .drop-zone {
+    border: 2px dashed $gray-500;
+    border-radius: 8px;
+    padding: 3rem;
+    text-align: center;
+    margin-top: 2rem;
+    transition: all 0.3s ease;
+    background-color: $color-bg-light;
+    cursor: pointer;
+
+    &.drag-over {
+      border-color: $color-primary;
+      background-color: rgba($color-primary, 0.05);
+    }
+
+    &.uploading {
+      cursor: not-allowed;
+      opacity: 0.6;
+      border-color: $color-info;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1.1rem;
+      color: $color-text-medium;
+    }
+  }
+
+  .error-message {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: rgba($color-danger, 0.1);
+    border: 1px solid $color-danger;
+    border-radius: 4px;
+    color: $color-danger;
+    text-align: center;
+  }
+
+  .uploaded-images {
+    margin-top: 2rem;
+
+    .images-list {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .image-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background-color: $color-bg-medium;
+      border: 1px solid $gray-600;
+      border-radius: 8px;
+      transition: all 0.2s;
+
+      &:hover {
+        background-color: $color-bg-dark;
+        border-color: $color-primary;
+      }
+
+      .image-preview {
+        flex-shrink: 0;
+        width: 80px;
+        height: 80px;
+        border-radius: 4px;
+        overflow: hidden;
+        background-color: $color-bg-dark;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .image-info {
+        flex: 1;
+        min-width: 0; // Allow text truncation
+
+        .image-name {
+          font-size: 1rem;
+          color: $color-text-light;
+          margin: 0 0 0.25rem 0;
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .image-details {
+          font-size: 0.85rem;
+          color: $color-text-medium;
+          margin: 0;
+        }
+      }
+
+      .image-status {
+        flex-shrink: 0;
+
+        .status-badge {
+          display: inline-block;
+          padding: 0.4rem 0.8rem;
+          border-radius: 4px;
+          font-size: 0.85rem;
+          font-weight: 500;
+
+          &.success {
+            background-color: rgba($color-success, 0.1);
+            color: $color-success;
+            border: 1px solid $color-success;
+          }
+        }
+      }
+    }
+  }
+}

@@ -4,12 +4,12 @@ import { FormComponents } from '../../components/form/form';
 import { SelectOption } from '../../components/form/form-select/form-select';
 
 @Component({
-  selector: 'app-images',
+  selector: 'app-images-list',
   imports: [Sidebar, FormComponents],
-  templateUrl: './images.html',
-  styleUrl: './images.scss',
+  templateUrl: './images-list.html',
+  styleUrl: './images-list.scss',
 })
-export class Images {
+export class ImagesList {
   productName = signal('');
   description = signal('');
   category = signal('');

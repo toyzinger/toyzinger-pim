@@ -1,4 +1,5 @@
 import { MultilingualStringArray, MultilingualString } from '../languages/languages.model';
+import { ProductImage } from '../images/images.model';
 
 export interface Product {
   id?: string;
@@ -17,12 +18,4 @@ export interface Product {
   updatedAt?: Date;
   isActive: boolean;
   sku?: string;
-}
-
-export interface ProductImage {
-  id: string;
-  url: string;
-  alt?: string;
-  isPrimary: boolean;
-  order: number;
 }

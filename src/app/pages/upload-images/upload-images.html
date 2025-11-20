@@ -1,0 +1,49 @@
+<main class="upload-images">
+  <section class="upload-images__content">
+    <h1>Upload Images</h1>
+    <p>Upload and manage your product images</p>
+
+    <input type="file" #fileInput accept=".jpg,.jpeg,.png,.gif,.webp,.svg" multiple (change)="onFileSelected($event)"
+      style="display: none;">
+
+    <div class="drop-zone" [class.drag-over]="isDragOver()" [class.uploading]="isUploading()"
+      (click)="!isUploading() && fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)">
+      @if (isUploading()) {
+      <p>Uploading...</p>
+      } @else {
+      <p>Drag and drop images here or click to browse</p>
+      }
+    </div>
+
+    @if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+    }
+
+    @if (uploadedImages().length > 0) {
+    <div class="uploaded-images">
+      <h2>Uploaded Images ({{ uploadedImages().length }})</h2>
+      <div class="images-list">
+        @for (image of uploadedImages(); track image.filename) {
+        <div class="image-row">
+          <div class="image-preview">
+            <img [src]="image.path" [alt]="image.filename">
+          </div>
+          <div class="image-info">
+            <p class="image-name">{{ image.filename }}</p>
+            <p class="image-details">
+              {{ (image.size / 1024).toFixed(2) }} KB • {{ image.mimetype }}
+            </p>
+          </div>
+          <div class="image-status">
+            <span class="status-badge success">✓ Uploaded</span>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </section>
+</main>
