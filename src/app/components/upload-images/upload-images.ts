@@ -2,15 +2,18 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { HttpEventType } from '@angular/common/http';
 import { ImagesService } from '../../features/images/images.service';
 import { UploadItem } from '../../features/images/images.model';
+import { FoldersDropdown } from '../../components/folders-dropdown/folders-dropdown';
 
 @Component({
   selector: 'app-upload-images',
-  imports: [],
+  imports: [FoldersDropdown],
   templateUrl: './upload-images.html',
   styleUrl: './upload-images.scss',
 })
 export class UploadImages {
   private imagesService = inject(ImagesService);
+
+  selectedFolderId = signal<string>('');
 
   isDragOver = signal(false);
   uploadQueue = signal<UploadItem[]>([]);

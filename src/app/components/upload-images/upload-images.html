@@ -1,6 +1,11 @@
 <div class="upload-images">
-  <input type="file" #fileInput accept=".jpg,.jpeg,.png,.gif,.webp,.svg" multiple (change)="onFileSelected($event)"
-    style="display: none;">
+  <input class="upload-images__input" type="file" #fileInput accept=".jpg,.jpeg,.png,.gif,.webp,.svg" multiple
+    (change)="onFileSelected($event)">
+
+  <div class="container">
+    <h3 class="container__title">Select a folder</h3>
+    <app-folders-dropdown [(selectedFolderId)]="selectedFolderId" />
+  </div>
 
   <div class="drop-zone" [class.drag-over]="isDragOver()" [class.uploading]="isUploading()"
     (click)="!isUploading() && fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
