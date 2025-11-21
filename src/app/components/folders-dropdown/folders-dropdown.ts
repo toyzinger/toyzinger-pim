@@ -1,4 +1,4 @@
-import { Component, model, computed, inject, OnInit } from '@angular/core';
+import { Component, model, computed, signal, inject, OnInit, effect } from '@angular/core';
 import { FoldersStore } from '../../features/folders/folders.store';
 import { Folder } from '../../features/folders/folders.model';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
@@ -12,17 +12,72 @@ import { FormSelect, SelectOption } from '../form/form-select/form-select';
 export class FoldersDropdown implements OnInit {
   private foldersStore = inject(FoldersStore);
 
-  // Two-way binding for selected folder ID
-  selectedFolderId = model<string>('root');
+  // Internal signals for the two dropdowns (public for template binding)
+  firstLevelFolderId = signal<string>('');
+  secondLevelFolderId = signal<string>('');
+
+  // Output: computed from both dropdowns
+  selectedFolderId = model<string>('');
 
   // Computed: loading state from folders store
   loading = this.foldersStore.loading;
 
-  // Computed: transform folders to select options (excluding virtual folders)
-  folderOptions = computed(() => {
-    const folders = this.foldersStore.allFolders().filter(f => !f.isVirtual);
-    return this.buildFolderOptions(folders);
+  // Computed: First dropdown options (root folders only)
+  firstLevelOptions = computed(() => {
+    const folders = this.foldersStore.allFolders().filter(f => !f.isVirtual && !f.parentId);
+
+    const options: SelectOption[] = [];
+
+    // Add root option
+    options.push({
+      value: '',
+      label: '(No folder / Root)'
+    });
+
+    // Add root folders sorted by order
+    folders
+      .sort((a, b) => a.order - b.order)
+      .forEach(folder => {
+        options.push({
+          value: folder.id!,
+          label: folder.name
+        });
+      });
+
+    return options;
   });
+
+  // Computed: Second dropdown options (children of selected first level folder)
+  secondLevelOptions = computed(() => {
+    const firstLevelId = this.firstLevelFolderId();
+
+    if (!firstLevelId) {
+      return [];
+    }
+
+    const allFolders = this.foldersStore.allFolders().filter(f => !f.isVirtual);
+    return this.buildChildOptions(allFolders, firstLevelId);
+  });
+
+  // Computed: Check if second dropdown should be visible
+  showSecondLevel = computed(() => this.secondLevelOptions().length > 0);
+
+  constructor() {
+    // Effect: Reset second dropdown when first dropdown changes
+    effect(() => {
+      const firstLevelId = this.firstLevelFolderId();
+      this.secondLevelFolderId.set('');
+    });
+
+    // Effect: Update output selectedFolderId based on both dropdowns
+    effect(() => {
+      const firstId = this.firstLevelFolderId();
+      const secondId = this.secondLevelFolderId();
+
+      // If second level has a value, use it; otherwise use first level
+      this.selectedFolderId.set(secondId || firstId);
+    });
+  }
 
   ngOnInit(): void {
     // Load folders if not already loaded
@@ -32,16 +87,10 @@ export class FoldersDropdown implements OnInit {
   }
 
   /**
-   * Build select options from folders with hierarchy indentation
+   * Build select options for child folders with hierarchy indentation
    */
-  private buildFolderOptions(folders: Folder[]): SelectOption[] {
+  private buildChildOptions(allFolders: Folder[], parentId: string): SelectOption[] {
     const options: SelectOption[] = [];
-
-    // Add root option first (no specific folder selected)
-    options.push({
-      value: '',
-      label: '(No folder / Root)'
-    });
 
     // Recursive function to add folders with indentation
     const addFolder = (folder: Folder, depth: number = 0) => {
@@ -52,19 +101,19 @@ export class FoldersDropdown implements OnInit {
       });
 
       // Add children
-      const children = folders
+      const children = allFolders
         .filter(f => f.parentId === folder.id)
         .sort((a, b) => a.order - b.order);
 
       children.forEach(child => addFolder(child, depth + 1));
     };
 
-    // Start with root folders (no parent)
-    const rootFolders = folders
-      .filter(f => !f.parentId)
+    // Start with direct children of the parent folder
+    const children = allFolders
+      .filter(f => f.parentId === parentId)
       .sort((a, b) => a.order - b.order);
 
-    rootFolders.forEach(folder => addFolder(folder));
+    children.forEach(folder => addFolder(folder));
 
     return options;
   }

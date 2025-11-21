@@ -1,2 +1,7 @@
-<app-form-select label="Folder" [options]="folderOptions()" placeholder="Select a folder" [disabled]="loading()"
-  [(value)]="selectedFolderId" />
+<div class="folders-dropdown">
+  <app-form-select label="Folder" [options]="firstLevelOptions()" placeholder="Select a folder" [disabled]="loading()"
+    [(value)]="firstLevelFolderId" />
+
+  <app-form-select label="Subfolder" [options]="secondLevelOptions()" placeholder="Select a subfolder (optional)"
+    [disabled]="loading() || !showSecondLevel()" [(value)]="secondLevelFolderId" />
+</div>

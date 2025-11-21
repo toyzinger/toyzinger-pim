@@ -1,99 +1,52 @@
 <form class="product-form" (submit)="$event.preventDefault(); onSubmit()">
 
-  <div class="product-form__section">
-    <h3 class="product-form__section-title">Product Information</h3>
+  <div class="container">
+    <h3 class="container__title">Product Information</h3>
     <!-- ROW -->
-    <app-form-input
-      label="Product Name"
-      placeholder="Enter product name"
-      [(value)]="name"
-      [disabled]="loading()"
-      [required]="true"
-    />
+    <app-form-input label="Product Name" placeholder="Enter product name" [(value)]="name" [disabled]="loading()"
+      [required]="true" />
     <!-- ROW -->
     <div class="product-form__row">
-      <app-product-form-franchise
-        [(franchise)]="franchise"
-        [disabled]="loading()"
-      />
-      <app-form-input
-        label="Collection"
-        placeholder="Enter collection name"
-        [(value)]="collection"
-        [disabled]="loading()"
-      />
+      <app-product-form-franchise [(franchise)]="franchise" [disabled]="loading()" />
+      <app-form-input label="Collection" placeholder="Enter collection name" [(value)]="collection"
+        [disabled]="loading()" />
     </div>
     <!-- ROW -->
     <div class="product-form__row">
-      <app-product-form-manufacturer
-        [(manufacturer)]="manufacturer"
-        [disabled]="loading()"
-      />
-      <app-form-input
-        label="Year Released"
-        type="number"
-        placeholder="Enter year"
-        [(value)]="yearReleased"
-        [disabled]="loading()"
-      />
+      <app-product-form-manufacturer [(manufacturer)]="manufacturer" [disabled]="loading()" />
+      <app-form-input label="Year Released" type="number" placeholder="Enter year" [(value)]="yearReleased"
+        [disabled]="loading()" />
     </div>
     <!-- ROW -->
     <div class="product-form__row">
-      <app-form-input
-        label="Size"
-        placeholder="Enter size"
-        [(value)]="size"
-        [disabled]="loading()"
-      />
-      <app-form-input
-        label="SKU"
-        placeholder="Enter SKU"
-        [(value)]="sku"
-        [disabled]="loading()"
-      />
+      <app-form-input label="Size" placeholder="Enter size" [(value)]="size" [disabled]="loading()" />
+      <app-form-input label="SKU" placeholder="Enter SKU" [(value)]="sku" [disabled]="loading()" />
     </div>
     <!-- ROW -->
     <div class="product-form__row">
-      <app-form-checkbox
-        label="Active Product"
-        [(checked)]="isActive"
-        [disabled]="loading()"
-      />
+      <app-form-checkbox label="Active Product" [(checked)]="isActive" [disabled]="loading()" />
     </div>
   </div>
 
-  <div class="product-form__section">
-    <h3 class="product-form__section-title">Accessories</h3>
-    <app-product-form-accessories
-      [(accessories)]="accessories"
-      [disabled]="loading()"
-    />
+  <div class="container">
+    <h3 class="container__title">Accessories</h3>
+    <app-product-form-accessories [(accessories)]="accessories" [disabled]="loading()" />
   </div>
 
-  <div class="product-form__section">
-    <h3 class="product-form__section-title">Toy Descriptions</h3>
-    <app-product-form-dualtextarea
-      [(valueEn)]="toyDescription_en"
-      [(valueEs)]="toyDescription_es"
-      [disabled]="loading()"
-    />
+  <div class="container">
+    <h3 class="container__title">Toy Descriptions</h3>
+    <app-product-form-dualtextarea [(valueEn)]="toyDescription_en" [(valueEs)]="toyDescription_es"
+      [disabled]="loading()" />
   </div>
 
-  <div class="product-form__section">
-    <h3 class="product-form__section-title">Character Descriptions</h3>
-    <app-product-form-dualtextarea
-      [(valueEn)]="characterDescription_en"
-      [(valueEs)]="characterDescription_es"
-      [disabled]="loading()"
-    />
+  <div class="container">
+    <h3 class="container__title">Character Descriptions</h3>
+    <app-product-form-dualtextarea [(valueEn)]="characterDescription_en" [(valueEs)]="characterDescription_es"
+      [disabled]="loading()" />
   </div>
 
   <div class="product-form__actions">
-    <button
-      type="submit"
-      class="btn-primary"
-      [disabled]="loading() || !name().trim()"
-    >
+    <button type="submit" class="btn-primary" [disabled]="loading() || !name().trim()">
       {{ loading() ? 'Saving...' : (product() ? 'Update Product' : 'Create Product') }}
     </button>
   </div>
