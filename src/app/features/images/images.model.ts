@@ -23,3 +23,12 @@ export interface ImageUploadResult {
   message: string;
   files: ImageUploadResponse[];
 }
+
+export interface UploadItem {
+  id: string;
+  file: File;
+  status: 'pending' | 'uploading' | 'success' | 'error' | 'invalid';
+  result?: ImageUploadResponse;
+  error?: string;
+  progress?: number;
+}

@@ -1,0 +1,79 @@
+<div class="upload-images">
+  <input type="file" #fileInput accept=".jpg,.jpeg,.png,.gif,.webp,.svg" multiple (change)="onFileSelected($event)"
+    style="display: none;">
+
+  <div class="drop-zone" [class.drag-over]="isDragOver()" [class.uploading]="isUploading()"
+    (click)="!isUploading() && fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)">
+    @if (isUploading()) {
+    <p>Uploading...</p>
+    } @else {
+    <p>Drag and drop images here or click to browse</p>
+    }
+  </div>
+
+  @if (errorMessage()) {
+  <div class="error-message">
+    {{ errorMessage() }}
+  </div>
+  }
+
+  @if (sortedQueue().length > 0) {
+  <div class="uploaded-images">
+    <div class="queue-header">
+      <h2>Upload Queue ({{ sortedQueue().length }})</h2>
+      <button class="btn-secondary" (click)="resetQueue()">Reset Queue</button>
+    </div>
+    <div class="images-list">
+      @for (item of sortedQueue(); track item.id) {
+      <div class="image-row" [class.error]="item.status === 'error'">
+        <div class="image-preview">
+          @if (item.result) {
+          <img [src]="item.result.path" [alt]="item.result.filename">
+          } @else {
+          <div class="placeholder-preview">
+            <span>{{ item.file.name.slice(0, 2).toUpperCase() }}</span>
+          </div>
+          }
+        </div>
+        <div class="image-info">
+          <p class="image-name">{{ item.file.name }}</p>
+          <p class="image-details">
+            {{ (item.file.size / 1024).toFixed(2) }} KB • {{ item.file.type }}
+          </p>
+          @if (item.error) {
+          <p class="error-text">{{ item.error }}</p>
+          }
+          @if (item.status === 'uploading') {
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="item.progress || 0"></div>
+          </div>
+          }
+        </div>
+        <div class="image-status">
+          @switch (item.status) {
+          @case ('pending') {
+          <span class="status-badge pending">Pending</span>
+          }
+          @case ('uploading') {
+          <span class="status-badge uploading">Uploading...</span>
+          }
+          @case ('success') {
+          <span class="status-badge success">✓ Uploaded</span>
+          }
+          @case ('error') {
+          <button class="btn-warning btn-sm" (click)="retry(item.id)">
+            ↻ Retry
+          </button>
+          }
+          @case ('invalid') {
+          <span class="status-badge invalid">⚠ Invalid</span>
+          }
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>

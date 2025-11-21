@@ -1,22 +1,19 @@
+@use 'sass:color';
 @use '../../../styles/variables' as *;
 
 .upload-images {
-  &__content {
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  h1 {
-    color: $color-primary;
-    margin-bottom: 1rem;
-  }
-
-  h2 {
-    color: $color-primary;
-    font-size: 1.5rem;
+  .queue-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-top: 2rem;
     margin-bottom: 1rem;
+
+    h2 {
+      color: $color-primary;
+      font-size: 1.5rem;
+      margin: 0;
+    }
   }
 
   p {
@@ -28,7 +25,6 @@
     border-radius: 8px;
     padding: 3rem;
     text-align: center;
-    margin-top: 2rem;
     transition: all 0.3s ease;
     background-color: $color-bg-light;
     cursor: pointer;
@@ -75,29 +71,44 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 1rem;
+      padding: 0.5rem;
       background-color: $color-bg-medium;
       border: 1px solid $gray-600;
       border-radius: 8px;
       transition: all 0.2s;
 
-      &:hover {
-        background-color: $color-bg-dark;
-        border-color: $color-primary;
+      &.error {
+        border-color: $color-danger;
+        background-color: rgba($color-danger, 0.05);
       }
 
       .image-preview {
         flex-shrink: 0;
-        width: 80px;
-        height: 80px;
+        width: 48px;
+        height: 48px;
         border-radius: 4px;
         overflow: hidden;
         background-color: $color-bg-dark;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+        }
+
+        .placeholder-preview {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: $gray-700;
+          color: $gray-400;
+          font-weight: bold;
+          font-size: 1.2rem;
         }
       }
 
@@ -106,9 +117,9 @@
         min-width: 0; // Allow text truncation
 
         .image-name {
-          font-size: 1rem;
+          font-size: 0.95rem;
           color: $color-text-light;
-          margin: 0 0 0.25rem 0;
+          margin: 0;
           font-weight: 500;
           white-space: nowrap;
           overflow: hidden;
@@ -120,23 +131,74 @@
           color: $color-text-medium;
           margin: 0;
         }
+
+        .error-text {
+          color: $color-danger;
+          font-size: 0.8rem;
+          margin: 0.125rem 0 0 0;
+        }
+
+        .progress-bar {
+          margin-top: 0.5rem;
+          height: 4px;
+          background-color: $gray-300;
+          border-radius: 2px;
+          overflow: hidden;
+
+          .progress-fill {
+            height: 100%;
+            background-color: $color-info;
+            transition: width 200ms ease;
+          }
+        }
       }
 
       .image-status {
         flex-shrink: 0;
+        width: 120px;
 
         .status-badge {
+          width: 100%;
           display: inline-block;
           padding: 0.4rem 0.8rem;
           border-radius: 4px;
           font-size: 0.85rem;
           font-weight: 500;
+          text-align: center;
 
           &.success {
             background-color: rgba($color-success, 0.1);
             color: $color-success;
             border: 1px solid $color-success;
           }
+
+          &.pending {
+            background-color: rgba($gray-500, 0.1);
+            color: $gray-400;
+            border: 1px solid $gray-600;
+          }
+
+          &.uploading {
+            background-color: rgba($color-info, 0.1);
+            color: $color-info;
+            border: 1px solid $color-info;
+          }
+
+          &.invalid {
+            background-color: rgba($color-warning, 0.1);
+            color: $color-warning;
+            border: 1px solid $color-warning;
+          }
+        }
+
+        button {
+          width: 100%;
+          width: 100%;
+          display: inline-block;
+          padding: 0.4rem 0.8rem;
+          border-radius: 4px;
+          font-size: 0.85rem;
+          font-weight: 500;
         }
       }
     }
