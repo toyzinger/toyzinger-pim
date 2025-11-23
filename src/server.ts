@@ -7,7 +7,7 @@ import {
 import express from 'express';
 import { join } from 'node:path';
 
-import uploadRouter from './api/upload.routes';
+import apiRouter from './api/index';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 const uploadsFolder = join(process.cwd(), 'uploads');
@@ -31,7 +31,7 @@ app.use('/uploads', express.static(uploadsFolder));
  * });
  * ```
  */
-app.use('/api', uploadRouter);
+app.use('/api', apiRouter);
 
 /**
  * Serve static files from /browser

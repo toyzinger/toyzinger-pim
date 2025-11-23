@@ -3,8 +3,12 @@
     (change)="onFileSelected($event)">
 
   <div class="container">
-    <h3 class="container__title">Select a folder</h3>
     <app-folders-dropdown [(selectedFolderId)]="selectedFolderId" />
+  </div>
+
+  <div class="container">
+    <app-form-input id="alt-text" label="Alt text" placeholder="Enter alternative text for images"
+      [(value)]="altText" />
   </div>
 
   <div class="drop-zone" [class.drag-over]="isDragOver()" [class.uploading]="isUploading()"
@@ -16,12 +20,6 @@
     <p>Drag and drop images here or click to browse</p>
     }
   </div>
-
-  @if (errorMessage()) {
-  <div class="error-message">
-    {{ errorMessage() }}
-  </div>
-  }
 
   @if (sortedQueue().length > 0) {
   <div class="uploaded-images">
