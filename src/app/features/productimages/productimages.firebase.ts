@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy } from '@angular/fire/firestore';
-import { ProductImage } from './images.model';
+import { ProductImage } from './productimages.model';
 
 @Injectable({
   providedIn: 'root'
@@ -79,8 +79,10 @@ export class ImagesFirebase {
   // Get product images without folder (unorganized images)
   async getUnorganizedProductImages(): Promise<ProductImage[]> {
     const collectionRef = collection(this.firestore, this.COLLECTION_NAME);
-    const q = query(collectionRef, where('folderId', '==', null));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ProductImage));
+    // Get all images and filter for those without folderId
+    const snapshot = await getDocs(collectionRef);
+    return snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() } as ProductImage))
+      .filter(img => !img.folderId); // Filter images without folderId
   }
 }

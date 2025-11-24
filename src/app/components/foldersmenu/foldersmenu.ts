@@ -1,5 +1,5 @@
 import { Component, inject, input, signal } from '@angular/core';
-import { FoldersStore } from '../../features/folders/folders.store';
+import { FoldersService } from '../../features/folders/folders.service';
 import { Folder, ItemType, SPECIAL_FOLDERS } from '../../features/folders/folders.model';
 import { ToastService } from '../../features/toast/toast.service';
 import { FoldersmenuNew } from './foldersmenu-new/foldersmenu-new';
@@ -14,7 +14,7 @@ import { FoldersmenuItem } from './foldersmenu-item/foldersmenu-item';
   styleUrl: './foldersmenu.scss',
 })
 export class Foldersmenu {
-  private foldersStore = inject(FoldersStore);
+  private foldersStore = inject(FoldersService);
   private toastService = inject(ToastService);
 
   itemType = input<ItemType>();

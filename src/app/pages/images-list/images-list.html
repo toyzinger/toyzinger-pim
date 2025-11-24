@@ -1,7 +1,29 @@
 <main class="images-list">
   <app-sidebar></app-sidebar>
   <section class="images-list__content">
-    <h1>Images</h1>
-    <p>Manage your product images</p>
+    <div class="header">
+      <div>
+        <h1>Images</h1>
+        @if (selectedFolder()) {
+        <p>{{ selectedFolder()!.name }} - {{ images().length }} images</p>
+        } @else {
+        <p>Select a folder to view images</p>
+        }
+      </div>
+    </div>
+
+    @if (loading()) {
+    <div class="loading">Loading images...</div>
+    } @else if (error()) {
+    <div class="error">{{ error() }}</div>
+    } @else if (images().length === 0) {
+    <div class="empty">No images found in this folder</div>
+    } @else {
+    <div class="images-list-container">
+      @for (image of images(); track image.id) {
+      <app-images-list-item [image]="image" />
+      }
+    </div>
+    }
   </section>
 </main>

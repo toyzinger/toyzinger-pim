@@ -1,5 +1,5 @@
 import { Component, model, computed, signal, inject, OnInit, effect } from '@angular/core';
-import { FoldersStore } from '../../features/folders/folders.store';
+import { FoldersService } from '../../features/folders/folders.service';
 import { Folder } from '../../features/folders/folders.model';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
 
@@ -10,7 +10,7 @@ import { FormSelect, SelectOption } from '../form/form-select/form-select';
   styleUrl: './folders-dropdown.scss',
 })
 export class FoldersDropdown implements OnInit {
-  private foldersStore = inject(FoldersStore);
+  private foldersStore = inject(FoldersService);
 
   // Internal signals for the two dropdowns (public for template binding)
   firstLevelFolderId = signal<string>('');

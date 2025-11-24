@@ -1,7 +1,7 @@
 import { Component, input, output, computed, signal, inject } from '@angular/core';
 import { Folder } from '../../../features/folders/folders.model';
 import { FormInput } from '../../form/form-input/form-input';
-import { FoldersStore } from '../../../features/folders/folders.store';
+import { FoldersService } from '../../../features/folders/folders.service';
 
 @Component({
   selector: 'app-foldersmenu-new',
@@ -10,7 +10,7 @@ import { FoldersStore } from '../../../features/folders/folders.store';
   styleUrl: './foldersmenu-new.scss',
 })
 export class FoldersmenuNew {
-  private foldersStore = inject(FoldersStore);
+  private foldersStore = inject(FoldersService);
 
   createFolder = output<string>();
   cancel = output<void>();

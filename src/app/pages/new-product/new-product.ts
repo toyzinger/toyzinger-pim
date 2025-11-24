@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Product } from '../../features/products/products.model';
 import { ProductForm } from '../../components/product-form/product-form';
-import { ProductsStore } from '../../features/products/products.store';
+import { ProductsService } from '../../features/products/products.service';
 import { ToastService } from '../../features/toast/toast.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { ToastService } from '../../features/toast/toast.service';
   styleUrl: './new-product.scss',
 })
 export class NewProduct {
-  private productsStore = inject(ProductsStore);
+  private productsStore = inject(ProductsService);
   private toastService = inject(ToastService);
 
   // Expose store state to template

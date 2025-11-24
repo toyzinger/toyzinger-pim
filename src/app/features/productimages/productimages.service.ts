@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { ProductImage, ImageUploadResult, UploadItem } from './images.model';
-import { ImagesFirebase } from './images.firebase';
-import { ImagesApi } from './images.api';
+import { ProductImage, ImageUploadResult, UploadItem } from './productimages.model';
+import { ImagesFirebase } from './productimages.firebase';
+import { ImagesApi } from './productimages.api';
 import { HttpEventType } from '@angular/common/http';
 
 @Injectable({
@@ -326,8 +326,8 @@ export class ImagesService {
         if (uploadedItem?.result && uploadedItem.status === 'success') {
           const imageData: Omit<ProductImage, 'id'> = {
             filename: uploadedItem.result.filename,
-            folderId: folderId,
-            alt: alt,
+            ...(folderId && { folderId }), // Only include folderId if it has a value
+            ...(alt && { alt }), // Only include alt if it has a value
           };
 
           try {

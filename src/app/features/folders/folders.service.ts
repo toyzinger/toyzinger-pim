@@ -5,8 +5,8 @@ import { Folder, ItemType, SPECIAL_FOLDERS } from './folders.model';
 @Injectable({
   providedIn: 'root'
 })
-export class FoldersStore {
-  private foldersService = inject(FoldersFirebase);
+export class FoldersService {
+  private foldersFirabase = inject(FoldersFirebase);
 
   // ========================================
   // STATE (Private signals)
@@ -97,7 +97,7 @@ export class FoldersStore {
     this._error.set(null);
 
     try {
-      const folders = await this.foldersService.getFolders();
+      const folders = await this.foldersFirabase.getFolders();
       this._folders.set(folders);
     } catch (error) {
       this._error.set(error instanceof Error ? error.message : 'Failed to load folders');
@@ -113,7 +113,7 @@ export class FoldersStore {
     this._error.set(null);
 
     try {
-      const id = await this.foldersService.createFolder(folder);
+      const id = await this.foldersFirabase.createFolder(folder);
 
       // Optimistic update
       const newFolder: Folder = { ...folder, id };
@@ -133,7 +133,7 @@ export class FoldersStore {
     this._error.set(null);
 
     try {
-      await this.foldersService.updateFolder(id, data);
+      await this.foldersFirabase.updateFolder(id, data);
 
       // Optimistic update
       this._folders.update(folders =>
@@ -142,7 +142,7 @@ export class FoldersStore {
 
       // Update selected folder if it's the one being updated
       if (this._selectedFolder()?.id === id) {
-        this._selectedFolder.update(f => f ? { ...f, ...data} : null);
+        this._selectedFolder.update(f => f ? { ...f, ...data } : null);
       }
     } catch (error) {
       this._error.set(error instanceof Error ? error.message : 'Failed to update folder');
@@ -159,7 +159,7 @@ export class FoldersStore {
     this._error.set(null);
 
     try {
-      await this.foldersService.deleteFolder(id);
+      await this.foldersFirabase.deleteFolder(id);
 
       // Optimistic update - remove deleted folder and its children
       this._folders.update(folders =>
@@ -270,7 +270,7 @@ export class FoldersStore {
   // Get items in a folder
   async getFolderItemIds(folderId: string, itemType?: ItemType): Promise<string[]> {
     try {
-      return await this.foldersService.getFolderItemIds(folderId, itemType);
+      return await this.foldersFirabase.getFolderItemIds(folderId, itemType);
     } catch (error) {
       this._error.set(error instanceof Error ? error.message : 'Failed to get folder items');
       console.error('Error getting folder items:', error);
@@ -281,7 +281,7 @@ export class FoldersStore {
   // Get count of items in folder
   async getFolderItemCount(folderId: string, itemType: ItemType): Promise<number> {
     try {
-      return await this.foldersService.getFolderItemCount(folderId, itemType);
+      return await this.foldersFirabase.getFolderItemCount(folderId, itemType);
     } catch (error) {
       this._error.set(error instanceof Error ? error.message : 'Failed to get item count');
       console.error('Error getting item count:', error);
@@ -292,7 +292,7 @@ export class FoldersStore {
   // Add item to folder
   async addItemToFolder(folderId: string, itemId: string, itemType: ItemType): Promise<void> {
     try {
-      await this.foldersService.addItemToFolder(folderId, itemId, itemType);
+      await this.foldersFirabase.addItemToFolder(folderId, itemId, itemType);
     } catch (error) {
       this._error.set(error instanceof Error ? error.message : 'Failed to add item to folder');
       console.error('Error adding item to folder:', error);
@@ -303,7 +303,7 @@ export class FoldersStore {
   // Remove item from folder
   async removeItemFromFolder(folderId: string, itemId: string, itemType: ItemType): Promise<void> {
     try {
-      await this.foldersService.removeItemFromFolder(folderId, itemId, itemType);
+      await this.foldersFirabase.removeItemFromFolder(folderId, itemId, itemType);
     } catch (error) {
       this._error.set(error instanceof Error ? error.message : 'Failed to remove item from folder');
       console.error('Error removing item from folder:', error);
@@ -314,7 +314,7 @@ export class FoldersStore {
   // Get uncategorized items
   async getUncategorizedItemIds(allItemIds: string[], itemType: ItemType): Promise<string[]> {
     try {
-      return await this.foldersService.getUncategorizedItemIds(allItemIds, itemType);
+      return await this.foldersFirabase.getUncategorizedItemIds(allItemIds, itemType);
     } catch (error) {
       this._error.set(error instanceof Error ? error.message : 'Failed to get uncategorized items');
       console.error('Error getting uncategorized items:', error);

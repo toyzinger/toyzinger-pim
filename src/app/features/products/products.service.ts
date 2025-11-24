@@ -5,8 +5,8 @@ import { ProductsFirebase } from './products.firebase';
 @Injectable({
   providedIn: 'root',
 })
-export class ProductsStore {
-  private productsService = inject(ProductsFirebase);
+export class ProductsService {
+  private productsFirabse = inject(ProductsFirebase);
 
   // ========================================
   // STATE (Private signals)
@@ -79,7 +79,7 @@ export class ProductsStore {
     this._loading.set(true);
     this._error.set(null);
     try {
-      const products = await this.productsService.getProducts();
+      const products = await this.productsFirabse.getProducts();
       this._products.set(products);
     } catch (error) {
       this._error.set('Failed to load products');
@@ -94,7 +94,7 @@ export class ProductsStore {
     this._loading.set(true);
     this._error.set(null);
     try {
-      const id = await this.productsService.addProduct(product);
+      const id = await this.productsFirabse.addProduct(product);
       // Optimistic update
       const newProduct: Product = { ...product, id };
       this._products.update(products => [...products, newProduct]);
@@ -120,7 +120,7 @@ export class ProductsStore {
       this._products.set(updatedProducts);
 
       // Update in Firebase
-      await this.productsService.updateProduct(id, data);
+      await this.productsFirabse.updateProduct(id, data);
 
       // Update selected product if it's the one being updated
       if (this._selectedProduct()?.id === id) {
@@ -146,7 +146,7 @@ export class ProductsStore {
       this._products.update(products => products.filter(p => p.id !== id));
 
       // Delete from Firebase
-      await this.productsService.deleteProduct(id);
+      await this.productsFirabse.deleteProduct(id);
 
       // Clear selected product if it's the one being deleted
       if (this._selectedProduct()?.id === id) {
@@ -207,7 +207,7 @@ export class ProductsStore {
     this._loading.set(true);
     this._error.set(null);
     try {
-      const products = await this.productsService.getProductsByFranchise(franchiseId);
+      const products = await this.productsFirabse.getProductsByFranchise(franchiseId);
       this._products.set(products);
     } catch (error) {
       this._error.set('Failed to load products by franchise');
@@ -222,7 +222,7 @@ export class ProductsStore {
     this._loading.set(true);
     this._error.set(null);
     try {
-      const products = await this.productsService.getProductsByManufacturer(manufacturerId);
+      const products = await this.productsFirabse.getProductsByManufacturer(manufacturerId);
       this._products.set(products);
     } catch (error) {
       this._error.set('Failed to load products by manufacturer');
@@ -237,7 +237,7 @@ export class ProductsStore {
     this._loading.set(true);
     this._error.set(null);
     try {
-      const products = await this.productsService.getActiveProducts();
+      const products = await this.productsFirabse.getActiveProducts();
       this._products.set(products);
     } catch (error) {
       this._error.set('Failed to load active products');

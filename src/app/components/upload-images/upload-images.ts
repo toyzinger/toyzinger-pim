@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { ImagesService } from '../../features/images/images.service';
-import { UploadItem } from '../../features/images/images.model';
+import { ImagesService } from '../../features/productimages/productimages.service';
+import { UploadItem } from '../../features/productimages/productimages.model';
 import { FoldersDropdown } from '../../components/folders-dropdown/folders-dropdown';
 import { FormInput } from '../../components/form/form-input/form-input';
 
