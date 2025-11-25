@@ -13,6 +13,6 @@ export class ImagesList implements OnInit {
   private globalService = inject(GlobalService);
 
   ngOnInit() {
-    this.globalService.setItemType('image');
+    this.globalService.setItemType('images');
   }
 }

@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, input, model, signal } from '@angular/core';
 import { FormSelect, SelectOption } from '../../form/form-select/form-select';
-import { MultilingualString } from '../../../features/languages/languages.model';
+import { MultilingualString } from '../../../features/global/global.model';
 import { DimensionsService } from '../../../features/dimensions/dimensions.service';
 
 @Component({

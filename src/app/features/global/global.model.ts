@@ -1,15 +1,13 @@
 /**
- * Type of draggable element
+ * Type of draggable element and item context
  */
-export type DragType = 'images' | 'products';
-
-export type ItemType = 'product' | 'image';
+export type ItemType = 'images' | 'products';
 
 /**
  * Data structure for drag operations
  */
 export interface DragData {
-  type: DragType;
+  type: ItemType;
   ids: string[];
 }
 
@@ -20,3 +18,12 @@ export interface FolderDropEvent {
   folderId: string;
   timestamp: number;
 }
+
+// Language type
+export type Language = 'en' | 'es';
+
+// Multilingual string using Language type
+export type MultilingualString = Record<Language, string>;
+
+// Multilingual array of strings using Language type
+export type MultilingualStringArray = Record<Language, string[]>;

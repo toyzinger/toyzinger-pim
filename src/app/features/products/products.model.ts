@@ -1,4 +1,4 @@
-import { MultilingualStringArray, MultilingualString } from '../languages/languages.model';
+import { MultilingualStringArray, MultilingualString } from '../global/global.model';
 import { ProductImage } from '../productimages/productimages.model';
 
 export interface Product {

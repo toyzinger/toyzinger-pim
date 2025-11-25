@@ -13,6 +13,6 @@ export class ProductsList implements OnInit {
   private globalService = inject(GlobalService);
 
   ngOnInit() {
-    this.globalService.setItemType('product');
+    this.globalService.setItemType('products');
   }
 }

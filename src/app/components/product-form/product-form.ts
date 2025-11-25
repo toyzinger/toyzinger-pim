@@ -1,6 +1,6 @@
 import { Component, input, output, signal, effect } from '@angular/core';
 import { Product } from '../../features/products/products.model';
-import { MultilingualString } from '../../features/languages/languages.model';
+import { MultilingualString } from '../../features/global/global.model';
 import { FormComponents } from '../form/form';
 import { ProductFormFranchise } from "./product-form-franchise/product-form-franchise";
 import { ProductFormManufacturer } from "./product-form-manufacturer/product-form-manufacturer";

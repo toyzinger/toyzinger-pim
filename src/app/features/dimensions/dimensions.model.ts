@@ -1,4 +1,4 @@
-import { MultilingualString } from '../languages/languages.model';
+import { MultilingualString } from '../global/global.model';
 
 // Base interface for all dimensions
 export interface DimensionBase {
