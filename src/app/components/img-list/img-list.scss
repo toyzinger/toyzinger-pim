@@ -59,6 +59,11 @@
       text-align: center;
     }
 
+    &--drag {
+      width: 50px;
+      text-align: center;
+    }
+
     &--thumbnail {
       width: 100px;
     }
@@ -114,6 +119,27 @@
     text-align: center;
   }
 
+  &__drag {
+    width: 50px;
+    text-align: center;
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    .material-icons-outlined {
+      font-size: 1.25rem;
+      color: $gray-500;
+      opacity: 0;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    &:hover .material-icons-outlined {
+      opacity: 1;
+    }
+  }
+
   &__thumbnail {
     width: 100px; // Increased from 80px
     padding-right: 1.5rem; // Extra spacing after thumbnail
@@ -149,8 +175,8 @@
   }
 
   &__actions {
-    width: 80px; // Increased from 60px
-    text-align: right;
+    width: 80px;
+    text-align: center;
     padding-left: 1rem;
   }
 }

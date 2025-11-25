@@ -27,44 +27,35 @@ export class ImgListItem {
   constructor() {
     // Initialize alt text from image when it changes
     effect(() => {
-      const img = this.image();
-      this.altText.set(img.alt || '');
+      const image = this.image();
+      this.altText.set(image.alt || '');
     });
   }
 
-  async updateAlt() {
-    const img = this.image();
-    const newAlt = this.altText();
+  onAltBlur() {
+    const image = this.image();
+    const currentAlt = image.alt || '';
+    const newAlt = this.altText().trim();
 
-    if (img.id && newAlt !== img.alt) {
-      try {
-        await this.imagesService.updateImage(img.id, { alt: newAlt });
-        this.isEditing.set(false);
-      } catch (error) {
-        console.error('Failed to update alt text:', error);
-      }
+    // Only save if changed
+    if (newAlt !== currentAlt && image.id) {
+      this.imagesService.updateImage(image.id, { alt: newAlt });
     }
   }
 
   async deleteImage() {
-    const img = this.image();
+    const image = this.image();
+    if (!image.id) return;
 
-    if (!img.id) return;
+    const confirmed = confirm(`Are you sure you want to delete "${image.filename}"?`);
+    if (!confirmed) return;
 
-    const confirmed = confirm(`Are you sure you want to delete "${img.filename}"? This action cannot be undone.`);
-
-    if (confirmed) {
-      try {
-        // Delete from Firestore and API
-        await this.imagesService.deleteImage(img.id);
-      } catch (error) {
-        console.error('Failed to delete image:', error);
-      }
+    try {
+      await this.imagesService.deleteImage(image.id);
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      alert('Failed to delete image');
     }
-  }
-
-  onAltBlur() {
-    this.updateAlt();
   }
 
   onCheckboxChange() {

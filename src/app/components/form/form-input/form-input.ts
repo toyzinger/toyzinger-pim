@@ -18,8 +18,15 @@ export class FormInput {
   // Two-way binding with model signal
   value = model<string | number | undefined>('');
 
+  // Outputs
+  blur = output<void>();
+
   onInput(event: Event) {
     const target = event.target as HTMLInputElement;
     this.value.set(target.value);
+  }
+
+  onBlur() {
+    this.blur.emit();
   }
 }

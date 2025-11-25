@@ -8,6 +8,8 @@
       (change)="onChange($event)"
       [disabled]="disabled()"
     />
+    @if (label()) {
     <span>{{ label() }}</span>
+    }
   </label>
 </div>

@@ -1,22 +1,22 @@
 <div class="folders-menu-item">
-  <div
-    class="folders-menu-item__folder"
+  <div class="folders-menu-item__folder"
     [class.folders-menu-item__folder--selected]="isSelected()"
+    [class.folders-menu-item__folder--drag-over]="isDragOver()"
     [style.padding-left.rem]="level() * 1"
     (click)="onSelectFolder($event)"
-  >
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)">
     @if (hasChildren()) {
-      <button
-        class="folders-menu-item__toggle btn-tertiary btn-icon"
-        (click)="onToggleFolder($event)"
-        type="button"
-      >
-        <span class="material-icons-outlined">
-          {{ isExpanded() ? 'expand_more' : 'chevron_right' }}
-        </span>
-      </button>
+    <button class="folders-menu-item__toggle btn-tertiary btn-icon"
+      (click)="onToggleFolder($event)"
+      type="button">
+      <span class="material-icons-outlined">
+        {{ isExpanded() ? 'expand_more' : 'chevron_right' }}
+      </span>
+    </button>
     } @else {
-      <span class="folders-menu-item__spacer"></span>
+    <span class="folders-menu-item__spacer"></span>
     }
 
     <span class="material-icons-outlined folders-menu-item__icon">
@@ -27,18 +27,18 @@
   </div>
 
   @if (isExpanded() && hasChildren()) {
-    <div class="folders-menu-item__children">
-      @for (subfolder of getSubfolders(); track subfolder.id) {
-        <app-folders-menu-item
-          [folder]="subfolder"
-          [allFolders]="allFolders()"
-          [selectedFolderId]="selectedFolderId()"
-          [expandedFolderIds]="expandedFolderIds()"
-          [level]="level() + 1"
-          (folderSelected)="folderSelected.emit($event)"
-          (folderToggled)="folderToggled.emit($event)"
-        />
-      }
-    </div>
+  <div class="folders-menu-item__children">
+    @for (subfolder of getSubfolders(); track subfolder.id) {
+    <app-folders-menu-item
+      [folder]="subfolder"
+      [allFolders]="allFolders()"
+      [selectedFolderId]="selectedFolderId()"
+      [expandedFolderIds]="expandedFolderIds()"
+      [level]="level() + 1"
+      (folderSelected)="folderSelected.emit($event)"
+      (folderToggled)="folderToggled.emit($event)"
+    />
+    }
+  </div>
   }
 </div>

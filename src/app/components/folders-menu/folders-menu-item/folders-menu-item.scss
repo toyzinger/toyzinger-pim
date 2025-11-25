@@ -1,4 +1,5 @@
 @use '../../../../styles/variables' as *;
+@use 'sass:color';
 
 .folders-menu-item {
   &__folder {
@@ -21,6 +22,12 @@
       .folders-menu-item__icon {
         color: $color-primary;
       }
+    }
+
+    &--drag-over {
+      background: color.adjust($color-primary, $alpha: -0.9);
+      border-left: 3px solid $color-primary;
+      padding-left: calc(0.875rem - 3px); // Compensate for border
     }
   }
 

@@ -99,6 +99,17 @@ export class FoldersService {
     try {
       const folders = await this.foldersFirabase.getFolders();
       this._folders.set(folders);
+
+      // Select UNASSIGNED folder by default if no folder is selected
+      if (!this._selectedFolder()) {
+        const unassignedFolder = this.allFolders().find(f => f.id === SPECIAL_FOLDERS.UNASSIGNED);
+        if (unassignedFolder) {
+          this._selectedFolder.set(unassignedFolder);
+        }
+      }
+
+      // Expand ROOT folder by default
+      this.expandFolder(SPECIAL_FOLDERS.ROOT);
     } catch (error) {
       this._error.set(error instanceof Error ? error.message : 'Failed to load folders');
       console.error('Error loading folders:', error);

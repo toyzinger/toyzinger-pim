@@ -1,5 +1,6 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, inject, input, output, computed, signal } from '@angular/core';
 import { Folder, SPECIAL_FOLDERS } from '../../../features/folders/folders.model';
+import { GlobalService } from '../../../features/global/global.service';
 
 @Component({
   selector: 'app-folders-menu-item',
@@ -8,14 +9,21 @@ import { Folder, SPECIAL_FOLDERS } from '../../../features/folders/folders.model
   styleUrl: './folders-menu-item.scss',
 })
 export class FoldersmenuItem {
+  private global = inject(GlobalService);
+
+  // Inputs
   folder = input.required<Folder>();
   allFolders = input.required<Folder[]>();
   selectedFolderId = input<string | null>(null);
   expandedFolderIds = input.required<Set<string>>();
   level = input<number>(0);
 
+  // Outputs
   folderSelected = output<Folder>();
   folderToggled = output<Folder>();
+
+  // Track drag over state
+  isDragOver = signal(false);
 
   getSubfolders(): Folder[] {
     const currentFolder = this.folder();
@@ -61,11 +69,52 @@ export class FoldersmenuItem {
 
   onSelectFolder(event: Event) {
     event.stopPropagation();
+
+    // Don't allow selecting ROOT folder - only expand/collapse
+    if (this.folder().id === SPECIAL_FOLDERS.ROOT) {
+      return;
+    }
+
     this.folderSelected.emit(this.folder());
   }
 
   onToggleFolder(event: Event) {
     event.stopPropagation();
     this.folderToggled.emit(this.folder());
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Don't allow drop on ROOT folder - only on UNASSIGNED and regular folders
+    if (this.folder().id === SPECIAL_FOLDERS.ROOT) {
+      return;
+    }
+
+    this.isDragOver.set(true);
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.stopPropagation();
+    this.isDragOver.set(false);
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver.set(false);
+
+    const folderId = this.folder().id;
+
+    // Don't allow dropping into ROOT - it's just a container
+    if (this.folder().id === SPECIAL_FOLDERS.ROOT) {
+      return;
+    }
+
+    // Notify global service
+    if (folderId) {
+      this.global.notifyFolderDrop(folderId);
+    }
   }
 }

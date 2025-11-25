@@ -1,8 +1,11 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
+import { deleteField } from '@angular/fire/firestore';
 import { ProductImage, ImageUploadResult, UploadItem } from './productimages.model';
 import { ImagesFirebase } from './productimages.firebase';
 import { ImagesApi } from './productimages.api';
 import { HttpEventType } from '@angular/common/http';
+import { FoldersService } from '../folders/folders.service';
+import { SPECIAL_FOLDERS } from '../folders/folders.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,17 +13,15 @@ import { HttpEventType } from '@angular/common/http';
 export class ImagesService {
   private imagesFirebase = inject(ImagesFirebase);
   private imagesService = inject(ImagesApi);
+  private foldersService = inject(FoldersService);
 
   // ========================================
   // STATE (Private signals)
   // ========================================
 
   private _images = signal<ProductImage[]>([]);
-  private _selectedImage = signal<ProductImage | null>(null);
   private _loading = signal<boolean>(false);
   private _error = signal<string | null>(null);
-  private _searchTerm = signal<string>('');
-  private _filterByFolderId = signal<string | null>(null);
   private _uploadQueue = signal<UploadItem[]>([]);
   private _uploading = signal<boolean>(false);
 
@@ -29,11 +30,8 @@ export class ImagesService {
   // ========================================
 
   images = this._images.asReadonly();
-  selectedImage = this._selectedImage.asReadonly();
   loading = this._loading.asReadonly();
   error = this._error.asReadonly();
-  searchTerm = this._searchTerm.asReadonly();
-  filterByFolderId = this._filterByFolderId.asReadonly();
   uploadQueue = this._uploadQueue.asReadonly();
   uploading = this._uploading.asReadonly();
 
@@ -44,27 +42,28 @@ export class ImagesService {
   // Total count of images
   imageCount = computed(() => this._images().length);
 
-  // Images filtered by search term and folder
+  // Images filtered by folder
   filteredImages = computed(() => {
     let images = this._images();
-    const search = this._searchTerm().toLowerCase();
-    const folderId = this._filterByFolderId();
+    const selectedFolder = this.foldersService.selectedFolder();
 
-    // Filter by folder
-    if (folderId !== null) {
-      images = images.filter(img => img.folderId === folderId);
+    // No folder selected - show nothing
+    if (!selectedFolder) {
+      return [];
     }
 
-    // Filter by search term
-    if (search) {
-      images = images.filter(
-        (img) =>
-          img.filename.toLowerCase().includes(search) ||
-          img.alt?.toLowerCase().includes(search)
-      );
+    // UNASSIGNED - show images without folderId
+    if (selectedFolder.id === SPECIAL_FOLDERS.UNASSIGNED) {
+      return images.filter(img => !img.folderId);
     }
 
-    return images;
+    // ROOT - show all images
+    if (selectedFolder.id === SPECIAL_FOLDERS.ROOT) {
+      return images;
+    }
+
+    // Regular folder - filter by folderId
+    return images.filter(img => img.folderId === selectedFolder.id);
   });
 
   // Unorganized images (without folder)
@@ -156,11 +155,6 @@ export class ImagesService {
 
       // Update in Firebase
       await this.imagesFirebase.updateProductImage(id, data);
-
-      // Update selected image if it's the one being updated
-      if (this._selectedImage()?.id === id) {
-        this._selectedImage.update(img => img ? { ...img, ...data } : null);
-      }
     } catch (error) {
       this._error.set('Failed to update image');
       console.error('Error updating image:', error);
@@ -182,16 +176,72 @@ export class ImagesService {
 
       // Delete from Firebase
       await this.imagesFirebase.deleteProductImage(id);
-
-      // Clear selected image if it's the one being deleted
-      if (this._selectedImage()?.id === id) {
-        this._selectedImage.set(null);
-      }
     } catch (error) {
       this._error.set('Failed to delete image');
       console.error('Error deleting image:', error);
       // Reload images to revert optimistic update
       await this.loadImages();
+      throw error;
+    } finally {
+      this._loading.set(false);
+    }
+  }
+
+  /**
+   * Update multiple images with the same data
+   * @param ids - Array of image IDs to update
+   * @param data - Partial image data to apply to all images
+   */
+  async updateMultipleImages(ids: string[], data: Partial<ProductImage>): Promise<void> {
+    if (ids.length === 0) return;
+
+    this._loading.set(true);
+    this._error.set(null);
+    try {
+      // Prepare update data - handle undefined values with deleteField()
+      const updateData: any = {};
+      for (const [key, value] of Object.entries(data)) {
+        if (value === undefined) {
+          // Use deleteField() to remove the field from Firebase
+          updateData[key] = deleteField();
+        } else {
+          updateData[key] = value;
+        }
+      }
+
+      // Update each image in Firebase in parallel
+      await Promise.all(
+        ids.map(id => this.imagesFirebase.updateProductImage(id, updateData))
+      );
+
+      // Reload images based on current selected folder to maintain UI state
+      const selectedFolder = this.foldersService.selectedFolder();
+      if (selectedFolder && selectedFolder.id !== SPECIAL_FOLDERS.ROOT) {
+        // Reload filtered images to maintain current folder view
+        if (selectedFolder.id === SPECIAL_FOLDERS.UNASSIGNED) {
+          await this.loadUnorganizedImages();
+        } else {
+          await this.loadImagesByFolder(selectedFolder.id!);
+        }
+      } else {
+        // Reload all images
+        await this.loadImages();
+      }
+    } catch (error) {
+      this._error.set('Failed to update images');
+      console.error('Error updating multiple images:', error);
+
+      // Rollback: reload based on current folder
+      const selectedFolder = this.foldersService.selectedFolder();
+      if (selectedFolder && selectedFolder.id !== SPECIAL_FOLDERS.ROOT) {
+        if (selectedFolder.id === SPECIAL_FOLDERS.UNASSIGNED) {
+          await this.loadUnorganizedImages();
+        } else {
+          await this.loadImagesByFolder(selectedFolder.id!);
+        }
+      } else {
+        await this.loadImages();
+      }
       throw error;
     } finally {
       this._loading.set(false);
@@ -390,32 +440,6 @@ export class ImagesService {
   // UI STATE ACTIONS
   // ========================================
 
-  // Select image
-  selectImage(image: ProductImage | null): void {
-    this._selectedImage.set(image);
-  }
-
-  // Set search term
-  setSearchTerm(term: string): void {
-    this._searchTerm.set(term);
-  }
-
-  // Clear search
-  clearSearch(): void {
-    this._searchTerm.set('');
-  }
-
-  // Set folder filter
-  setFolderFilter(folderId: string | null): void {
-    this._filterByFolderId.set(folderId);
-  }
-
-  // Clear all filters
-  clearFilters(): void {
-    this._searchTerm.set('');
-    this._filterByFolderId.set(null);
-  }
-
   // Clear error
   clearError(): void {
     this._error.set(null);
@@ -450,21 +474,6 @@ export class ImagesService {
     } catch (error) {
       this._error.set('Failed to load unorganized images');
       console.error('Error loading unorganized images:', error);
-    } finally {
-      this._loading.set(false);
-    }
-  }
-
-  // Search images
-  async searchImages(searchTerm: string): Promise<void> {
-    this._loading.set(true);
-    this._error.set(null);
-    try {
-      const images = await this.imagesFirebase.searchProductImages(searchTerm);
-      this._images.set(images);
-    } catch (error) {
-      this._error.set('Failed to search images');
-      console.error('Error searching images:', error);
     } finally {
       this._loading.set(false);
     }
