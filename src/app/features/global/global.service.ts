@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { DragData, FolderDropEvent } from './global.model';
+import { DragData, FolderDropEvent, ItemType } from './global.model';
 
 /**
  * Global service for cross-component communication and shared state
@@ -9,6 +9,21 @@ import { DragData, FolderDropEvent } from './global.model';
   providedIn: 'root',
 })
 export class GlobalService {
+  // ========================================
+  // APP STATE
+  // ========================================
+
+  // Current item type context (product or image)
+  private _itemType = signal<ItemType | null>(null);
+
+  // Current item type as readonly signal
+  itemType = this._itemType.asReadonly();
+
+  // Set the current item type
+  setItemType(type: ItemType): void {
+    this._itemType.set(type);
+  }
+
   // ========================================
   // DRAG AND DROP ON FOLDERS FUNCTIONALITY
   // ========================================

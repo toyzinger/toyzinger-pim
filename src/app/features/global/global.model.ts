@@ -3,6 +3,8 @@
  */
 export type DragType = 'images' | 'products';
 
+export type ItemType = 'product' | 'image';
+
 /**
  * Data structure for drag operations
  */

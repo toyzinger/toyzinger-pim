@@ -1,10 +1,10 @@
+import { ItemType } from '../global/global.model';
+
 // Special folder IDs
 export const SPECIAL_FOLDERS = {
   ROOT: 'root',
   UNASSIGNED: 'unassigned',
 } as const;
-
-export type ItemType = 'product' | 'image';
 
 export interface Folder {
   id?: string;

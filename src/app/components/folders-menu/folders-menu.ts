@@ -1,11 +1,13 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, Signal, signal } from '@angular/core';
 import { FoldersService } from '../../features/folders/folders.service';
-import { Folder, ItemType, SPECIAL_FOLDERS } from '../../features/folders/folders.model';
+import { Folder, SPECIAL_FOLDERS } from '../../features/folders/folders.model';
 import { ToastService } from '../../features/toast/toast.service';
+import { GlobalService } from '../../features/global/global.service';
 import { FoldersmenuNew } from './folders-menu-new/folders-menu-new';
 import { FoldersmenuRename } from './folders-menu-rename/folders-menu-rename';
 import { FoldersmenuDelete } from './folders-menu-delete/folders-menu-delete';
 import { FoldersmenuItem } from './folders-menu-item/folders-menu-item';
+import { ItemType } from '../../features/global/global.model';
 
 @Component({
   selector: 'app-folders-menu',
@@ -21,8 +23,9 @@ import { FoldersmenuItem } from './folders-menu-item/folders-menu-item';
 export class Foldersmenu {
   private foldersStore = inject(FoldersService);
   private toastService = inject(ToastService);
+  private globalService = inject(GlobalService);
 
-  itemType = input<ItemType>();
+  itemType: Signal<ItemType | null> = this.globalService.itemType;
 
   // Expose store state to template
   folders = this.foldersStore.allFolders;

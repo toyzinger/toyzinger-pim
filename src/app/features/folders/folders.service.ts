@@ -1,6 +1,7 @@
 import { Injectable, computed, signal, inject } from '@angular/core';
 import { FoldersFirebase } from './folders.firebase';
-import { Folder, ItemType, SPECIAL_FOLDERS } from './folders.model';
+import { ItemType } from '../global/global.model';
+import { Folder, FolderItem, SPECIAL_FOLDERS } from './folders.model';
 
 @Injectable({
   providedIn: 'root'
