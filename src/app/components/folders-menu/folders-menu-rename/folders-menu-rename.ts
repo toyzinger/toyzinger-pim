@@ -4,10 +4,10 @@ import { FormInput } from '../../form/form-input/form-input';
 import { FoldersService } from '../../../features/folders/folders.service';
 
 @Component({
-  selector: 'app-foldersmenu-rename',
+  selector: 'app-folders-menu-rename',
   imports: [FormInput],
-  templateUrl: './foldersmenu-rename.html',
-  styleUrl: './foldersmenu-rename.scss',
+  templateUrl: './folders-menu-rename.html',
+  styleUrl: './folders-menu-rename.scss',
 })
 export class FoldersmenuRename {
   private foldersStore = inject(FoldersService);

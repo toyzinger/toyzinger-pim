@@ -2,16 +2,21 @@ import { Component, inject, input, signal } from '@angular/core';
 import { FoldersService } from '../../features/folders/folders.service';
 import { Folder, ItemType, SPECIAL_FOLDERS } from '../../features/folders/folders.model';
 import { ToastService } from '../../features/toast/toast.service';
-import { FoldersmenuNew } from './foldersmenu-new/foldersmenu-new';
-import { FoldersmenuRename } from './foldersmenu-rename/foldersmenu-rename';
-import { FoldersmenuDelete } from './foldersmenu-delete/foldersmenu-delete';
-import { FoldersmenuItem } from './foldersmenu-item/foldersmenu-item';
+import { FoldersmenuNew } from './folders-menu-new/folders-menu-new';
+import { FoldersmenuRename } from './folders-menu-rename/folders-menu-rename';
+import { FoldersmenuDelete } from './folders-menu-delete/folders-menu-delete';
+import { FoldersmenuItem } from './folders-menu-item/folders-menu-item';
 
 @Component({
-  selector: 'app-foldersmenu',
-  imports: [FoldersmenuNew, FoldersmenuRename, FoldersmenuDelete, FoldersmenuItem],
-  templateUrl: './foldersmenu.html',
-  styleUrl: './foldersmenu.scss',
+  selector: 'app-folders-menu',
+  imports: [
+    FoldersmenuItem,
+    FoldersmenuNew,
+    FoldersmenuRename,
+    FoldersmenuDelete,
+  ],
+  templateUrl: './folders-menu.html',
+  styleUrl: './folders-menu.scss',
 })
 export class Foldersmenu {
   private foldersStore = inject(FoldersService);

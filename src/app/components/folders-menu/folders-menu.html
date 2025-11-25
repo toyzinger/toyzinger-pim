@@ -1,22 +1,22 @@
-<div class="foldersmenu">
+<div class="folders-menu">
 
-  <div class="foldersmenu__header">
-    <h3 class="foldersmenu__title">Folders</h3>
-    <div class="foldersmenu__actions">
+  <div class="folders-menu__header">
+    <h3 class="folders-menu__title">Folders</h3>
+    <div class="folders-menu__actions">
       <button
-        class="foldersmenu__action-btn btn-tertiary"
+        class="folders-menu__action-btn btn-tertiary"
         title="Create folder"
         (click)="openNewFolderMenu()">
         <span class="material-icons-outlined">add</span>
       </button>
       <button
-        class="foldersmenu__action-btn btn-tertiary"
+        class="folders-menu__action-btn btn-tertiary"
         title="Rename folder"
         (click)="openRenameMenu()">
         <span class="material-icons-outlined">edit</span>
       </button>
       <button
-        class="foldersmenu__action-btn btn-tertiary"
+        class="folders-menu__action-btn btn-tertiary"
         title="Delete folder"
         (click)="openDeleteMenu()">
         <span class="material-icons-outlined">delete</span>
@@ -25,27 +25,27 @@
   </div>
 
   @if (showNewFolderMenu() || showRenameMenu() || showDeleteMenu()) {
-    <div class="foldersmenu__action-menu">
-      <div class="foldersmenu__action-menu-header">
+    <div class="folders-menu__action-menu">
+      <div class="folders-menu__action-menu-header">
         <h4>{{ actionMenuTitle() }}</h4>
-        <button class="foldersmenu__close-btn btn-tertiary btn-icon" (click)="closeActionsMenus()">
+        <button class="folders-menu__close-btn btn-tertiary btn-icon" (click)="closeActionsMenus()">
           <span class="material-icons-outlined">close</span>
         </button>
       </div>
       @if (showNewFolderMenu()) {
-        <app-foldersmenu-new
+        <app-folders-menu-new
           (createFolder)="onCreateFolder($event)"
           (cancel)="closeActionsMenus()"
         />
       }
       @if (showRenameMenu()) {
-        <app-foldersmenu-rename
+        <app-folders-menu-rename
           (renameFolder)="onRenameFolder($event)"
           (cancel)="closeActionsMenus()"
         />
       }
       @if (showDeleteMenu()) {
-        <app-foldersmenu-delete
+        <app-folders-menu-delete
           (deleteFolder)="onDeleteFolder()"
           (cancel)="closeActionsMenus()"
         />
@@ -53,9 +53,9 @@
     </div>
   }
 
-  <div class="foldersmenu__tree">
+  <div class="folders-menu__tree">
     @for (folder of getRootFolders(); track folder.id) {
-      <app-foldersmenu-item
+      <app-folders-menu-item
         [folder]="folder"
         [allFolders]="folders()"
         [selectedFolderId]="selectedFolder()?.id || null"

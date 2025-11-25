@@ -1,13 +1,13 @@
-<div class="foldersmenu-item">
+<div class="folders-menu-item">
   <div
-    class="foldersmenu-item__folder"
-    [class.foldersmenu-item__folder--selected]="isSelected()"
+    class="folders-menu-item__folder"
+    [class.folders-menu-item__folder--selected]="isSelected()"
     [style.padding-left.rem]="level() * 1"
     (click)="onSelectFolder($event)"
   >
     @if (hasChildren()) {
       <button
-        class="foldersmenu-item__toggle btn-tertiary btn-icon"
+        class="folders-menu-item__toggle btn-tertiary btn-icon"
         (click)="onToggleFolder($event)"
         type="button"
       >
@@ -16,20 +16,20 @@
         </span>
       </button>
     } @else {
-      <span class="foldersmenu-item__spacer"></span>
+      <span class="folders-menu-item__spacer"></span>
     }
 
-    <span class="material-icons-outlined foldersmenu-item__icon">
+    <span class="material-icons-outlined folders-menu-item__icon">
       {{ getFolderIcon() }}
     </span>
 
-    <span class="foldersmenu-item__name">{{ folder().name }}</span>
+    <span class="folders-menu-item__name">{{ folder().name }}</span>
   </div>
 
   @if (isExpanded() && hasChildren()) {
-    <div class="foldersmenu-item__children">
+    <div class="folders-menu-item__children">
       @for (subfolder of getSubfolders(); track subfolder.id) {
-        <app-foldersmenu-item
+        <app-folders-menu-item
           [folder]="subfolder"
           [allFolders]="allFolders()"
           [selectedFolderId]="selectedFolderId()"

@@ -1,6 +1,6 @@
 @use '../../../../styles/variables' as *;
 
-.foldersmenu-item {
+.folders-menu-item {
   &__folder {
     display: flex;
     align-items: center;
@@ -18,7 +18,7 @@
       background-color: $color-bg-light;
       color: $color-primary;
 
-      .foldersmenu-item__icon {
+      .folders-menu-item__icon {
         color: $color-primary;
       }
     }

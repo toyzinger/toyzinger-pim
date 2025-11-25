@@ -1,6 +1,6 @@
-<div class="foldersmenu-delete">
-  <div class="foldersmenu-delete__info">
-    <p class="foldersmenu-delete__warning">Are you sure you want to delete this folder?</p>
+<div class="folders-menu-delete">
+  <div class="folders-menu-delete__info">
+    <p class="folders-menu-delete__warning">Are you sure you want to delete this folder?</p>
     <app-form-input
       [value]="folderName()"
       [label]="'Folder to delete'"
@@ -8,7 +8,7 @@
     />
   </div>
 
-  <div class="foldersmenu-delete__actions">
+  <div class="folders-menu-delete__actions">
     <button class="btn-secondary" type="button" (click)="onCancel()" [disabled]="loading()">
       Cancel
     </button>

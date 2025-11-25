@@ -1,0 +1,156 @@
+@use '../../../styles/variables' as *;
+
+.header {
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: $color-text-light;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: $gray-400;
+  }
+}
+
+.loading,
+.error,
+.empty {
+  padding: 2rem;
+  text-align: center;
+  color: $gray-400;
+  font-size: 0.875rem;
+}
+
+.error {
+  color: $color-danger;
+}
+
+.images-table {
+  width: 100%;
+  border-collapse: separate; // Changed from collapse
+  border-spacing: 0 0.5rem; // Add vertical spacing between rows
+  background: transparent; // Changed from $gray-900
+
+  thead {
+    tr {
+      background: transparent;
+    }
+
+    th {
+      padding: 0.75rem 1.25rem;
+      text-align: left;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: $gray-400;
+      border-bottom: 2px solid $gray-700;
+    }
+  }
+
+  &__header {
+    &--checkbox {
+      width: 60px;
+      text-align: center;
+    }
+
+    &--thumbnail {
+      width: 100px;
+    }
+
+    &--filename {
+      width: 250px;
+    }
+
+    &--actions {
+      width: 80px;
+      text-align: right;
+    }
+  }
+
+  tbody tr {
+    background: $gray-800; // Move background to row
+    border-radius: 8px; // Rounded rows
+
+    &:first-child td:first-child {
+      border-top-left-radius: 8px;
+    }
+
+    &:first-child td:last-child {
+      border-top-right-radius: 8px;
+    }
+
+    &:last-child td:first-child {
+      border-bottom-left-radius: 8px;
+    }
+
+    &:last-child td:last-child {
+      border-bottom-right-radius: 8px;
+    }
+  }
+}
+
+// img-list-item styles
+.img-list-item {
+  background: $gray-800;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: $gray-700;
+  }
+
+  td {
+    padding: 1rem 1.25rem; // Increased from 0.75rem 1rem
+    vertical-align: middle;
+  }
+
+  &__checkbox {
+    width: 60px; // Increased from 50px
+    text-align: center;
+  }
+
+  &__thumbnail {
+    width: 100px; // Increased from 80px
+    padding-right: 1.5rem; // Extra spacing after thumbnail
+
+    img {
+      width: 80px; // Increased from 60px
+      height: 80px; // Increased from 60px
+      border-radius: 6px; // Slightly larger border radius
+      object-fit: cover;
+      background: $gray-900;
+      border: 2px solid $gray-700; // Added subtle border
+    }
+  }
+
+  &__info {
+    width: 250px; // Increased from 200px
+    padding-right: 1.5rem;
+
+    .filename {
+      font-size: 0.9375rem; // Slightly larger from 0.875rem
+      font-weight: 500;
+      color: $color-text-light;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
+  &__alt {
+    padding-right: 1.5rem;
+  }
+
+  &__actions {
+    width: 80px; // Increased from 60px
+    text-align: right;
+    padding-left: 1rem;
+  }
+}

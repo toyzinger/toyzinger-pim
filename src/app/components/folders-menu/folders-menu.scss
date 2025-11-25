@@ -1,6 +1,6 @@
 @use '../../../styles/variables' as *;
 
-.foldersmenu {
+.folders-menu {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -84,7 +84,7 @@
       background-color: $color-bg-light;
       color: $color-primary;
 
-      .foldersmenu__icon {
+      .folders-menu__icon {
         color: $color-primary;
       }
     }

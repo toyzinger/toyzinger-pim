@@ -1,19 +1,24 @@
-import { Component, input, inject, signal, effect } from '@angular/core';
-import { ProductImage } from '../../features/productimages/productimages.model';
-import { ImagesService } from '../../features/productimages/productimages.service';
-import { FormInput } from '../form/form-input/form-input';
+import { Component, input, output, inject, signal, effect } from '@angular/core';
+import { ProductImage } from '../../../features/productimages/productimages.model';
+import { ImagesService } from '../../../features/productimages/productimages.service';
+import { FormInput } from '../../form/form-input/form-input';
+import { FormCheckbox } from '../../form/form-checkbox/form-checkbox';
 
 @Component({
-  selector: 'app-images-list-item',
-  imports: [FormInput],
-  templateUrl: './images-list-item.html',
-  styleUrl: './images-list-item.scss',
+  selector: 'tr[app-img-list-item]',
+  imports: [FormInput, FormCheckbox],
+  templateUrl: './img-list-item.html',
+  styleUrl: '../img-list.scss',
 })
-export class ImagesListItem {
+export class ImgListItem {
   private imagesService = inject(ImagesService);
 
-  // Input from parent
+  // Inputs from parent
   image = input.required<ProductImage>();
+  isSelected = input<boolean>(false); // Controlled by parent
+
+  // Output to parent
+  selectionChange = output<string>(); // Emit image ID when selection changes
 
   // Local state for alt text
   altText = signal<string>('');
@@ -60,5 +65,12 @@ export class ImagesListItem {
 
   onAltBlur() {
     this.updateAlt();
+  }
+
+  onCheckboxChange() {
+    const imageId = this.image().id;
+    if (imageId) {
+      this.selectionChange.emit(imageId);
+    }
   }
 }

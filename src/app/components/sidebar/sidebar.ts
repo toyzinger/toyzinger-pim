@@ -1,5 +1,5 @@
 import { Component, signal, HostListener } from '@angular/core';
-import { Foldersmenu } from '../foldersmenu/foldersmenu';
+import { Foldersmenu } from '../folders-menu/folders-menu';
 
 @Component({
   selector: 'app-sidebar',

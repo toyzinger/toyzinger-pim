@@ -4,10 +4,10 @@ import { FormInput } from '../../form/form-input/form-input';
 import { FoldersService } from '../../../features/folders/folders.service';
 
 @Component({
-  selector: 'app-foldersmenu-new',
+  selector: 'app-folders-menu-new',
   imports: [FormInput],
-  templateUrl: './foldersmenu-new.html',
-  styleUrl: './foldersmenu-new.scss',
+  templateUrl: './folders-menu-new.html',
+  styleUrl: './folders-menu-new.scss',
 })
 export class FoldersmenuNew {
   private foldersStore = inject(FoldersService);

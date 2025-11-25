@@ -2,10 +2,10 @@ import { Component, computed, input, output } from '@angular/core';
 import { Folder, SPECIAL_FOLDERS } from '../../../features/folders/folders.model';
 
 @Component({
-  selector: 'app-foldersmenu-item',
+  selector: 'app-folders-menu-item',
   imports: [],
-  templateUrl: './foldersmenu-item.html',
-  styleUrl: './foldersmenu-item.scss'
+  templateUrl: './folders-menu-item.html',
+  styleUrl: './folders-menu-item.scss',
 })
 export class FoldersmenuItem {
   folder = input.required<Folder>();

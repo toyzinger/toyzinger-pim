@@ -4,10 +4,10 @@ import { FormInput } from '../../form/form-input/form-input';
 import { FoldersService } from '../../../features/folders/folders.service';
 
 @Component({
-  selector: 'app-foldersmenu-delete',
+  selector: 'app-folders-menu-delete',
   imports: [FormInput],
-  templateUrl: './foldersmenu-delete.html',
-  styleUrl: './foldersmenu-delete.scss',
+  templateUrl: './folders-menu-delete.html',
+  styleUrl: './folders-menu-delete.scss',
 })
 export class FoldersmenuDelete {
   private foldersStore = inject(FoldersService);
