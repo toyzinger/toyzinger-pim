@@ -16,11 +16,4 @@ export interface Folder {
   isVirtual?: boolean; // For special folders like Root, Unassigned
 }
 
-export interface FolderItem {
-  id?: string;
-  folderId: string;
-  itemId: string;
-  itemType: ItemType;
-  order: number;
-  addedAt: Date;
-}
+

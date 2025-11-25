@@ -1,7 +1,7 @@
 import { Injectable, computed, signal, inject } from '@angular/core';
 import { FoldersFirebase } from './folders.firebase';
 import { ItemType } from '../global/global.model';
-import { Folder, FolderItem, SPECIAL_FOLDERS } from './folders.model';
+import { Folder, SPECIAL_FOLDERS } from './folders.model';
 
 @Injectable({
   providedIn: 'root'
@@ -276,61 +276,4 @@ export class FoldersService {
   }
 
   // ========================================
-  // FOLDER ITEMS OPERATIONS
-  // ========================================
-
-  // Get items in a folder
-  async getFolderItemIds(folderId: string, itemType?: ItemType): Promise<string[]> {
-    try {
-      return await this.foldersFirabase.getFolderItemIds(folderId, itemType);
-    } catch (error) {
-      this._error.set(error instanceof Error ? error.message : 'Failed to get folder items');
-      console.error('Error getting folder items:', error);
-      return [];
-    }
-  }
-
-  // Get count of items in folder
-  async getFolderItemCount(folderId: string, itemType: ItemType): Promise<number> {
-    try {
-      return await this.foldersFirabase.getFolderItemCount(folderId, itemType);
-    } catch (error) {
-      this._error.set(error instanceof Error ? error.message : 'Failed to get item count');
-      console.error('Error getting item count:', error);
-      return 0;
-    }
-  }
-
-  // Add item to folder
-  async addItemToFolder(folderId: string, itemId: string, itemType: ItemType): Promise<void> {
-    try {
-      await this.foldersFirabase.addItemToFolder(folderId, itemId, itemType);
-    } catch (error) {
-      this._error.set(error instanceof Error ? error.message : 'Failed to add item to folder');
-      console.error('Error adding item to folder:', error);
-      throw error;
-    }
-  }
-
-  // Remove item from folder
-  async removeItemFromFolder(folderId: string, itemId: string, itemType: ItemType): Promise<void> {
-    try {
-      await this.foldersFirabase.removeItemFromFolder(folderId, itemId, itemType);
-    } catch (error) {
-      this._error.set(error instanceof Error ? error.message : 'Failed to remove item from folder');
-      console.error('Error removing item from folder:', error);
-      throw error;
-    }
-  }
-
-  // Get uncategorized items
-  async getUncategorizedItemIds(allItemIds: string[], itemType: ItemType): Promise<string[]> {
-    try {
-      return await this.foldersFirabase.getUncategorizedItemIds(allItemIds, itemType);
-    } catch (error) {
-      this._error.set(error instanceof Error ? error.message : 'Failed to get uncategorized items');
-      console.error('Error getting uncategorized items:', error);
-      return [];
-    }
-  }
 }

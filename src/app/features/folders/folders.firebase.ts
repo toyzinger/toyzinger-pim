@@ -12,11 +12,10 @@ import {
   getDoc,
   updateDoc,
 } from '@angular/fire/firestore';
-import { Folder, FolderItem } from './folders.model';
+import { Folder } from './folders.model';
 import { ItemType } from '../global/global.model';
 
 const FOLDERS_COLLECTION = 'folders';
-const FOLDER_ITEMS_COLLECTION = 'folder_items';
 
 @Injectable({
   providedIn: 'root',
@@ -81,101 +80,8 @@ export class FoldersFirebase {
       await this.deleteFolder(subfolder.id!); // Recursive call
     }
 
-    // Delete all folder items
-    const relationsRef = collection(this.firestore, FOLDER_ITEMS_COLLECTION);
-    const q = query(relationsRef, where('folderId', '==', folderId));
-    const snapshot = await getDocs(q);
-    const deleteItemsPromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
-    await Promise.all(deleteItemsPromises);
-
     // Finally delete the folder itself
     const folderRef = doc(this.firestore, FOLDERS_COLLECTION, folderId);
     await deleteDoc(folderRef);
-  }
-
-  // ========================================
-  // FOLDER ITEMS OPERATIONS (CRUD)
-  // ========================================
-
-  // Get items in a folder filtered by type
-  async getFolderItemIds(folderId: string, itemType?: ItemType): Promise<string[]> {
-    const relationsRef = collection(this.firestore, FOLDER_ITEMS_COLLECTION);
-
-    let q;
-    if (itemType) {
-      // Filter by type (products or images)
-      q = query(
-        relationsRef,
-        where('folderId', '==', folderId),
-        where('itemType', '==', itemType),
-        orderBy('order')
-      );
-    } else {
-      // Get all items (both products and images)
-      q = query(relationsRef, where('folderId', '==', folderId), orderBy('order'));
-    }
-
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map((doc) => doc.data()['itemId']);
-  }
-
-  // Get count of items by type in a folder
-  async getFolderItemCount(folderId: string, itemType: ItemType): Promise<number> {
-    const relationsRef = collection(this.firestore, FOLDER_ITEMS_COLLECTION);
-    const q = query(
-      relationsRef,
-      where('folderId', '==', folderId),
-      where('itemType', '==', itemType)
-    );
-    const snapshot = await getDocs(q);
-    return snapshot.size;
-  }
-
-  // Add item to folder
-  async addItemToFolder(
-    folderId: string,
-    itemId: string,
-    itemType: ItemType,
-    order: number = 0
-  ): Promise<void> {
-    const folderItemsRef = collection(this.firestore, FOLDER_ITEMS_COLLECTION);
-    await addDoc(folderItemsRef, {
-      folderId,
-      itemId,
-      itemType,
-      order,
-      addedAt: new Date(),
-    });
-  }
-
-  // Remove item from folder
-  async removeItemFromFolder(
-    folderId: string,
-    itemId: string,
-    itemType: ItemType
-  ): Promise<void> {
-    const relationsRef = collection(this.firestore, FOLDER_ITEMS_COLLECTION);
-    const q = query(
-      relationsRef,
-      where('folderId', '==', folderId),
-      where('itemId', '==', itemId),
-      where('itemType', '==', itemType)
-    );
-    const snapshot = await getDocs(q);
-    const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
-    await Promise.all(deletePromises);
-  }
-
-  // Get uncategorized items
-  async getUncategorizedItemIds(
-    allItemIds: string[],
-    itemType: ItemType
-  ): Promise<string[]> {
-    const relationsRef = collection(this.firestore, FOLDER_ITEMS_COLLECTION);
-    const q = query(relationsRef, where('itemType', '==', itemType));
-    const snapshot = await getDocs(q);
-    const categorizedIds = new Set(snapshot.docs.map((doc) => doc.data()['itemId']));
-
-    return allItemIds.filter((id) => !categorizedIds.has(id));
   }
 }
