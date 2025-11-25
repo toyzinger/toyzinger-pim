@@ -56,11 +56,57 @@ npm install <package> --legacy-peer-deps --registry https://registry.npmjs.org/
 
 **Always import and use SCSS variables from `src/styles/_variables.scss`**
 
+### 🎨 SCSS Variables
+
+**ALWAYS use SCSS variables from `src/styles/_variables.scss`**
+
+```scss
+// ✅ CORRECT
+background-color: $color-bg-dark;
+color: $color-primary;
+padding: $spacing-md;
+
+// ❌ WRONG
+background-color: #1a1a1a;
+color: #007bff;
+padding: 16px;
+```
+
+**Common variables:**
+- Colors: `$color-primary`, `$color-bg-dark`, `$color-text-light`, `$gray-*`
+- Spacing: `$spacing-xs`, `$spacing-sm`, `$spacing-md`, `$spacing-lg`
+- Typography: `$font-family-base`, `$font-size-*`
+
+### 🎨 SCSS Color Functions
+
+**Use modern Dart Sass color functions, not deprecated ones**
+
+```scss
+// ✅ CORRECT - Modern color.adjust()
+@use 'sass:color';
+
+.element {
+  background: color.adjust($color-primary, $alpha: -0.9); // 10% opacity
+  border-color: color.adjust($color-primary, $lightness: 10%);
+}
+
+// ❌ WRONG - Deprecated functions
+.element {
+  background: transparentize($color-primary, 0.9);
+  border-color: lighten($color-primary, 10%);
+}
+```
+
+**Common color adjustments:**
+- Transparency: `color.adjust($color, $alpha: -0.9)` (10% opacity)
+- Lightness: `color.adjust($color, $lightness: 10%)`
+- Darkness: `color.adjust($color, $lightness: -10%)`
+
 #### Usage Rules:
 1. ✅ **ALWAYS** use `@use` not `@import`: `@use 'path/to/styles/variables' as *;`
 2. ✅ **NEVER** use hardcoded colors like `#DC8F02` directly
 3. ✅ **PREFER** SCSS variables over CSS custom properties (`var(--color-*)`)
-4. ✅ Use SCSS functions when needed: `lighten()`, `darken()`, `transparentize()`
+4. ✅ Use modern color functions: `color.adjust()`, `color.scale()`, not deprecated `lighten()`, `darken()`, `transparentize()`
 
 > [!IMPORTANT]
 > Use `@use` instead of `@import` - `@import` is deprecated and will be removed in Dart Sass 3.0.0
@@ -387,6 +433,48 @@ npm run build                         # → dist/
 - Use standalone components
 - Use signals for reactive state
 - Follow Angular style guide
+
+#### HTML Templates
+- **Multi-line attributes**: Elements with multiple attributes must use multi-line format
+  - **`class` attribute first**: Always place `class` as the first attribute, on the same line as the opening tag
+  - **All other attributes**: One attribute per line, indented below the opening tag
+  - **Single `class` only**: Elements with only a `class` attribute can stay on one line
+
+```html
+<!-- ✅ CORRECT - class on same line, other attributes on separate lines -->
+<div class="folders-menu-item__folder"
+  [class.folders-menu-item__folder--selected]="isSelected()"
+  [style.padding-left.rem]="level() * 1"
+  (click)="onSelectFolder($event)">
+</div>
+
+<button class="btn-danger btn-icon"
+  (click)="deleteImage()"
+  title="Delete image">
+  <span class="material-icons-outlined">delete</span>
+</button>
+
+<!-- ✅ CORRECT - Single class attribute on same line -->
+<div class="header">
+  <h1>Title</h1>
+</div>
+
+<!-- ✅ CORRECT - No class, first attribute on same line -->
+<app-form-input
+  [(value)]="mySignal"
+  placeholder="Enter text"
+/>
+
+<!-- ❌ WRONG - class not first -->
+<div [style.padding-left.rem]="level() * 1"
+  class="folders-menu-item__folder">
+</div>
+
+<!-- ❌ WRONG - Multiple attributes on same line -->
+<button class="btn-danger" (click)="deleteImage()" title="Delete">
+  Delete
+</button>
+```
 
 #### Styling
 - Use SCSS (not CSS)
