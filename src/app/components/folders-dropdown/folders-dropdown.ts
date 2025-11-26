@@ -17,7 +17,7 @@ export class FoldersDropdown implements OnInit {
   secondLevelFolderId = signal<string>('');
 
   // Output: computed from both dropdowns
-  selectedFolderId = model<string>('');
+  selectedFolderId = model<string | null>('');
 
   // Computed: loading state from folders store
   loading = this.foldersStore.loading;

@@ -1,34 +1,32 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Product } from './products.model';
 import { ProductsFirebase } from './products.firebase';
+import { FoldersService } from '../folders/folders.service';
+import { SPECIAL_FOLDERS } from '../folders/folders.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
   private productsFirabse = inject(ProductsFirebase);
+  private foldersService = inject(FoldersService);
 
   // ========================================
   // STATE (Private signals)
   // ========================================
 
-  private _products = signal<Product[]>([]);
-  private _selectedProduct = signal<Product | null>(null);
-  private _loading = signal<boolean>(false);
-  private _error = signal<string | null>(null);
-  private _searchTerm = signal<string>('');
-  private _filterByFolderId = signal<string | null>(null);
+  private _products = signal<Product[]>([]); // Array of all products
+  private _loading = signal<boolean>(false); // Loading state
+  private _error = signal<string | null>(null); // Error state
+  private _productsLoaded = signal<boolean>(false); // Track if products have been loaded
 
   // ========================================
   // SELECTORS (Public readonly)
   // ========================================
 
   products = this._products.asReadonly();
-  selectedProduct = this._selectedProduct.asReadonly();
   loading = this._loading.asReadonly();
   error = this._error.asReadonly();
-  searchTerm = this._searchTerm.asReadonly();
-  filterByFolderId = this._filterByFolderId.asReadonly();
 
   // ========================================
   // COMPUTED VALUES
@@ -37,19 +35,20 @@ export class ProductsService {
   // Total count of products
   productCount = computed(() => this._products().length);
 
-  // Products filtered by search term
+  // Products filtered by folder
   filteredProducts = computed(() => {
     let products = this._products();
-    const search = this._searchTerm().toLowerCase();
+    const selectedFolder = this.foldersService.selectedFolder();
 
-    // Filter by search term
-    if (search) {
-      products = products.filter(
-        (p) =>
-          p.name.toLowerCase().includes(search) ||
-          p.collection?.toLowerCase().includes(search) ||
-          p.sku?.toLowerCase().includes(search)
-      );
+    // Filter by folder (same pattern as ImagesService)
+    if (!selectedFolder) {
+      return [];
+    }
+
+    if (selectedFolder.id === SPECIAL_FOLDERS.UNASSIGNED) {
+      products = products.filter(p => !p.folderId);
+    } else if (selectedFolder.id !== SPECIAL_FOLDERS.ROOT) {
+      products = products.filter(p => p.folderId === selectedFolder.id);
     }
 
     return products;
@@ -74,13 +73,21 @@ export class ProductsService {
   // ACTIONS - CRUD OPERATIONS
   // ========================================
 
-  // Load all products
+  // Ensure products are loaded (only loads once per session)
+  async ensureProductsLoaded(): Promise<void> {
+    if (!this._productsLoaded()) {
+      await this.loadProducts();
+    }
+  }
+
+  // Load all products (always fetches from Firebase)
   async loadProducts(): Promise<void> {
     this._loading.set(true);
     this._error.set(null);
     try {
       const products = await this.productsFirabse.getProducts();
       this._products.set(products);
+      this._productsLoaded.set(true); // Mark as loaded
     } catch (error) {
       this._error.set('Failed to load products');
       console.error('Error loading products:', error);
@@ -121,11 +128,6 @@ export class ProductsService {
 
       // Update in Firebase
       await this.productsFirabse.updateProduct(id, data);
-
-      // Update selected product if it's the one being updated
-      if (this._selectedProduct()?.id === id) {
-        this._selectedProduct.update(p => p ? { ...p, ...data } : null);
-      }
     } catch (error) {
       this._error.set('Failed to update product');
       console.error('Error updating product:', error);
@@ -147,11 +149,6 @@ export class ProductsService {
 
       // Delete from Firebase
       await this.productsFirabse.deleteProduct(id);
-
-      // Clear selected product if it's the one being deleted
-      if (this._selectedProduct()?.id === id) {
-        this._selectedProduct.set(null);
-      }
     } catch (error) {
       this._error.set('Failed to delete product');
       console.error('Error deleting product:', error);
@@ -167,81 +164,38 @@ export class ProductsService {
   // UI STATE ACTIONS
   // ========================================
 
-  // Select product
-  selectProduct(product: Product | null): void {
-    this._selectedProduct.set(product);
-  }
-
-  // Set search term
-  setSearchTerm(term: string): void {
-    this._searchTerm.set(term);
-  }
-
-  // Clear search
-  clearSearch(): void {
-    this._searchTerm.set('');
-  }
-
-  // Set folder filter
-  setFolderFilter(folderId: string | null): void {
-    this._filterByFolderId.set(folderId);
-  }
-
-  // Clear all filters
-  clearFilters(): void {
-    this._searchTerm.set('');
-    this._filterByFolderId.set(null);
-  }
-
   // Clear error
   clearError(): void {
     this._error.set(null);
   }
 
   // ========================================
-  // SPECIALIZED QUERIES
+  // BATCH OPERATIONS
   // ========================================
 
-  // Load products by franchise
-  async loadProductsByFranchise(franchiseId: number | string): Promise<void> {
-    this._loading.set(true);
-    this._error.set(null);
-    try {
-      const products = await this.productsFirabse.getProductsByFranchise(franchiseId);
-      this._products.set(products);
-    } catch (error) {
-      this._error.set('Failed to load products by franchise');
-      console.error('Error loading products by franchise:', error);
-    } finally {
-      this._loading.set(false);
-    }
-  }
+  // Update multiple products with the same data
+  async updateMultipleProducts(ids: string[], data: Partial<Product>): Promise<void> {
+    if (ids.length === 0) return;
 
-  // Load products by manufacturer
-  async loadProductsByManufacturer(manufacturerId: number | string): Promise<void> {
     this._loading.set(true);
     this._error.set(null);
-    try {
-      const products = await this.productsFirabse.getProductsByManufacturer(manufacturerId);
-      this._products.set(products);
-    } catch (error) {
-      this._error.set('Failed to load products by manufacturer');
-      console.error('Error loading products by manufacturer:', error);
-    } finally {
-      this._loading.set(false);
-    }
-  }
 
-  // Load active products only
-  async loadActiveProducts(): Promise<void> {
-    this._loading.set(true);
-    this._error.set(null);
     try {
-      const products = await this.productsFirabse.getActiveProducts();
-      this._products.set(products);
+      // 1. Optimistic update  - update local cache immediately
+      this._products.update(products =>
+        products.map(p => ids.includes(p.id!) ? { ...p, ...data } : p)
+      );
+
+      // 2. Sync to Firebase in background
+      await Promise.all(ids.map(id => this.productsFirabse.updateProduct(id, data)));
+
     } catch (error) {
-      this._error.set('Failed to load active products');
-      console.error('Error loading active products:', error);
+      this._error.set('Failed to update products');
+      console.error('Error updating multiple products:', error);
+
+      // On failure: reload all products from Firebase
+      await this.loadProducts();
+      throw error;
     } finally {
       this._loading.set(false);
     }

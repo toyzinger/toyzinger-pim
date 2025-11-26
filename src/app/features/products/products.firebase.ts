@@ -9,6 +9,10 @@ export class ProductsFirebase {
   private firestore = inject(Firestore);
   private readonly COLLECTION_NAME = 'products';
 
+  // ========================================
+  // CRUD OPERATIONS
+  // ========================================
+
   // Get all products
   async getProducts(): Promise<Product[]> {
     const collectionRef = collection(this.firestore, this.COLLECTION_NAME);
@@ -27,12 +31,15 @@ export class ProductsFirebase {
   // Add product
   async addProduct(product: Omit<Product, 'id'>): Promise<string> {
     const collectionRef = collection(this.firestore, this.COLLECTION_NAME);
-    const productData = {
+
+    // Remove undefined values (Firebase doesn't accept them)
+    const cleanProduct = this.removeUndefined({
       ...product,
       createdAt: new Date(),
       updatedAt: new Date()
-    };
-    const docRef = await addDoc(collectionRef, productData);
+    });
+
+    const docRef = await addDoc(collectionRef, cleanProduct);
     return docRef.id;
   }
 
@@ -51,35 +58,17 @@ export class ProductsFirebase {
     await deleteDoc(docRef);
   }
 
-  // Get products by franchise
-  async getProductsByFranchise(franchiseId: number | string): Promise<Product[]> {
-    const collectionRef = collection(this.firestore, this.COLLECTION_NAME);
-    const q = query(collectionRef, where('franchiseId', '==', franchiseId));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
-  }
+  // ========================================
+  // HELPERS
+  // ========================================
 
-  // Get products by manufacturer
-  async getProductsByManufacturer(manufacturerId: number | string): Promise<Product[]> {
-    const collectionRef = collection(this.firestore, this.COLLECTION_NAME);
-    const q = query(collectionRef, where('manufacturerId', '==', manufacturerId));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
-  }
-
-  // Get active products
-  async getActiveProducts(): Promise<Product[]> {
-    const collectionRef = collection(this.firestore, this.COLLECTION_NAME);
-    const q = query(collectionRef, where('isActive', '==', true));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
-  }
-
-  // Search products by name
-  async searchProducts(searchTerm: string): Promise<Product[]> {
-    const products = await this.getProducts();
-    return products.filter(product =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  // Helper: Remove undefined values from object (Firebase doesn't support undefined)
+  private removeUndefined<T extends Record<string, any>>(obj: T): Partial<T> {
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {} as any);
   }
 }
