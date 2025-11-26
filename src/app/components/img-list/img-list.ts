@@ -1,4 +1,4 @@
-import { Component, inject, effect, signal } from '@angular/core';
+import { Component, inject, effect, signal, OnInit } from '@angular/core';
 import { FoldersService } from '../../features/folders/folders.service';
 import { SPECIAL_FOLDERS } from '../../features/folders/folders.model';
 import { ImagesService } from '../../features/productimages/productimages.service';
@@ -13,7 +13,7 @@ import { FormCheckbox } from '../form/form-checkbox/form-checkbox';
   templateUrl: './img-list.html',
   styleUrl: './img-list.scss',
 })
-export class ImgList {
+export class ImgList implements OnInit {
   private foldersService = inject(FoldersService);
   private imagesService = inject(ImagesService);
   private global = inject(GlobalService);
@@ -30,20 +30,13 @@ export class ImgList {
   selectAll = signal(false);
 
   constructor() {
-    // Watch for folder selection changes
+    // Clear selection when folder changes
     effect(() => {
       const folder = this.foldersService.selectedFolder();
-
-      if (folder?.id === SPECIAL_FOLDERS.UNASSIGNED) {
-        // Load unorganized images
-        this.imagesService.loadUnorganizedImages();
-      } else if (folder && !folder.isVirtual) {
-        // Load images for the selected regular folder
-        this.imagesService.loadImagesByFolder(folder.id!);
+      // Just trigger reactivity - filteredImages computed will handle filtering
+      if (folder) {
+        this.clearSelection();
       }
-
-      // Clear selection when folder changes
-      this.clearSelection();
     });
 
     // Sync selectAll checkbox with actual selection
@@ -70,6 +63,11 @@ export class ImgList {
         this.global.clearFolderDrop();
       }
     });
+  }
+
+  ngOnInit() {
+    // Load images only if not already loaded
+    this.imagesService.ensureImagesLoaded();
   }
 
   toggleSelectAll() {

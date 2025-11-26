@@ -74,8 +74,6 @@ padding: 16px;
 
 **Common variables:**
 - Colors: `$color-primary`, `$color-bg-dark`, `$color-text-light`, `$gray-*`
-- Spacing: `$spacing-xs`, `$spacing-sm`, `$spacing-md`, `$spacing-lg`
-- Typography: `$font-family-base`, `$font-size-*`
 
 ### 🎨 SCSS Color Functions
 

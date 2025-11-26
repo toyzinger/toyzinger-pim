@@ -24,6 +24,7 @@ export class ImagesService {
   private _error = signal<string | null>(null);
   private _uploadQueue = signal<UploadItem[]>([]);
   private _uploading = signal<boolean>(false);
+  private _imagesLoaded = signal<boolean>(false); // Track if images have been loaded
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -108,13 +109,21 @@ export class ImagesService {
   // ACTIONS - CRUD OPERATIONS (Firestore)
   // ========================================
 
-  // Load all images
+  // Ensure images are loaded (only loads once per session)
+  async ensureImagesLoaded(): Promise<void> {
+    if (!this._imagesLoaded()) {
+      await this.loadImages();
+    }
+  }
+
+  // Load all images (always fetches from Firebase)
   async loadImages(): Promise<void> {
     this._loading.set(true);
     this._error.set(null);
     try {
       const images = await this.imagesFirebase.getProductImages();
       this._images.set(images);
+      this._imagesLoaded.set(true); // Mark as loaded
     } catch (error) {
       this._error.set('Failed to load images');
       console.error('Error loading images:', error);
@@ -197,6 +206,7 @@ export class ImagesService {
 
     this._loading.set(true);
     this._error.set(null);
+
     try {
       // Prepare update data - handle undefined values with deleteField()
       const updateData: any = {};
@@ -209,39 +219,23 @@ export class ImagesService {
         }
       }
 
-      // Update each image in Firebase in parallel
+      // 1. Optimistic update - update local cache immediately
+      this._images.update(images =>
+        images.map(img =>
+          ids.includes(img.id!) ? { ...img, ...data } : img
+        )
+      );
+
+      // 2. Sync to Firebase in background (without blocking UI)
       await Promise.all(
         ids.map(id => this.imagesFirebase.updateProductImage(id, updateData))
       );
 
-      // Reload images based on current selected folder to maintain UI state
-      const selectedFolder = this.foldersService.selectedFolder();
-      if (selectedFolder && selectedFolder.id !== SPECIAL_FOLDERS.ROOT) {
-        // Reload filtered images to maintain current folder view
-        if (selectedFolder.id === SPECIAL_FOLDERS.UNASSIGNED) {
-          await this.loadUnorganizedImages();
-        } else {
-          await this.loadImagesByFolder(selectedFolder.id!);
-        }
-      } else {
-        // Reload all images
-        await this.loadImages();
-      }
     } catch (error) {
       this._error.set('Failed to update images');
       console.error('Error updating multiple images:', error);
-
-      // Rollback: reload based on current folder
-      const selectedFolder = this.foldersService.selectedFolder();
-      if (selectedFolder && selectedFolder.id !== SPECIAL_FOLDERS.ROOT) {
-        if (selectedFolder.id === SPECIAL_FOLDERS.UNASSIGNED) {
-          await this.loadUnorganizedImages();
-        } else {
-          await this.loadImagesByFolder(selectedFolder.id!);
-        }
-      } else {
-        await this.loadImages();
-      }
+      // On failure: reload all images from Firebase to restore correct state
+      await this.loadImages();
       throw error;
     } finally {
       this._loading.set(false);
@@ -445,37 +439,4 @@ export class ImagesService {
     this._error.set(null);
   }
 
-  // ========================================
-  // SPECIALIZED QUERIES
-  // ========================================
-
-  // Load images by folder
-  async loadImagesByFolder(folderId: string): Promise<void> {
-    this._loading.set(true);
-    this._error.set(null);
-    try {
-      const images = await this.imagesFirebase.getProductImagesByFolder(folderId);
-      this._images.set(images);
-    } catch (error) {
-      this._error.set('Failed to load images by folder');
-      console.error('Error loading images by folder:', error);
-    } finally {
-      this._loading.set(false);
-    }
-  }
-
-  // Load unorganized images
-  async loadUnorganizedImages(): Promise<void> {
-    this._loading.set(true);
-    this._error.set(null);
-    try {
-      const images = await this.imagesFirebase.getUnorganizedProductImages();
-      this._images.set(images);
-    } catch (error) {
-      this._error.set('Failed to load unorganized images');
-      console.error('Error loading unorganized images:', error);
-    } finally {
-      this._loading.set(false);
-    }
-  }
 }
