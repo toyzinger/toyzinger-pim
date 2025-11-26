@@ -1,0 +1,45 @@
+<div class="header">
+    @if (selectedFolder()) {
+    <p>{{ selectedFolder()!.name }} - {{ products().length }} products</p>
+    } @else {
+    <p>Select a folder to view products</p>
+    }
+</div>
+
+@if (loading()) {
+<div class="loading">Loading products...</div>
+} @else if (error()) {
+<div class="error">{{ error() }}</div>
+} @else if (products().length === 0) {
+<div class="empty">No products found in this folder</div>
+} @else {
+<table class="products-table">
+  <thead>
+    <tr>
+      <th class="products-table__header products-table__header--drag"></th>
+      <th class="products-table__header products-table__header--checkbox">
+        <app-form-checkbox
+          [checked]="selectAll()"
+          (checkedChange)="toggleSelectAll()"
+        />
+      </th>
+      <th class="products-table__header products-table__header--name">Name</th>
+      <th class="products-table__header products-table__header--id">ID</th>
+      <th class="products-table__header products-table__header--actions">Actions</th>
+    </tr>
+  </thead>
+  <tbody
+    (dragstart)="onDragStart($event)"
+    (dragend)="onDragEnd()">
+    @for (product of products(); track product.id) {
+    <tr app-product-list-item
+      draggable="true"
+      [attr.data-product-id]="product.id"
+      [product]="product"
+      [isSelected]="isProductSelected(product.id!)"
+      (selectionChange)="toggleProductSelection($event)">
+    </tr>
+    }
+  </tbody>
+</table>
+}

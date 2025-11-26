@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, limit } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, limit, deleteField } from '@angular/fire/firestore';
 import { Product } from './products.model';
 
 @Injectable({
@@ -46,10 +46,14 @@ export class ProductsFirebase {
   // Update product
   async updateProduct(id: string, product: Partial<Product>): Promise<void> {
     const docRef = doc(this.firestore, this.COLLECTION_NAME, id);
-    await updateDoc(docRef, {
+
+    // Prepare data: replace undefined with deleteField()
+    const updateData = this.prepareUpdateData({
       ...product,
       updatedAt: new Date()
     });
+
+    await updateDoc(docRef, updateData);
   }
 
   // Delete product
@@ -66,6 +70,18 @@ export class ProductsFirebase {
   private removeUndefined<T extends Record<string, any>>(obj: T): Partial<T> {
     return Object.entries(obj).reduce((acc, [key, value]) => {
       if (value !== undefined) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {} as any);
+  }
+
+  // Helper: Replace undefined values with deleteField() for updates
+  private prepareUpdateData<T extends Record<string, any>>(obj: T): Record<string, any> {
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+      if (value === undefined) {
+        acc[key] = deleteField();
+      } else {
         acc[key] = value;
       }
       return acc;

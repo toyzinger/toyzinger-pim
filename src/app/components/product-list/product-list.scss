@@ -1,0 +1,166 @@
+@use '../../../styles/variables' as *;
+
+.header {
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: $color-text-light;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: $gray-400;
+  }
+}
+
+.loading,
+.error,
+.empty {
+  padding: 2rem;
+  text-align: center;
+  color: $gray-400;
+  font-size: 0.875rem;
+}
+
+.error {
+  color: $color-danger;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+  background: transparent;
+
+  thead {
+    tr {
+      background: transparent;
+    }
+
+    th {
+      padding: 0.75rem 1.25rem;
+      text-align: left;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: $gray-400;
+      border-bottom: 2px solid $gray-700;
+    }
+  }
+
+  &__header {
+    &--checkbox {
+      width: 60px;
+      text-align: center;
+    }
+
+    &--drag {
+      width: 50px;
+      text-align: center;
+    }
+
+    &--name {
+      width: auto; // Flexible width
+    }
+
+    &--id {
+        width: 250px; // Fixed width for ID
+    }
+
+    &--actions {
+      width: 80px;
+      text-align: right;
+    }
+  }
+
+  tbody tr {
+    background: $gray-800;
+    border-radius: 8px;
+
+    &:first-child td:first-child {
+      border-top-left-radius: 8px;
+    }
+
+    &:first-child td:last-child {
+      border-top-right-radius: 8px;
+    }
+
+    &:last-child td:first-child {
+      border-bottom-left-radius: 8px;
+    }
+
+    &:last-child td:last-child {
+      border-bottom-right-radius: 8px;
+    }
+  }
+}
+
+// product-list-item styles
+.product-list-item {
+  background: $gray-800;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: $gray-700;
+  }
+
+  td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+  }
+
+  &__checkbox {
+    width: 60px;
+    text-align: center;
+  }
+
+  &__drag {
+    width: 50px;
+    text-align: center;
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    .material-icons-outlined {
+      font-size: 1.25rem;
+      color: $gray-500;
+      opacity: 0;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    &:hover .material-icons-outlined {
+      opacity: 1;
+    }
+  }
+
+  &__info {
+    padding-right: 1.5rem;
+
+    .name {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: $color-text-light;
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
+  &__id {
+      color: $gray-400;
+      font-size: 0.875rem;
+      font-family: monospace; // Monospace for IDs
+  }
+
+  &__actions {
+    width: 80px;
+    text-align: center;
+    padding-left: 1rem;
+  }
+}

@@ -1,0 +1,31 @@
+<td class="product-list-item__drag">
+  <span class="material-icons-outlined">open_with</span>
+</td>
+
+<td class="product-list-item__checkbox">
+  <app-form-checkbox
+    [checked]="isSelected()"
+    (checkedChange)="onCheckboxChange()"
+  />
+</td>
+
+<td class="product-list-item__info">
+  <p class="name">{{ product().name }}</p>
+</td>
+
+<td class="product-list-item__id">
+  {{ product().id || '-' }}
+</td>
+
+<td class="product-list-item__actions">
+  <a class="btn-icon"
+    [routerLink]="['/product', product().id]"
+    title="Edit product">
+    <span class="material-icons-outlined">edit</span>
+  </a>
+  <button class="btn-danger btn-icon"
+    (click)="deleteProduct()"
+    title="Delete product">
+    <span class="material-icons-outlined">delete</span>
+  </button>
+</td>
