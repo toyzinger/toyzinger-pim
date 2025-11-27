@@ -27,7 +27,6 @@ export class NewProduct {
   loading = this.productsStore.loading;
 
   updatedProductDataChange(product: Product) {
-    console.log('Product data updated!', product);
     this.updatedProductData.set(product);
   }
 
@@ -50,7 +49,13 @@ export class NewProduct {
       await this.productsStore.createProduct(productWithFolder);
       this.toastService.success(`Product Created: ${data.name}`);
       // Clear Necessary Data
-      this.initialProductData = Object.assign(data, {name: ''});
+      this.initialProductData = Object.assign(data, {
+        name: '',
+        accessories: undefined,
+        characterDescription: undefined,
+      });
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       this.toastService.danger('Failed to create product');
     }
