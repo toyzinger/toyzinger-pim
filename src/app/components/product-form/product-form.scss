@@ -16,20 +16,4 @@
       grid-template-columns: 1fr;
     }
   }
-
-  &__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid $gray-700;
-
-    @include mq-mobile-only {
-      flex-direction: column-reverse;
-
-      button {
-        width: 100%;
-      }
-    }
-  }
 }

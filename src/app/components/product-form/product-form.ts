@@ -1,5 +1,5 @@
-import { Component, input, output, signal, effect } from '@angular/core';
-import { Product } from '../../features/products/products.model';
+import { Component, model, signal, effect, untracked, input, OnInit, output } from '@angular/core';
+import { Product, createEmptyProduct } from '../../features/products/products.model';
 import { MultilingualString } from '../../features/global/global.model';
 import { FormComponents } from '../form/form';
 import { ProductFormFranchise } from "./product-form-franchise/product-form-franchise";
@@ -14,11 +14,17 @@ import { ProductFormAccessories } from './product-form-accessories/product-form-
   styleUrl: './product-form.scss',
 })
 export class ProductForm {
-  product = input<Product | null>(null);
+
+  // Product Data received from parent
+  product = input<Product | Omit<Product, 'id'>>(createEmptyProduct());
+  // Loading state
   loading = input<boolean>(false);
 
-  submitProduct = output<Omit<Product, 'id'>>();
+  // Event emitter for updated productData
+  updatedProduct = output<Product | Omit<Product, 'id'>>();
 
+  // Product Data to be sent to parent
+  productData = signal<Product | Omit<Product, 'id'>>(createEmptyProduct());
   // Form fields
   name = signal<string>('');
   collection = signal<string>('');
@@ -26,31 +32,66 @@ export class ProductForm {
   size = signal<string>('');
   yearReleased = signal<number | undefined>(undefined);
   isActive = signal<boolean>(true);
-
-  // Multilingual fields
   franchise = signal<MultilingualString | undefined>(undefined);
   manufacturer = signal<MultilingualString | undefined>(undefined);
   toyDescription_es = signal<string>('');
   toyDescription_en = signal<string>('');
   characterDescription_es = signal<string>('');
   characterDescription_en = signal<string>('');
-
-  // Accessories
   accessories = signal<{ en: string[]; es: string[] }>({ en: [], es: [] });
 
   constructor() {
     // Load product data when product changes
     effect(() => {
-      const prod = this.product();
-      if (prod) {
-        this.loadProductData(prod);
-      } else {
-        this.resetForm();
+      this.loadProductData(this.product());
+    });
+    // Update product model when form fields change
+    effect(() => {
+      const productData: Omit<Product, 'id'> = {
+        name: this.name(),
+        collection: this.collection(),
+        sku: this.sku().trim() || undefined,
+        size: this.size().trim() || undefined,
+        yearReleased: this.yearReleased(),
+        isActive: this.isActive(),
+      };
+      // Add franchise if provided
+      if (this.franchise()) {
+        productData.franchise = this.franchise();
       }
+      // Add manufacturer if provided
+      if (this.manufacturer()) {
+        productData.manufacturer = this.manufacturer();
+      }
+      // Add toy description if provided
+      const toyDescEn = this.toyDescription_en().trim();
+      const toyDescEs = this.toyDescription_es().trim();
+      if (toyDescEn || toyDescEs) {
+        productData.toyDescription = {
+          en: toyDescEn,
+          es: toyDescEs,
+        };
+      }
+      // Add character description if provided
+      const charDescEn = this.characterDescription_en().trim();
+      const charDescEs = this.characterDescription_es().trim();
+      if (charDescEn || charDescEs) {
+        productData.characterDescription = {
+          en: charDescEn,
+          es: charDescEs,
+        };
+      }
+      // Add accessories if provided
+      const acc = this.accessories();
+      if (acc.en.length > 0 || acc.es.length > 0) {
+        productData.accessories = acc;
+      }
+      // Emit updated product data
+      this.updatedProduct.emit(productData);
     });
   }
 
-  private loadProductData(prod: Product): void {
+  private loadProductData(prod: Product | Omit<Product, 'id'>): void {
     this.name.set(prod.name || '');
     this.collection.set(prod.collection || '');
     this.sku.set(prod.sku || '');
@@ -64,82 +105,24 @@ export class ProductForm {
     if (prod.toyDescription) {
       this.toyDescription_en.set(prod.toyDescription.en || '');
       this.toyDescription_es.set(prod.toyDescription.es || '');
+    } else {
+      this.toyDescription_en.set('');
+      this.toyDescription_es.set('');
     }
     if (prod.characterDescription) {
       this.characterDescription_en.set(prod.characterDescription.en || '');
       this.characterDescription_es.set(prod.characterDescription.es || '');
+    } else {
+      this.characterDescription_en.set('');
+      this.characterDescription_es.set('');
     }
     if (prod.accessories) {
       this.accessories.set({
         en: prod.accessories.en || [],
         es: prod.accessories.es || [],
       });
+    } else {
+      this.accessories.set({ en: [], es: [] });
     }
-  }
-
-  onSubmit(): void {
-    if (!this.name().trim() || this.loading()) {
-      return;
-    }
-
-    const productData: Omit<Product, 'id'> = {
-      name: this.name().trim(),
-      collection: this.collection().trim(),
-      sku: this.sku().trim() || undefined,
-      size: this.size().trim() || undefined,
-      yearReleased: this.yearReleased(),
-      isActive: this.isActive(),
-    };
-
-    // Add multilingual fields if provided
-    if (this.franchise()) {
-      productData.franchise = this.franchise();
-    }
-
-    if (this.manufacturer()) {
-      productData.manufacturer = this.manufacturer();
-    }
-
-    const toyDescEn = this.toyDescription_en().trim();
-    const toyDescEs = this.toyDescription_es().trim();
-    if (toyDescEn || toyDescEs) {
-      productData.toyDescription = {
-        en: toyDescEn,
-        es: toyDescEs,
-      };
-    }
-
-    const charDescEn = this.characterDescription_en().trim();
-    const charDescEs = this.characterDescription_es().trim();
-    if (charDescEn || charDescEs) {
-      productData.characterDescription = {
-        en: charDescEn,
-        es: charDescEs,
-      };
-    }
-
-    // Add accessories if provided
-    const acc = this.accessories();
-    if (acc.en.length > 0 || acc.es.length > 0) {
-      productData.accessories = acc;
-    }
-
-    this.submitProduct.emit(productData);
-  }
-
-  resetForm(): void {
-    this.name.set('');
-    this.collection.set('');
-    this.sku.set('');
-    this.size.set('');
-    this.yearReleased.set(undefined);
-    this.isActive.set(true);
-    this.franchise.set(undefined);
-    this.manufacturer.set(undefined);
-    this.toyDescription_en.set('');
-    this.toyDescription_es.set('');
-    this.characterDescription_en.set('');
-    this.characterDescription_es.set('');
-    this.accessories.set({ en: [], es: [] });
   }
 }

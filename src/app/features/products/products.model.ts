@@ -20,3 +20,26 @@ export interface Product {
   isActive: boolean;
   sku?: string;
 }
+
+/**
+ * Factory function to create an empty product with default values.
+ * Use this when creating new products or resetting form state.
+ *
+ * @returns A new product object without an ID, ready to be populated
+ */
+export function createEmptyProduct(): Omit<Product, 'id'> {
+  return {
+    name: '',
+    collection: '',
+    isActive: true,
+    sku: undefined,
+    size: undefined,
+    yearReleased: undefined,
+    accessories: undefined,
+    toyDescription: undefined,
+    characterDescription: undefined,
+    images: undefined,
+    franchise: undefined,
+    manufacturer: undefined,
+  };
+}

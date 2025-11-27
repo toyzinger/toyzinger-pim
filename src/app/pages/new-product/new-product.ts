@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { Product } from '../../features/products/products.model';
+import { Product, createEmptyProduct } from '../../features/products/products.model';
 import { ProductForm } from '../../components/product-form/product-form';
 import { ProductsService } from '../../features/products/products.service';
 import { ToastService } from '../../features/toast/toast.service';
@@ -17,21 +17,40 @@ export class NewProduct {
 
   selectedFolderId = signal<string | null>(null);
 
+  // Product data bound to the form
+  initialProductData: Product = createEmptyProduct();
+
+  // Product data updated by the form
+  updatedProductData = signal<Product>(createEmptyProduct());
+
   // Expose store state to template
   loading = this.productsStore.loading;
 
-  async onSubmitProduct(productData: Omit<Product, 'id'>) {
+  updatedProductDataChange(product: Product) {
+    console.log('Product data updated!', product);
+    this.updatedProductData.set(product);
+  }
+
+  async onSubmit() {
+    const data = this.updatedProductData();
+    // Validate required fields
+    if (!data.name.trim()) {
+      this.toastService.danger('Product name is required');
+      return;
+    }
     // Add selected folder to product data (convert null to undefined)
     const folderId = this.selectedFolderId();
     const productWithFolder = {
-      ...productData,
+      ...data,
       ...(folderId && { folderId })
     };
-
+    // Create product
     console.log('New product submitted!', productWithFolder);
     try {
       await this.productsStore.createProduct(productWithFolder);
-      this.toastService.success(`Product Created: ${productData.name}`);
+      this.toastService.success(`Product Created: ${data.name}`);
+      // Clear Necessary Data
+      this.initialProductData = Object.assign(data, {name: ''});
     } catch (error) {
       this.toastService.danger('Failed to create product');
     }

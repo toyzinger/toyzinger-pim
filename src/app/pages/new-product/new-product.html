@@ -8,10 +8,18 @@
       <app-folders-dropdown [(selectedFolderId)]="selectedFolderId" />
     </div>
 
-    <app-product-form
-      (submitProduct)="onSubmitProduct($event)"
-      [loading]="loading()"
-    ></app-product-form>
+    <app-product-form [product]="initialProductData" [loading]="loading()" (updatedProduct)="updatedProductDataChange($event)"></app-product-form>
+
+    <div class="new-product__actions">
+      <button
+        type="button"
+        class="btn-primary"
+        [disabled]="loading() || !updatedProductData().name.trim()"
+        (click)="onSubmit()"
+      >
+        {{ loading() ? 'Creating...' : 'Create Product' }}
+      </button>
+    </div>
 
   </section>
 </main>
