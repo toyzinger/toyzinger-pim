@@ -8,6 +8,9 @@
   } @else if (!product()) {
     <div class="not-found">Product not found</div>
   } @else {
+    @if (product(); as p) {
+      <app-product-form [product]="p"></app-product-form>
+    }
     <div class="product-json">
       <pre>{{ product() | json }}</pre>
     </div>

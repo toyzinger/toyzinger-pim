@@ -16,15 +16,15 @@ import { ProductFormAccessories } from './product-form-accessories/product-form-
 export class ProductForm {
 
   // Product Data received from parent
-  product = input<Product | Omit<Product, 'id'>>(createEmptyProduct());
+  product = input<Product>(createEmptyProduct());
   // Loading state
   loading = input<boolean>(false);
 
   // Event emitter for updated productData
-  updatedProduct = output<Product | Omit<Product, 'id'>>();
+  updatedProduct = output<Product>();
 
   // Product Data to be sent to parent
-  productData = signal<Product | Omit<Product, 'id'>>(createEmptyProduct());
+  productData = signal<Product>(createEmptyProduct());
   // Form fields
   name = signal<string>('');
   collection = signal<string>('');
@@ -47,7 +47,7 @@ export class ProductForm {
     });
     // Update product model when form fields change
     effect(() => {
-      const productData: Omit<Product, 'id'> = {
+      const productData: Product = {
         name: this.name(),
         collection: this.collection(),
         sku: this.sku().trim() || undefined,

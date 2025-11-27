@@ -1,11 +1,12 @@
 import { Component, inject, input, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../features/products/products.service';
+import { ProductForm } from '../../components/product-form/product-form';
 
 @Component({
   selector: 'app-edit-product',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProductForm],
   templateUrl: './edit-product.html',
   styleUrl: './edit-product.scss',
 })
