@@ -1,0 +1,31 @@
+<div class="edit-franchise">
+  <section class="edit-franchise__content">
+    <div class="edit-franchise__header">
+      <button class="material-icons-outlined" routerLink="/dimensions">arrow_back</button>
+      <h1>Edit Franchise</h1>
+      <p>{{ id() }}</p>
+    </div>
+    @if (loading()) {
+      <div class="edit-franchise__loading">Loading franchise...</div>
+    } @else if (error()) {
+      <div class="edit-franchise__error">{{ error() }}</div>
+    } @else if (!franchise()) {
+      <div class="edit-franchise__not-found">Franchise not found</div>
+    } @else {
+      @if (franchise(); as f) {
+        <div class="edit-franchise__form">
+          <app-franchise-form [franchise]="f" (updatedFranchise)="updatedFranchiseDataChange($event)"></app-franchise-form>
+          <button
+            type="button"
+            class="btn-primary"
+            [disabled]="loading() || !isDataValid()"
+            (click)="onSubmit()"
+          >
+            {{ loading() ? 'Updating...' : 'Update Dimension' }}
+          </button>
+          <!-- <pre>{{ franchise() | json }}</pre> -->
+      </div>
+      }
+    }
+  </section>
+</div>

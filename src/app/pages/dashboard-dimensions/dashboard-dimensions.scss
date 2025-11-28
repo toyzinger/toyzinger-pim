@@ -1,0 +1,39 @@
+@use '../../../styles/variables' as *;
+
+.dashboard-dimensions {
+  display: flex;
+  height: calc(100vh - 50px);
+  overflow: hidden;
+
+  &__content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+  }
+
+  h1 {
+    color: $color-primary;
+    margin-bottom: 1rem;
+  }
+
+  &__separator {
+    margin: 1rem 0;
+    border-color: $gray-400;
+  }
+
+  &__navigation {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: stretch;
+
+    .container {
+      flex: 1;
+      cursor: pointer;
+
+      &--active {
+        background-color: $gray-600;
+      }
+    }
+  }
+}

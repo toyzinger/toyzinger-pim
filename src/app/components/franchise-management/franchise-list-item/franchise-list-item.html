@@ -1,0 +1,13 @@
+
+<td class="franchise-list-item__name">{{ franchise().name.en }} / {{ franchise().name.es }}</td>
+<td class="franchise-list-item__slug">/{{ franchise().slug }}</td>
+<td class="franchise-list-item__status">{{ franchise().isActive ? 'Active' : 'Inactive' }}</td>
+<td class="franchise-list-item__actions">
+  <button class="btn-sm btn-primary" (click)="onEdit()">
+    <span class="material-icons-outlined">edit</span>
+  </button>
+  <button class="btn-sm btn-danger" (click)="onDelete()">
+    <span class="material-icons-outlined">delete</span>
+  </button>
+</td>
+

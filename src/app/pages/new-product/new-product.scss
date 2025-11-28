@@ -1,7 +1,7 @@
 @use '../../../styles/variables' as *;
 
 .new-product {
-  .new-product__content {
+  &__content {
     max-width: 980px;
     margin: 0 auto;
     padding: 2rem;
@@ -21,7 +21,7 @@
     margin-bottom: 1rem;
   }
 
-  .new-product__actions {
+  &__actions {
     display: flex;
     justify-content: flex-end;
     padding: 1.5rem 0;

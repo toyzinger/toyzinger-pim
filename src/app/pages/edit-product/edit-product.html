@@ -1,18 +1,31 @@
 <div class="edit-product">
-  <h1>Edit Product</h1>
-
-  @if (loading()) {
-    <div class="loading">Loading product...</div>
-  } @else if (error()) {
-    <div class="error">{{ error() }}</div>
-  } @else if (!product()) {
-    <div class="not-found">Product not found</div>
-  } @else {
-    @if (product(); as p) {
-      <app-product-form [product]="p"></app-product-form>
-    }
-    <div class="product-json">
-      <pre>{{ product() | json }}</pre>
+  <section class="edit-product__content">
+    <div class="edit-product__header">
+      <button class="material-icons-outlined" routerLink="/products">arrow_back</button>
+      <h1>Edit Product</h1>
+      <p>{{ id() }}</p>
     </div>
-  }
+    @if (loading()) {
+      <div class="edit-product__loading">Loading product...</div>
+    } @else if (error()) {
+      <div class="edit-product__error">{{ error() }}</div>
+    } @else if (!product()) {
+      <div class="edit-product__not-found">Product not found</div>
+    } @else {
+      @if (product(); as p) {
+        <div class="edit-product__form">
+          <app-product-form [product]="p" (updatedProduct)="updatedProductDataChange($event)"></app-product-form>
+          <button
+            type="button"
+            class="btn-primary"
+            [disabled]="loading() || !isDataValid()"
+            (click)="onSubmit()"
+          >
+            {{ loading() ? 'Updating...' : 'Update Product' }}
+          </button>
+          <!-- <pre>{{ product() | json }}</pre> -->
+      </div>
+      }
+    }
+  </section>
 </div>

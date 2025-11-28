@@ -1,0 +1,69 @@
+<div class="franchise-form">
+  <!-- ROW -->
+  <div class="franchise-form__row">
+    <app-form-input
+      label="Name (Spanish)"
+      placeholder="Enter franchise name in Spanish"
+      [(value)]="name_es"
+      [disabled]="loading()"
+      [required]="true"
+    />
+    <app-form-input
+      label="Name (English)"
+      placeholder="Enter franchise name in English"
+      [(value)]="name_en"
+      [disabled]="loading()"
+      [required]="true"
+      (blur)="nameENBlur()"
+    />
+  </div>
+  <!-- ROW -->
+  <div class="franchise-form__row">
+    <app-form-input
+      label="Slug"
+      placeholder="Enter URL slug"
+      [(value)]="slug"
+      [disabled]="loading()"
+      (blur)="slugBlur()"
+    />
+    <app-form-input
+      label="Order"
+      type="number"
+      placeholder="Display order"
+      [(value)]="order"
+      [disabled]="loading()"
+    />
+  </div>
+
+  @if (!reduced()) {
+  <!-- ROW -->
+  <div class="franchise-form__row">
+    <app-form-input
+      label="Logo Image Path"
+      placeholder="Enter logo image path"
+      [(value)]="imgLogoPath"
+      [disabled]="loading()"
+    />
+    <app-form-input
+      label="Jumbotron Image Path"
+      placeholder="Enter jumbotron image path"
+      [(value)]="imgJumbotronPath"
+      [disabled]="loading()"
+    />
+  </div>
+  <!-- ROW -->
+  <app-product-form-dualtextarea
+    [(valueEn)]="text_en"
+    [(valueEs)]="text_es"
+    [disabled]="loading()"
+  />
+  <!-- ROW -->
+  <div class="franchise-form__row">
+    <app-form-checkbox
+      label="Active Franchise"
+      [(checked)]="isActive"
+      [disabled]="loading()"
+    />
+  </div>
+  }
+</div>

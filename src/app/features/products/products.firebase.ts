@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, limit, deleteField } from '@angular/fire/firestore';
 import { Product } from './products.model';
+import { removeUndefined, prepareUpdateData } from '../../utils/firestore.utils';
 
 @Injectable({
   providedIn: 'root'
@@ -20,20 +21,12 @@ export class ProductsFirebase {
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
   }
 
-  // Get product by ID
-  async getProductById(id: string): Promise<Product | null> {
-    const docRef = doc(this.firestore, this.COLLECTION_NAME, id);
-    const docSnap = await getDocs(query(collection(this.firestore, this.COLLECTION_NAME), where('__name__', '==', id)));
-    if (docSnap.empty) return null;
-    return { id: docSnap.docs[0].id, ...docSnap.docs[0].data() } as Product;
-  }
-
   // Add product
   async addProduct(product: Omit<Product, 'id'>): Promise<string> {
     const collectionRef = collection(this.firestore, this.COLLECTION_NAME);
 
     // Remove undefined values (Firebase doesn't accept them)
-    const cleanProduct = this.removeUndefined({
+    const cleanProduct = removeUndefined({
       ...product,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -48,7 +41,7 @@ export class ProductsFirebase {
     const docRef = doc(this.firestore, this.COLLECTION_NAME, id);
 
     // Prepare data: replace undefined with deleteField()
-    const updateData = this.prepareUpdateData({
+    const updateData = prepareUpdateData({
       ...product,
       updatedAt: new Date()
     });
@@ -62,29 +55,4 @@ export class ProductsFirebase {
     await deleteDoc(docRef);
   }
 
-  // ========================================
-  // HELPERS
-  // ========================================
-
-  // Helper: Remove undefined values from object (Firebase doesn't support undefined)
-  private removeUndefined<T extends Record<string, any>>(obj: T): Partial<T> {
-    return Object.entries(obj).reduce((acc, [key, value]) => {
-      if (value !== undefined) {
-        acc[key] = value;
-      }
-      return acc;
-    }, {} as any);
-  }
-
-  // Helper: Replace undefined values with deleteField() for updates
-  private prepareUpdateData<T extends Record<string, any>>(obj: T): Record<string, any> {
-    return Object.entries(obj).reduce((acc, [key, value]) => {
-      if (value === undefined) {
-        acc[key] = deleteField();
-      } else {
-        acc[key] = value;
-      }
-      return acc;
-    }, {} as any);
-  }
 }

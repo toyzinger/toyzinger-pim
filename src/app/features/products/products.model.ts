@@ -14,6 +14,7 @@ export interface Product {
   toyDescription?: MultilingualString;
   characterDescription?: MultilingualString;
   images?: ProductImage[];
+  slug?: string;
   //
   createdAt?: Date;
   updatedAt?: Date;

@@ -1,0 +1,9 @@
+<div class="dimension-info">
+  <div class="dimension-info__icon">
+    {{ type() | slice:0:1 | uppercase }}
+  </div>
+  <div class="dimension-info__content">
+    <h3 class="container__title">{{ type() | titlecase }}</h3>
+    <p>Total {{ type() | titlecase }}: {{ total() }}</p>
+  </div>
+</div>

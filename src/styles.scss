@@ -12,3 +12,15 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
 }
+
+pre {
+    align-self: center;
+    padding: 1rem;
+    border: 1px solid $gray-600;
+    background-color: $gray-800;
+    border-radius: 4px;
+    margin: 0;
+    color: $color-text-light;
+    font-family: monospace;
+    white-space: pre-wrap;
+}

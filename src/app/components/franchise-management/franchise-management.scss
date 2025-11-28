@@ -1,0 +1,58 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/breakpoints' as *;
+
+.franchise-management {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+
+  @include mq-desktop {
+    flex-direction: row;
+
+    .container {
+      flex: 1;
+    }
+  }
+
+  .error {
+    color: $color-danger;
+    padding: 1rem;
+    background-color: $color-bg-light;
+    border: 1px solid $color-danger;
+    border-radius: 4px;
+  }
+
+  &__list {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: $color-bg-light;
+    border: 1px solid $gray-600;
+    border-radius: 4px;
+    overflow: hidden;
+
+    thead {
+      background-color: $gray-700;
+
+      tr {
+        th {
+          padding: 0.25rem;
+          text-align: left;
+          font-weight: 800;
+          color: $color-text-dark;
+          border-bottom: 2px solid $gray-600;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid $gray-600;
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}

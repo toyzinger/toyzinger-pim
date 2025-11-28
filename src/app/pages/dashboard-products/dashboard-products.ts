@@ -5,12 +5,12 @@ import { ProductList } from "../../components/product-list/product-list";
 
 
 @Component({
-  selector: 'app-products-list',
+  selector: 'app-dashboard-products',
   imports: [Sidebar, ProductList],
-  templateUrl: './products-list.html',
-  styleUrl: './products-list.scss',
+  templateUrl: './dashboard-products.html',
+  styleUrl: './dashboard-products.scss',
 })
-export class ProductsList implements OnInit {
+export class DashboardProducts implements OnInit {
   private globalService = inject(GlobalService);
 
   ngOnInit() {

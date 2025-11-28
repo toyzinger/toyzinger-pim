@@ -4,12 +4,12 @@ import { ImgList } from '../../components/img-list/img-list';
 import { GlobalService } from '../../features/global/global.service';
 
 @Component({
-  selector: 'app-images-list',
+  selector: 'app-dashboard-images',
   imports: [Sidebar, ImgList],
-  templateUrl: './images-list.html',
-  styleUrl: './images-list.scss',
+  templateUrl: './dashboard-images.html',
+  styleUrl: './dashboard-images.scss',
 })
-export class ImagesList implements OnInit {
+export class DashboardImages implements OnInit {
   private globalService = inject(GlobalService);
 
   ngOnInit() {

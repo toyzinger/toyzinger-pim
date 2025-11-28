@@ -2,18 +2,5 @@
   <section class="home__content">
     <h1>Welcome to Toyzinger PIM</h1>
     <p>Manage your toy products and images efficiently.</p>
-
-    <hr style="margin: 2rem 0;">
-
-    <h2>Test: Folders Dropdown</h2>
-    <div style="max-width: 400px; margin-top: 1rem;">
-      <app-folders-dropdown [(selectedFolderId)]="selectedFolderId" />
-
-      @if (selectedFolderId()) {
-      <p style="margin-top: 1rem; padding: 1rem; background-color: rgba(76, 175, 80, 0.1); border-radius: 4px;">
-        <strong>Selected Folder ID:</strong> {{ selectedFolderId() }}
-      </p>
-      }
-    </div>
   </section>
 </div>

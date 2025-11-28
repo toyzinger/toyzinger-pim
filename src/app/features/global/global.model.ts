@@ -1,7 +1,7 @@
 /**
  * Type of draggable element and item context
  */
-export type ItemType = 'images' | 'products';
+export type ItemType = 'images' | 'products' | 'dimensions';
 
 /**
  * Data structure for drag operations
@@ -27,3 +27,14 @@ export type MultilingualString = Record<Language, string>;
 
 // Multilingual array of strings using Language type
 export type MultilingualStringArray = Record<Language, string[]>;
+
+// ====================
+// Factory functions for global types
+// ====================
+
+export function createEmptyMultilingualString(): MultilingualString {
+  return {
+    en: '',
+    es: '',
+  };
+}

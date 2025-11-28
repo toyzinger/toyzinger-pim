@@ -1,0 +1,49 @@
+<div class="franchise-management">
+
+  <div class="container">
+    <h3 class="container__title">Franchise List</h3>
+    @if (loading()) {
+    <p>Loading...</p>
+    }
+    @if (error()) {
+    <p class="error">{{ error() }}</p>
+    }
+    @if (!loading() && !error()) {
+      @if (franchises().length === 0) {
+      <p>No franchises found</p>
+      } @else {
+      <table class="franchise-management__list">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Slug</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (franchise of alphaSortFranchises(); track franchise.id) {
+            <tr app-franchise-list-item [franchise]="franchise"></tr>
+          }
+        </tbody>
+      </table>
+      }
+    }
+  </div>
+
+  <div class="container">
+    <h3 class="container__title">Add New Franchise</h3>
+    <app-franchise-form
+      [franchise]="newFranchise()"
+      (updatedFranchise)="onNewFranchise($event)"
+      [loading]="loading()"
+      [reduced]="true"
+    />
+    <button class="btn-primary"
+      (click)="addFranchise()"
+      [disabled]="!isValidFranchise()">
+      Add Franchise
+    </button>
+  </div>
+
+</div>
