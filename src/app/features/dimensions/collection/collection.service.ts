@@ -1,12 +1,14 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { DimCollection } from '../dimensions.model';
 import { CollectionFirebase } from './collection.firebase';
+import { ToastService } from '../../toast/toast.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CollectionService {
   private collectionFirebase = inject(CollectionFirebase);
+  private toastService = inject(ToastService);
 
   // ========================================
   // STATE (Private signals)
@@ -78,6 +80,7 @@ export class CollectionService {
       // Optimistic update
       const newCollection: DimCollection = { ...collection, id };
       this._collections.update(collections => [...collections, newCollection]);
+      this.toastService.success(`Collection Created: ${collection.name}`);
     } catch (error) {
       this._error.set('Failed to create collection');
       console.error('Error creating collection:', error);
@@ -101,6 +104,7 @@ export class CollectionService {
 
       // Update in Firebase
       await this.collectionFirebase.updateCollection(id, data);
+      this.toastService.success(`Collection Updated: ${data.name}`);
     } catch (error) {
       this._error.set('Failed to update collection');
       console.error('Error updating collection:', error);
@@ -122,6 +126,7 @@ export class CollectionService {
 
       // Delete from Firebase
       await this.collectionFirebase.deleteCollection(id);
+      this.toastService.success(`Collection Deleted: ${id}`);
     } catch (error) {
       this._error.set('Failed to delete collection');
       console.error('Error deleting collection:', error);

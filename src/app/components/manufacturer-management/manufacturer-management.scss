@@ -1,7 +1,7 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/breakpoints' as *;
 
-.collection-management {
+.manufacturer-management {
   display: flex;
   gap: 1rem;
   flex-direction: column;
@@ -21,23 +21,6 @@
     background-color: $color-bg-light;
     border: 1px solid $color-danger;
     border-radius: 4px;
-  }
-
-  &__filters {
-    width: 100%;
-    display: flex;
-    align-items: flex-end;
-    gap: 1rem;
-    flex-wrap: wrap;
-
-    &--dropdown {
-      flex: 1;
-    }
-
-    button {
-      margin-bottom: 0.5rem;
-      min-height: 50px;
-    }
   }
 
   &__list {

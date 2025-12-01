@@ -147,7 +147,7 @@ export class ProductList implements OnInit {
       // Clear selection after successful move
       this.clearSelection();
     } catch (error) {
-      this.toastService.danger('Failed to move products');
+      this.toastService.error('Failed to move products');
       console.error('Error moving products:', error);
     }
   }

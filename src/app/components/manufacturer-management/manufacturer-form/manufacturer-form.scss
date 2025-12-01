@@ -1,0 +1,22 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/breakpoints' as *;
+
+.manufacturer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+
+    & > * {
+      flex: 1;
+    }
+
+    @include mq-desktop {
+      flex-direction: row;
+    }
+  }
+}

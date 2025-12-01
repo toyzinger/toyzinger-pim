@@ -1,12 +1,14 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { DimFranchise } from '../dimensions.model';
 import { FranchiseFirebase } from './franchise.firebase';
+import { ToastService } from '../../toast/toast.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FranchiseService {
   private franchiseFirebase = inject(FranchiseFirebase);
+  private toastService = inject(ToastService);
 
   // ========================================
   // STATE (Private signals)
@@ -88,6 +90,7 @@ export class FranchiseService {
       // Optimistic update
       const newFranchise: DimFranchise = { ...franchise, id };
       this._franchises.update(franchises => [...franchises, newFranchise]);
+      this.toastService.success(`Franchise Created: ${franchise.name}`);
     } catch (error) {
       this._error.set('Failed to create franchise');
       console.error('Error creating franchise:', error);
@@ -111,6 +114,7 @@ export class FranchiseService {
 
       // Update in Firebase
       await this.franchiseFirebase.updateFranchise(id, data);
+      this.toastService.success(`Franchise Updated: ${data.name}`);
     } catch (error) {
       this._error.set('Failed to update franchise');
       console.error('Error updating franchise:', error);
@@ -132,6 +136,7 @@ export class FranchiseService {
 
       // Delete from Firebase
       await this.franchiseFirebase.deleteFranchise(id);
+      this.toastService.success(`Franchise Deleted: ${id}`);
     } catch (error) {
       this._error.set('Failed to delete franchise');
       console.error('Error deleting franchise:', error);
@@ -171,7 +176,7 @@ export class FranchiseService {
 
       // 2. Sync to Firebase in background
       await Promise.all(ids.map(id => this.franchiseFirebase.updateFranchise(id, data)));
-
+      this.toastService.success(`Franchises Updated: ${ids.length}`);
     } catch (error) {
       this._error.set('Failed to update franchises');
       console.error('Error updating multiple franchises:', error);

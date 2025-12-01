@@ -1,0 +1,9 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/breakpoints' as *;
+
+// This component uses FormSelect internally, which has its own styles.
+// Add custom styling here only if needed for the dropdown-manufacturers wrapper.
+
+.dropdown-manufacturers {
+  // Custom styles if needed
+}

@@ -134,14 +134,14 @@ export class Foldersmenu {
       await this.foldersStore.createFolder(newFolder);
       this.toastService.success(`Folder "${folderName}" created`);
     } catch (error) {
-      this.toastService.danger('Failed to create folder');
+      this.toastService.error('Failed to create folder');
     }
   }
 
   async onRenameFolder(name: string) {
     const selectedFolder = this.selectedFolder();
     if (!selectedFolder || !name || !name.trim()) {
-      this.toastService.danger('Invalid folder name');
+      this.toastService.error('Invalid folder name');
       return;
     }
 
@@ -153,14 +153,14 @@ export class Foldersmenu {
       });
       this.toastService.success(`Folder renamed to "${folderName}"`);
     } catch (error) {
-      this.toastService.danger('Failed to rename folder');
+      this.toastService.error('Failed to rename folder');
     }
   }
 
   async onDeleteFolder() {
     const selectedFolder = this.selectedFolder();
     if (!selectedFolder) {
-      this.toastService.danger('No folder selected to delete');
+      this.toastService.error('No folder selected to delete');
       return;
     }
 
@@ -168,7 +168,7 @@ export class Foldersmenu {
       await this.foldersStore.deleteFolder(selectedFolder.id!);
       this.toastService.success(`Folder "${selectedFolder.name}" deleted`);
     } catch (error) {
-      this.toastService.danger('Failed to delete folder');
+      this.toastService.error('Failed to delete folder');
     }
   }
 }

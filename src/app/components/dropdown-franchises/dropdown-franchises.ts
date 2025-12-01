@@ -1,4 +1,4 @@
-import { Component, inject, model, input, computed, effect } from '@angular/core';
+import { Component, inject, model, input, computed, OnInit } from '@angular/core';
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
 
@@ -8,7 +8,7 @@ import { FormSelect, SelectOption } from '../form/form-select/form-select';
   templateUrl: 'dropdown-franchises.html',
   styleUrl: 'dropdown-franchises.scss',
 })
-export class DropdownFranchises {
+export class DropdownFranchises implements OnInit {
   private franchiseService = inject(FranchiseService);
 
   // ========================================
@@ -16,12 +16,12 @@ export class DropdownFranchises {
   // ========================================
 
   label = input<string>('Franchise');
+  placeholder = input<string>('Select a franchise');
   id = input<string>('franchise-select');
   required = input<boolean>(false);
   disabled = input<boolean>(false);
-  placeholder = input<string>('Select a franchise');
-  onlyActive = input<boolean>(false); // Show only active franchises by default
   language = input<'en' | 'es'>('en'); // Language for franchise names
+  filtered = input<string[]>([]); // Array of franchise IDs to filter by
 
   // ========================================
   // TWO-WAY BINDING
@@ -34,12 +34,18 @@ export class DropdownFranchises {
   // COMPUTED VALUES
   // ========================================
 
-  // Get franchises based on onlyActive flag
+  // Get franchises, optionally filtered by ID array
   franchises = computed(() => {
-    if (this.onlyActive()) {
-      return this.franchiseService.activeFranchises();
+    const allFranchises = this.franchiseService.sortedFranchises();
+    const filteredIds = this.filtered();
+
+    // If filtered array is empty, return all franchises
+    if (filteredIds.length === 0) {
+      return allFranchises;
     }
-    return this.franchiseService.sortedFranchises();
+
+    // Otherwise, only return franchises whose ID is in the filtered array
+    return allFranchises.filter(franchise => filteredIds.includes(franchise.id || ''));
   });
 
   // Convert franchises to SelectOption[] for FormSelect
@@ -55,10 +61,8 @@ export class DropdownFranchises {
   // LIFECYCLE
   // ========================================
 
-  constructor() {
-    // Load franchises when component is created
-    effect(() => {
-      this.franchiseService.ensureFranchisesLoaded();
-    }, { allowSignalWrites: true });
+  ngOnInit() {
+    // Load franchises when component is initialized
+    this.franchiseService.ensureFranchisesLoaded();
   }
 }

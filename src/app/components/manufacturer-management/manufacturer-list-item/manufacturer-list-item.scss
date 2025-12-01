@@ -1,0 +1,40 @@
+@use '../../../../styles/variables' as *;
+
+td {
+    padding: 0.25rem;
+    vertical-align: middle;
+}
+
+.manufacturer-list-item {
+  &__name {
+    font-weight: 500;
+    color: $color-text-dark;
+  }
+
+  &__slug {
+    color: $color-text-medium;
+    font-family: monospace;
+    font-size: 0.9rem;
+  }
+
+  &__order {
+    color: $color-text-medium;
+    font-size: 0.9rem;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .material-icons-outlined {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}

@@ -4,10 +4,16 @@ import { FormComponents } from '../../form/form';
 import { ProductFormDualtextarea } from '../../product-form/product-form-dualtextarea/product-form-dualtextarea';
 import { slugify } from '../../../utils/slug.utils';
 import { DropdownFranchises } from "../../dropdown-franchises/dropdown-franchises";
+import { DropdownManufacturers } from "../../dropdown-manufacturers/dropdown-manufacturers";
 
 @Component({
   selector: 'app-collection-form',
-  imports: [FormComponents, ProductFormDualtextarea, DropdownFranchises],
+  imports: [
+    FormComponents,
+    ProductFormDualtextarea,
+    DropdownFranchises,
+    DropdownManufacturers
+  ],
   templateUrl: './collection-form.html',
   styleUrl: './collection-form.scss',
 })

@@ -34,7 +34,7 @@ export class NewProduct {
     const data = this.updatedProductData();
     // Validate required fields
     if (!data.name.trim()) {
-      this.toastService.danger('Product name is required');
+      this.toastService.error('Product name is required');
       return;
     }
     // Add selected folder to product data (convert null to undefined)
@@ -44,7 +44,6 @@ export class NewProduct {
       ...(folderId && { folderId })
     };
     // Create product
-    console.log('New product submitted!', productWithFolder);
     try {
       await this.productsStore.createProduct(productWithFolder);
       this.toastService.success(`Product Created: ${data.name}`);
@@ -57,7 +56,7 @@ export class NewProduct {
       // Scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
-      this.toastService.danger('Failed to create product');
+      this.toastService.error('Failed to create product');
     }
   }
 }

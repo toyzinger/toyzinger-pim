@@ -5,11 +5,10 @@
       [disabled]="loading()"
       [(value)]="franchiseId"
     />
-    <app-form-input
-      label="Manufacturer ID"
-      placeholder="Enter manufacturer ID"
-      [(value)]="manufacturerId"
+    <app-dropdown-manufacturers
+      [label]="'Manufacturer'"
       [disabled]="loading()"
+      [(value)]="manufacturerId"
     />
   </div>
   <!-- ROW -->

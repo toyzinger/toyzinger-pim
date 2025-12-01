@@ -4,17 +4,28 @@ import { DimensionInfo } from '../../components/dimension-info/dimension-info';
 import { dimensionType } from '../../features/dimensions/dimensions.model';
 import { FranchiseManagement } from '../../components/franchise-management/franchise-management';
 import { CollectionManagement } from "../../components/collection-management/collection-management";
+import { ManufacturerManagement } from '../../components/manufacturer-management/manufacturer-management';
 
 @Component({
   selector: 'app-dashboard-dimensions',
-  imports: [DimensionInfo, FranchiseManagement, CollectionManagement],
+  imports: [
+    DimensionInfo,
+    FranchiseManagement,
+    CollectionManagement,
+    ManufacturerManagement
+  ],
   templateUrl: './dashboard-dimensions.html',
   styleUrl: './dashboard-dimensions.scss',
 })
 export class DashboardDimensions implements OnInit {
   private globalService = inject(GlobalService);
 
-  tab = signal<dimensionType>('franchise');
+  private readonly TAB_STORAGE_KEY = 'dashboard-dimensions-tab';
+
+  // Initialize tab from localStorage or use default 'franchise'
+  tab = signal<dimensionType>(
+    this.globalService.getLocalStorage<dimensionType>(this.TAB_STORAGE_KEY, 'franchise')
+  );
 
   ngOnInit() {
     this.globalService.setItemType('dimensions');
@@ -22,5 +33,7 @@ export class DashboardDimensions implements OnInit {
 
   onDimensionClick(type: dimensionType) {
     this.tab.set(type);
+    // Save to localStorage when tab changes
+    this.globalService.setLocalStorage(this.TAB_STORAGE_KEY, type);
   }
 }

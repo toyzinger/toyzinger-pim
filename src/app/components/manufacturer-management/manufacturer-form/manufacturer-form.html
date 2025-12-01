@@ -1,0 +1,33 @@
+<div class="manufacturer-form">
+  <!-- ROW -->
+  <div class="manufacturer-form__row">
+    <app-form-input
+      label="Name"
+      placeholder="Enter manufacturer name"
+      [(value)]="name"
+      [disabled]="loading()"
+      [required]="true"
+      (blur)="nameBlur()"
+    />
+    <app-form-input
+      label="Slug"
+      placeholder="Enter URL slug"
+      [(value)]="slug"
+      [disabled]="loading()"
+      (blur)="slugBlur()"
+    />
+  </div>
+
+  @if (!reduced()) {
+  <!-- ROW -->
+  <div class="manufacturer-form__row">
+    <app-form-input
+      label="Order"
+      type="number"
+      placeholder="Display order"
+      [(value)]="order"
+      [disabled]="loading()"
+    />
+  </div>
+  }
+</div>

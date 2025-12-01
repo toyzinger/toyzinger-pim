@@ -31,8 +31,8 @@ export class ToastService {
     // Add toast to array
     this._toasts.update(toasts => [...toasts, toast]);
 
-    // Auto remove after duration
-    if (duration > 0) {
+    // Auto remove after duration (unless it's a error toast)
+    if (duration > 0 && type !== 'error') {
       setTimeout(() => this.remove(id), duration);
     }
   }
@@ -48,8 +48,8 @@ export class ToastService {
   }
 
   // Show a danger/error toast
-  danger(message: string, duration?: number) {
-    this.show(message, 'danger', duration);
+  error(message: string, duration?: number) {
+    this.show(message, 'error', duration);
   }
 
   // Show an info toast

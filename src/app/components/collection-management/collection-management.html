@@ -12,6 +12,22 @@
       @if (collections().length === 0) {
       <p>No collections found</p>
       } @else {
+
+      <div class="collection-management__filters">
+        <div class="collection-management__filters--dropdown">
+          <app-dropdown-franchises
+            [filtered]="uniqueFranchiseIds()"
+            label="Filter by franchise"
+            [(value)]="franchiseSelection"
+            />
+        </div>
+        <button class="btn-primary"
+          (click)="clearFranchiseSelection()">
+          Clear
+        </button>
+      </div>
+
+
       <table class="collection-management__list">
         <thead>
           <tr>
@@ -24,7 +40,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (collection of alphaSortCollections(); track collection.id) {
+          @for (collection of filteredSortedCollections(); track collection.id) {
             <tr app-collection-list-item [collection]="collection"></tr>
           }
         </tbody>

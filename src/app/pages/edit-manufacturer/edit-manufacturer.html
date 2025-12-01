@@ -1,0 +1,34 @@
+<div class="edit-manufacturer">
+  <section class="edit-manufacturer__content">
+    <div class="edit-manufacturer__header">
+      <button class="material-icons-outlined" routerLink="/dimensions">arrow_back</button>
+      <h1>Edit Manufacturer</h1>
+      <p>{{ id() }}</p>
+    </div>
+    @if (loading()) {
+      <div class="edit-manufacturer__loading">Loading manufacturer...</div>
+    } @else if (error()) {
+      <div class="edit-manufacturer__error">{{ error() }}</div>
+    } @else if (!manufacturer()) {
+      <div class="edit-manufacturer__not-found">Manufacturer not found</div>
+    } @else {
+      @if (manufacturer(); as m) {
+        <div class="edit-manufacturer__form">
+          <app-manufacturer-form
+            [manufacturer]="m"
+            (updatedManufacturer)="updatedManufacturerDataChange($event)">
+          </app-manufacturer-form>
+          <button
+            type="button"
+            class="btn-primary"
+            [disabled]="loading() || !isDataValid()"
+            (click)="onSubmit()"
+          >
+            {{ loading() ? 'Updating...' : 'Update Manufacturer' }}
+          </button>
+          <!-- <pre>{{ manufacturer() | json }}</pre> -->
+      </div>
+      }
+    }
+  </section>
+</div>

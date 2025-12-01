@@ -9,6 +9,7 @@ import { EditProduct } from './pages/edit-product/edit-product';
 import { DashboardDimensions } from './pages/dashboard-dimensions/dashboard-dimensions';
 import { EditFranchise } from './pages/edit-franchise/edit-franchise';
 import { EditCollection } from './pages/edit-collection/edit-collection';
+import { EditManufacturer } from './pages/edit-manufacturer/edit-manufacturer';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'product/:id', component: EditProduct },
   { path: 'franchise/:id', component: EditFranchise },
   { path: 'collection/:id', component: EditCollection },
+  { path: 'manufacturer/:id', component: EditManufacturer },
   { path: 'new-images', component: NewImages },
   { path: '**', component: NotFound }
 ];

@@ -1,49 +1,49 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
-import { DimManufacturer } from './dimensions.model';
-import { removeUndefined, prepareUpdateData } from '../../utils/firestore.utils';
+import { DimSubCollection } from '../dimensions.model';
+import { removeUndefined, prepareUpdateData } from '../../../utils/firestore.utils';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ManufacturerFirebase {
+export class SubCollectionFirebase {
   private firestore = inject(Firestore);
-  private readonly COLLECTION_NAME = 'dim_manufacturer';
+  private readonly COLLECTION_NAME = 'dim_subcollection';
 
   // ========================================
   // CRUD OPERATIONS
   // ========================================
 
-  // Get all manufacturers
-  async getManufacturers(): Promise<DimManufacturer[]> {
+  // Get all subcollections
+  async getSubCollections(): Promise<DimSubCollection[]> {
     const collectionRef = collection(this.firestore, this.COLLECTION_NAME);
     const snapshot = await getDocs(collectionRef);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as DimManufacturer));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as DimSubCollection));
   }
 
-  // Add manufacturer
-  async addManufacturer(manufacturer: Omit<DimManufacturer, 'id'>): Promise<string> {
+  // Add subcollection
+  async addSubCollection(subCollection: Omit<DimSubCollection, 'id'>): Promise<string> {
     const collectionRef = collection(this.firestore, this.COLLECTION_NAME);
 
     // Remove undefined values (Firebase doesn't accept them)
-    const cleanManufacturer = removeUndefined(manufacturer);
+    const cleanSubCollection = removeUndefined(subCollection);
 
-    const docRef = await addDoc(collectionRef, cleanManufacturer);
+    const docRef = await addDoc(collectionRef, cleanSubCollection);
     return docRef.id;
   }
 
-  // Update manufacturer
-  async updateManufacturer(id: string, manufacturer: Partial<DimManufacturer>): Promise<void> {
+  // Update subcollection
+  async updateSubCollection(id: string, subCollection: Partial<DimSubCollection>): Promise<void> {
     const docRef = doc(this.firestore, this.COLLECTION_NAME, id);
 
     // Prepare data: replace undefined with deleteField()
-    const updateData = prepareUpdateData(manufacturer);
+    const updateData = prepareUpdateData(subCollection);
 
     await updateDoc(docRef, updateData);
   }
 
-  // Delete manufacturer
-  async deleteManufacturer(id: string): Promise<void> {
+  // Delete subcollection
+  async deleteSubCollection(id: string): Promise<void> {
     const docRef = doc(this.firestore, this.COLLECTION_NAME, id);
     await deleteDoc(docRef);
   }

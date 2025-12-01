@@ -149,7 +149,7 @@ export class ImgList implements OnInit {
       // Clear selection after successful move
       this.clearSelection();
     } catch (error) {
-      this.toastService.danger('Failed to move images');
+      this.toastService.error('Failed to move images');
       console.error('Error moving images:', error);
     }
   }

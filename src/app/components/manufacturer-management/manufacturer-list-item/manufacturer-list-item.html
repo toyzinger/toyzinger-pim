@@ -1,0 +1,13 @@
+
+<td class="manufacturer-list-item__name">{{ manufacturer().name }}</td>
+<td class="manufacturer-list-item__slug">/{{ manufacturer().slug }}</td>
+<td class="manufacturer-list-item__order">{{ manufacturer().order || '-' }}</td>
+<td class="manufacturer-list-item__actions">
+  <button class="btn-sm btn-primary" (click)="onEdit()">
+    <span class="material-icons-outlined">edit</span>
+  </button>
+  <button class="btn-sm btn-danger" (click)="onDelete()">
+    <span class="material-icons-outlined">delete</span>
+  </button>
+</td>
+
