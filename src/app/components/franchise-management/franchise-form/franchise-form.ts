@@ -1,8 +1,8 @@
 import { Component, signal, effect, input, output } from '@angular/core';
-import { DimFranchise, createEmptyFranchise } from '../../features/dimensions/dimensions.model';
-import { FormComponents } from '../form/form';
-import { ProductFormDualtextarea } from '../product-form/product-form-dualtextarea/product-form-dualtextarea';
-import { slugify } from '../../utils/slug.utils';
+import { DimFranchise, createEmptyFranchise } from '../../../features/dimensions/dimensions.model';
+import { FormComponents } from '../../form/form';
+import { ProductFormDualtextarea } from '../../product-form/product-form-dualtextarea/product-form-dualtextarea';
+import { slugify } from '../../../utils/slug.utils';
 
 @Component({
   selector: 'app-franchise-form',

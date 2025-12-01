@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
-import { DimCollection } from './dimensions.model';
-import { removeUndefined, prepareUpdateData } from '../../utils/firestore.utils';
+import { DimCollection } from '../dimensions.model';
+import { removeUndefined, prepareUpdateData } from '../../../utils/firestore.utils';
 
 @Injectable({
   providedIn: 'root'

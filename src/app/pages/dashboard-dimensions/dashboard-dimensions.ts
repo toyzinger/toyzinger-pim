@@ -3,10 +3,11 @@ import { GlobalService } from '../../features/global/global.service';
 import { DimensionInfo } from '../../components/dimension-info/dimension-info';
 import { dimensionType } from '../../features/dimensions/dimensions.model';
 import { FranchiseManagement } from '../../components/franchise-management/franchise-management';
+import { CollectionManagement } from "../../components/collection-management/collection-management";
 
 @Component({
   selector: 'app-dashboard-dimensions',
-  imports: [DimensionInfo, FranchiseManagement],
+  imports: [DimensionInfo, FranchiseManagement, CollectionManagement],
   templateUrl: './dashboard-dimensions.html',
   styleUrl: './dashboard-dimensions.scss',
 })

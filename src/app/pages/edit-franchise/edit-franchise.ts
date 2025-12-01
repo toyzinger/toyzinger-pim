@@ -1,7 +1,7 @@
 import { Component, inject, input, computed, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
-import { FranchiseForm } from "../../components/franchise-form/franchise-form";
+import { FranchiseForm } from "../../components/franchise-management/franchise-form/franchise-form";
 import { DimFranchise, createEmptyFranchise } from '../../features/dimensions/dimensions.model';
 import { RouterLink } from "@angular/router";
 

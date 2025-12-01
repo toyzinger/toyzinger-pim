@@ -1,0 +1,34 @@
+<div class="edit-collection">
+  <section class="edit-collection__content">
+    <div class="edit-collection__header">
+      <button class="material-icons-outlined" routerLink="/dimensions">arrow_back</button>
+      <h1>Edit Collection</h1>
+      <p>{{ id() }}</p>
+    </div>
+    @if (loading()) {
+      <div class="edit-collection__loading">Loading collection...</div>
+    } @else if (error()) {
+      <div class="edit-collection__error">{{ error() }}</div>
+    } @else if (!collection()) {
+      <div class="edit-collection__not-found">Collection not found</div>
+    } @else {
+      @if (collection(); as c) {
+        <div class="edit-collection__form">
+          <app-collection-form
+            [collection]="c"
+            (updatedCollection)="updatedCollectionDataChange($event)">
+          </app-collection-form>
+          <button
+            type="button"
+            class="btn-primary"
+            [disabled]="loading() || !isDataValid()"
+            (click)="onSubmit()"
+          >
+            {{ loading() ? 'Updating...' : 'Update Collection' }}
+          </button>
+          <!-- <pre>{{ collection() | json }}</pre> -->
+      </div>
+      }
+    }
+  </section>
+</div>

@@ -1,0 +1,51 @@
+<div class="collection-management">
+
+  <div class="container">
+    <h3 class="container__title">Collection List</h3>
+    @if (loading()) {
+    <p>Loading...</p>
+    }
+    @if (error()) {
+    <p class="error">{{ error() }}</p>
+    }
+    @if (!loading() && !error()) {
+      @if (collections().length === 0) {
+      <p>No collections found</p>
+      } @else {
+      <table class="collection-management__list">
+        <thead>
+          <tr>
+            <th>Name (en)</th>
+            <th>Slug</th>
+            <th>Franchise</th>
+            <th>Manufacturer</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (collection of alphaSortCollections(); track collection.id) {
+            <tr app-collection-list-item [collection]="collection"></tr>
+          }
+        </tbody>
+      </table>
+      }
+    }
+  </div>
+
+  <div class="container">
+    <h3 class="container__title">Add New Collection</h3>
+    <app-collection-form
+      [collection]="newCollection()"
+      (updatedCollection)="onNewCollection($event)"
+      [loading]="loading()"
+      [reduced]="true"
+    />
+    <button class="btn-primary"
+      (click)="addCollection()"
+      [disabled]="!isValidCollection()">
+      Add Collection
+    </button>
+  </div>
+
+</div>

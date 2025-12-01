@@ -1,0 +1,82 @@
+<div class="collection-form">
+  <div class="collection-form__row">
+    <app-dropdown-franchises
+      [label]="'Franchise'"
+      [disabled]="loading()"
+      [(value)]="franchiseId"
+    />
+    <app-form-input
+      label="Manufacturer ID"
+      placeholder="Enter manufacturer ID"
+      [(value)]="manufacturerId"
+      [disabled]="loading()"
+    />
+  </div>
+  <!-- ROW -->
+  <div class="collection-form__row">
+    <app-form-input
+      label="Name (Spanish)"
+      placeholder="Enter collection name in Spanish"
+      [(value)]="name_es"
+      [disabled]="loading()"
+      [required]="true"
+    />
+    <app-form-input
+      label="Name (English)"
+      placeholder="Enter collection name in English"
+      [(value)]="name_en"
+      [disabled]="loading()"
+      [required]="true"
+      (blur)="nameENBlur()"
+    />
+  </div>
+  <!-- ROW -->
+  <div class="collection-form__row">
+    <app-form-input
+      label="Slug"
+      placeholder="Enter URL slug"
+      [(value)]="slug"
+      [disabled]="loading()"
+      (blur)="slugBlur()"
+    />
+    <app-form-input
+      label="Years"
+      placeholder="Enter years (e.g., 2020-2023)"
+      [(value)]="years"
+      [disabled]="loading()"
+    />
+  </div>
+
+  @if (!reduced()) {
+  <!-- ROW -->
+  <div class="collection-form__row">
+    <app-form-input
+      label="Order"
+      type="number"
+      placeholder="Display order"
+      [(value)]="order"
+      [disabled]="loading()"
+    />
+    <app-form-input
+      label="Jumbotron Image Path"
+      placeholder="Enter jumbotron image path"
+      [(value)]="imgJumbotronPath"
+      [disabled]="loading()"
+    />
+  </div>
+  <!-- ROW -->
+  <app-product-form-dualtextarea
+    [(valueEn)]="text_en"
+    [(valueEs)]="text_es"
+    [disabled]="loading()"
+  />
+  <!-- ROW -->
+  <div class="collection-form__row">
+    <app-form-checkbox
+      label="Active Collection"
+      [(checked)]="isActive"
+      [disabled]="loading()"
+    />
+  </div>
+  }
+</div>
