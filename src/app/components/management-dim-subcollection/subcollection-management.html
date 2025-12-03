@@ -19,29 +19,34 @@
         </button>
       </div>
 
-      <table class="subcollection-management__list">
-        <thead>
-          <tr>
-            <th>Name (en)</th>
-            <th>Slug</th>
-            <th>Collection</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (subcollection of filteredSortedSubCollections(); track subcollection.id) {
-            <tr app-subcollection-list-item [subcollection]="subcollection"></tr>
-          }
-        </tbody>
-      </table>
+      @if (collectionSelection() !== '' && filteredSortedSubCollections().length > 0) {
+        <table class="subcollection-management__list">
+          <thead>
+            <tr>
+              <th>Name (en)</th>
+              <th>Slug</th>
+              <th>Collection</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (subcollection of filteredSortedSubCollections(); track subcollection.id) {
+              <tr app-subcollection-list-item [subcollection]="subcollection"></tr>
+            }
+          </tbody>
+        </table>
+      }
     }
     <!-- LOADING -->
     @if (loading()) {
     <p>Loading...</p>
     }
+    @if (!loading() && collectionSelection() === '') {
+    <p>Please select a collection</p>
+    }
     <!-- EMPTY LIST -->
-    @if (!loading() && subcollections().length === 0) {
+    @if (!loading() && filteredSortedSubCollections().length === 0) {
     <p>No subcollections found</p>
     }
   </div>

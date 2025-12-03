@@ -2,10 +2,10 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { GlobalService } from '../../features/global/global.service';
 import { DimensionInfo } from '../../components/dimension-info/dimension-info';
 import { dimensionType } from '../../features/dimensions/dimensions.model';
-import { FranchiseManagement } from '../../components/franchise-management/franchise-management';
-import { CollectionManagement } from "../../components/collection-management/collection-management";
-import { ManufacturerManagement } from '../../components/manufacturer-management/manufacturer-management';
-import { SubCollectionManagement } from "../../components/subcollection-management/subcollection-management";
+import { FranchiseManagement } from '../../components/management-dim-franchise/franchise-management';
+import { CollectionManagement } from "../../components/management-dim-collection/collection-management";
+import { ManufacturerManagement } from '../../components/management-dim-manufacturer/manufacturer-management';
+import { SubCollectionManagement } from "../../components/management-dim-subcollection/subcollection-management";
 
 @Component({
   selector: 'app-dashboard-dimensions',

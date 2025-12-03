@@ -18,6 +18,7 @@ export class SubCollectionService {
   private _loading = signal<boolean>(false); // Loading state
   private _error = signal<string | null>(null); // Error state
   private _subcollectionsLoaded = signal<boolean>(false); // Track if subcollections have been loaded
+  private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -50,8 +51,24 @@ export class SubCollectionService {
 
   // Ensure subcollections are loaded (only loads once per session)
   async ensureSubCollectionsLoaded(): Promise<void> {
-    if (!this._subcollectionsLoaded()) {
-      await this.loadSubCollections();
+    // If already loaded, return immediately
+    if (this._subcollectionsLoaded()) {
+      return;
+    }
+
+    // If currently loading, return the cached promise
+    if (this.loadingPromise) {
+      return this.loadingPromise;
+    }
+
+    // Start loading and cache the promise
+    this.loadingPromise = this.loadSubCollections();
+
+    try {
+      await this.loadingPromise;
+    } finally {
+      // Clear the promise cache after loading completes (success or failure)
+      this.loadingPromise = null;
     }
   }
 

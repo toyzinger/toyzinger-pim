@@ -18,6 +18,7 @@ export class FranchiseService {
   private _loading = signal<boolean>(false); // Loading state
   private _error = signal<string | null>(null); // Error state
   private _franchisesLoaded = signal<boolean>(false); // Track if franchises have been loaded
+  private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -60,8 +61,24 @@ export class FranchiseService {
 
   // Ensure franchises are loaded (only loads once per session)
   async ensureFranchisesLoaded(): Promise<void> {
-    if (!this._franchisesLoaded()) {
-      await this.loadFranchises();
+    // If already loaded, return immediately
+    if (this._franchisesLoaded()) {
+      return;
+    }
+
+    // If currently loading, return the cached promise
+    if (this.loadingPromise) {
+      return this.loadingPromise;
+    }
+
+    // Start loading and cache the promise
+    this.loadingPromise = this.loadFranchises();
+
+    try {
+      await this.loadingPromise;
+    } finally {
+      // Clear the promise cache after loading completes (success or failure)
+      this.loadingPromise = null;
     }
   }
 

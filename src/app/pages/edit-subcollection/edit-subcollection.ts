@@ -1,7 +1,7 @@
 import { Component, inject, input, computed, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
-import { SubCollectionForm } from "../../components/subcollection-management/subcollection-form/subcollection-form";
+import { SubCollectionForm } from "../../components/management-dim-subcollection/subcollection-form/subcollection-form";
 import { DimSubCollection, createEmptySubCollection } from '../../features/dimensions/dimensions.model';
 import { RouterLink } from "@angular/router";
 

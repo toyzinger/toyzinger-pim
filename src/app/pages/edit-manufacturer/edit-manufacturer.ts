@@ -1,7 +1,7 @@
 import { Component, inject, input, computed, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ManufacturerService } from '../../features/dimensions/manufacturer/manufacturer.service';
-import { ManufacturerForm } from "../../components/manufacturer-management/manufacturer-form/manufacturer-form";
+import { ManufacturerForm } from "../../components/management-dim-manufacturer/manufacturer-form/manufacturer-form";
 import { DimManufacturer, createEmptyManufacturer } from '../../features/dimensions/dimensions.model';
 import { RouterLink } from "@angular/router";
 

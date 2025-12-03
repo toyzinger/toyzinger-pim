@@ -18,6 +18,7 @@ export class CollectionService {
   private _loading = signal<boolean>(false); // Loading state
   private _error = signal<string | null>(null); // Error state
   private _collectionsLoaded = signal<boolean>(false); // Track if collections have been loaded
+  private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -50,8 +51,24 @@ export class CollectionService {
 
   // Ensure collections are loaded (only loads once per session)
   async ensureCollectionsLoaded(): Promise<void> {
-    if (!this._collectionsLoaded()) {
-      await this.loadCollections();
+    // If already loaded, return immediately
+    if (this._collectionsLoaded()) {
+      return;
+    }
+
+    // If currently loading, return the cached promise
+    if (this.loadingPromise) {
+      return this.loadingPromise;
+    }
+
+    // Start loading and cache the promise
+    this.loadingPromise = this.loadCollections();
+
+    try {
+      await this.loadingPromise;
+    } finally {
+      // Clear the promise cache after loading completes (success or failure)
+      this.loadingPromise = null;
     }
   }
 

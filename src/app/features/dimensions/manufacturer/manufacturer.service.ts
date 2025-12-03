@@ -18,6 +18,7 @@ export class ManufacturerService {
   private _loading = signal<boolean>(false); // Loading state
   private _error = signal<string | null>(null); // Error state
   private _manufacturersLoaded = signal<boolean>(false); // Track if manufacturers have been loaded
+  private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -50,8 +51,24 @@ export class ManufacturerService {
 
   // Ensure manufacturers are loaded (only loads once per session)
   async ensureManufacturersLoaded(): Promise<void> {
-    if (!this._manufacturersLoaded()) {
-      await this.loadManufacturers();
+    // If already loaded, return immediately
+    if (this._manufacturersLoaded()) {
+      return;
+    }
+
+    // If currently loading, return the cached promise
+    if (this.loadingPromise) {
+      return this.loadingPromise;
+    }
+
+    // Start loading and cache the promise
+    this.loadingPromise = this.loadManufacturers();
+
+    try {
+      await this.loadingPromise;
+    } finally {
+      // Clear the promise cache after loading completes (success or failure)
+      this.loadingPromise = null;
     }
   }
 

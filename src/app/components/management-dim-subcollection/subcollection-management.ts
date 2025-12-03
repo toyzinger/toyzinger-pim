@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, computed, signal } from '@angular/core';
+import { Component, inject, OnInit, computed, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
 import { SubCollectionForm } from "./subcollection-form/subcollection-form";
@@ -25,6 +25,18 @@ export class SubCollectionManagement implements OnInit {
   //Filters
   franchiseSelection = signal<string>('');
   collectionSelection = signal<string>('');
+
+  // ========================================
+  // CONSTRUCTOR
+  // ========================================
+
+  constructor() {
+    // Clear collection selection when franchise selection changes
+    effect(() => {
+      this.franchiseSelection(); // Track franchiseSelection
+      this.collectionSelection.set(''); // Clear collectionSelection
+    });
+  }
 
   isValidSubCollection = computed(() => {
     return this.newSubCollection().name.en.trim() !== '' && this.newSubCollection().name.es.trim() !== '';
