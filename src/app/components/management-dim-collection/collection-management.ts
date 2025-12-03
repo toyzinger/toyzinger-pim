@@ -5,6 +5,7 @@ import { CollectionForm } from "./collection-form/collection-form";
 import { CollectionListItem } from "./collection-list-item/collection-list-item";
 import { DimCollection, createEmptyCollection } from '../../features/dimensions/dimensions.model';
 import { DropdownFranchises } from "../dropdown-franchises/dropdown-franchises";
+import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 
 @Component({
   selector: 'app-collection-management',
@@ -14,13 +15,14 @@ import { DropdownFranchises } from "../dropdown-franchises/dropdown-franchises";
 })
 export class CollectionManagement implements OnInit {
   private collectionService = inject(CollectionService);
+  private franchiseService = inject(FranchiseService);
 
   // Use service signals directly
   collections = this.collectionService.collections;
   loading = this.collectionService.loading;
 
   newCollection = signal<DimCollection>(createEmptyCollection());
-  franchiseSelection = signal<string>('');
+  franchiseSelection = this.franchiseService.selectedFranchiseId;
 
   isValidCollection = computed(() => {
     return this.newCollection().name.en.trim() !== '' && this.newCollection().name.es.trim() !== '';
@@ -52,7 +54,7 @@ export class CollectionManagement implements OnInit {
   }
 
   clearFranchiseSelection() {
-    this.franchiseSelection.set('');
+    this.franchiseService.clearSelectedFranchiseId();
   }
 
   async addCollection() {

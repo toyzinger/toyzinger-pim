@@ -6,7 +6,6 @@
       <div class="subcollection-management__filters">
         <app-dropdown-franchises
           label="Filter by franchise"
-          [(value)]="franchiseSelection"
         />
         <app-dropdown-collections
           [filteredByFranchise]="franchiseSelection()"
@@ -57,7 +56,6 @@
     <div class="subcollection-management__filters">
       <app-dropdown-franchises
         label="Filter by franchise"
-        [(value)]="franchiseSelection"
       />
       <button class="btn-primary" (click)="clearCollectionSelection()">
         <span class="material-icons-outlined">filter_alt_off</span>

@@ -1,4 +1,4 @@
-import { Component, inject, model, input, computed, OnInit } from '@angular/core';
+import { Component, inject, model, input, computed, OnInit, effect, untracked } from '@angular/core';
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
 
@@ -58,6 +58,38 @@ export class DropdownFranchises implements OnInit {
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
   });
+
+  // ========================================
+  // CONSTRUCTOR
+  // ========================================
+
+  constructor() {
+    // Effect 1: Track global changes, update local (untracked read of local)
+    effect(() => {
+      const globalFranchiseId = this.franchiseService.selectedFranchiseId();
+      // Read local value without tracking it
+      const localValue = untracked(() => this.value());
+      // Only update if different and franchise is in filtered list
+      if (globalFranchiseId !== localValue) {
+        const franchiseIds = untracked(() => this.franchises().map(f => f.id || ''));
+
+        if (globalFranchiseId === '' || franchiseIds.includes(globalFranchiseId)) {
+          this.value.set(globalFranchiseId);
+        }
+      }
+    });
+
+    // Effect 2: Track local changes, update global (untracked read of global)
+    effect(() => {
+      const localValue = this.value();
+      // Read global value without tracking it
+      const globalFranchiseId = untracked(() => this.franchiseService.selectedFranchiseId());
+      // Only update global if local changed and is different
+      if (localValue !== globalFranchiseId) {
+        this.franchiseService.setSelectedFranchiseId(localValue);
+      }
+    });
+  }
 
   // ========================================
   // LIFECYCLE

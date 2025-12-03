@@ -19,6 +19,7 @@ export class FranchiseService {
   private _error = signal<string | null>(null); // Error state
   private _franchisesLoaded = signal<boolean>(false); // Track if franchises have been loaded
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
+  private _selectedFranchiseId = signal<string>(''); // Global selected franchise ID
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -27,6 +28,7 @@ export class FranchiseService {
   franchises = this._franchises.asReadonly();
   loading = this._loading.asReadonly();
   error = this._error.asReadonly();
+  selectedFranchiseId = this._selectedFranchiseId.asReadonly();
 
   // ========================================
   // COMPUTED VALUES
@@ -172,6 +174,16 @@ export class FranchiseService {
   // Clear error
   clearError(): void {
     this._error.set(null);
+  }
+
+  // Set globally selected franchise ID
+  setSelectedFranchiseId(id: string): void {
+    this._selectedFranchiseId.set(id);
+  }
+
+  // Clear globally selected franchise ID
+  clearSelectedFranchiseId(): void {
+    this._selectedFranchiseId.set('');
   }
 
   // ========================================

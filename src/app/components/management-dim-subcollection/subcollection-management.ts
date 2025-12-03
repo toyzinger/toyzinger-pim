@@ -6,6 +6,7 @@ import { SubCollectionListItem } from "./subcollection-list-item/subcollection-l
 import { DimSubCollection, createEmptySubCollection } from '../../features/dimensions/dimensions.model';
 import { DropdownCollections } from "../dropdown-collections/dropdown-collections";
 import { DropdownFranchises } from "../dropdown-franchises/dropdown-franchises";
+import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 
 @Component({
   selector: 'app-subcollection-management',
@@ -15,6 +16,7 @@ import { DropdownFranchises } from "../dropdown-franchises/dropdown-franchises";
 })
 export class SubCollectionManagement implements OnInit {
   private subcollectionService = inject(SubCollectionService);
+  private franchiseService = inject(FranchiseService);
 
   // Use service signals directly
   subcollections = this.subcollectionService.subcollections;
@@ -23,7 +25,7 @@ export class SubCollectionManagement implements OnInit {
   newSubCollection = signal<DimSubCollection>(createEmptySubCollection());
 
   //Filters
-  franchiseSelection = signal<string>('');
+  franchiseSelection = this.franchiseService.selectedFranchiseId; // Use global franchise selection
   collectionSelection = signal<string>('');
 
   // ========================================
@@ -68,7 +70,7 @@ export class SubCollectionManagement implements OnInit {
   }
 
   clearCollectionSelection() {
-    this.franchiseSelection.set('');
+    this.franchiseService.clearSelectedFranchiseId();
     this.collectionSelection.set('');
   }
 
