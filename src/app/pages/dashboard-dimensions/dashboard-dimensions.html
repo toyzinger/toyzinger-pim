@@ -30,18 +30,16 @@
     <div class="dashboard-dimensions__tab">
       @switch (tab()) {
         @case ('franchise') {
-        <app-franchise-management></app-franchise-management>
+          <app-franchise-management/>
         }
         @case ('collection') {
-          <app-collection-management></app-collection-management>
+          <app-collection-management/>
         }
         @case ('subcollection') {
-          <div class="container">
-            <p>Subcollection Content</p>
-          </div>
+          <app-subcollection-management/>
         }
         @case ('manufacturer') {
-          <app-manufacturer-management></app-manufacturer-management>
+          <app-manufacturer-management/>
         }
       }
     </div>

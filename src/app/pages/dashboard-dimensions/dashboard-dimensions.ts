@@ -5,6 +5,7 @@ import { dimensionType } from '../../features/dimensions/dimensions.model';
 import { FranchiseManagement } from '../../components/franchise-management/franchise-management';
 import { CollectionManagement } from "../../components/collection-management/collection-management";
 import { ManufacturerManagement } from '../../components/manufacturer-management/manufacturer-management';
+import { SubCollectionManagement } from "../../components/subcollection-management/subcollection-management";
 
 @Component({
   selector: 'app-dashboard-dimensions',
@@ -12,8 +13,9 @@ import { ManufacturerManagement } from '../../components/manufacturer-management
     DimensionInfo,
     FranchiseManagement,
     CollectionManagement,
-    ManufacturerManagement
-  ],
+    ManufacturerManagement,
+    SubCollectionManagement
+],
   templateUrl: './dashboard-dimensions.html',
   styleUrl: './dashboard-dimensions.scss',
 })

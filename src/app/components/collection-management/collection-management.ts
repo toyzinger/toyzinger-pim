@@ -18,7 +18,6 @@ export class CollectionManagement implements OnInit {
   // Use service signals directly
   collections = this.collectionService.collections;
   loading = this.collectionService.loading;
-  error = this.collectionService.error;
 
   newCollection = signal<DimCollection>(createEmptyCollection());
   franchiseSelection = signal<string>('');

@@ -1,7 +1,7 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/breakpoints' as *;
 
-.collection-management {
+.subcollection-management {
   display: flex;
   gap: 1rem;
   flex-direction: column;
@@ -18,7 +18,7 @@
   &__filters {
     width: 100%;
     display: flex;
-    align-items: flex-end;
+    align-items: end;
     gap: 1rem;
     flex-wrap: wrap;
     padding-bottom: 1rem;
@@ -30,8 +30,8 @@
 
     button {
       max-width: 50px;
-      min-height: 50px;
       margin-bottom: 0.5rem;
+      min-height: 50px;
     }
   }
 
@@ -67,4 +67,5 @@
       }
     }
   }
+
 }

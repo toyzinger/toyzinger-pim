@@ -35,12 +35,15 @@ td {
   &__actions {
     display: flex;
     gap: 0.5rem;
+    padding: 0.5rem;
     justify-content: flex-end;
 
     button {
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 35px;
+      width: 45px;
 
       .material-icons-outlined {
         font-size: 1.2rem;

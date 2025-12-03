@@ -10,6 +10,7 @@ import { DashboardDimensions } from './pages/dashboard-dimensions/dashboard-dime
 import { EditFranchise } from './pages/edit-franchise/edit-franchise';
 import { EditCollection } from './pages/edit-collection/edit-collection';
 import { EditManufacturer } from './pages/edit-manufacturer/edit-manufacturer';
+import { EditSubCollection } from './pages/edit-subcollection/edit-subcollection';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -20,6 +21,7 @@ export const routes: Routes = [
   { path: 'product/:id', component: EditProduct },
   { path: 'franchise/:id', component: EditFranchise },
   { path: 'collection/:id', component: EditCollection },
+  { path: 'subcollection/:id', component: EditSubCollection },
   { path: 'manufacturer/:id', component: EditManufacturer },
   { path: 'new-images', component: NewImages },
   { path: '**', component: NotFound }

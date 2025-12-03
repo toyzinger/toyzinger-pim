@@ -1,0 +1,14 @@
+
+<td class="subcollection-list-item__name">{{ subcollection().name.en }}</td>
+<td class="subcollection-list-item__slug">/{{ subcollection().slug }}</td>
+<td class="subcollection-list-item__collection">{{ collectionName() }}</td>
+<td class="subcollection-list-item__status">{{ subcollection().isActive ? 'Active' : 'Inactive' }}</td>
+<td class="subcollection-list-item__actions">
+  <button class="btn-sm btn-primary" (click)="onEdit()">
+    <span class="material-icons-outlined">edit</span>
+  </button>
+  <button class="btn-sm btn-danger" (click)="onDelete()">
+    <span class="material-icons-outlined">delete</span>
+  </button>
+</td>
+

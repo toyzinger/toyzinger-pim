@@ -1,0 +1,34 @@
+<div class="edit-subcollection">
+  <section class="edit-subcollection__content">
+    <div class="edit-subcollection__header">
+      <button class="material-icons-outlined" routerLink="/dimensions">arrow_back</button>
+      <h1>Edit SubCollection</h1>
+      <p>{{ id() }}</p>
+    </div>
+    @if (loading()) {
+      <div class="edit-subcollection__loading">Loading subcollection...</div>
+    } @else if (error()) {
+      <div class="edit-subcollection__error">{{ error() }}</div>
+    } @else if (!subcollection()) {
+      <div class="edit-subcollection__not-found">SubCollection not found</div>
+    } @else {
+      @if (subcollection(); as sc) {
+        <div class="edit-subcollection__form">
+          <app-subcollection-form
+            [subcollection]="sc"
+            (updatedSubCollection)="updatedSubCollectionDataChange($event)">
+          </app-subcollection-form>
+          <button
+            type="button"
+            class="btn-primary"
+            [disabled]="loading() || !isDataValid()"
+            (click)="onSubmit()"
+          >
+            {{ loading() ? 'Updating...' : 'Update SubCollection' }}
+          </button>
+          <pre>{{ subcollection() | json }}</pre>
+      </div>
+      }
+    }
+  </section>
+</div>

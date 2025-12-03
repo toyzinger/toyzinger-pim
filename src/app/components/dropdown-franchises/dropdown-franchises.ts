@@ -51,10 +51,12 @@ export class DropdownFranchises implements OnInit {
   // Convert franchises to SelectOption[] for FormSelect
   franchiseOptions = computed<SelectOption[]>(() => {
     const lang = this.language();
-    return this.franchises().map(franchise => ({
-      value: franchise.id || '',
-      label: franchise.name[lang] || franchise.name.en || 'Unnamed Franchise',
-    }));
+    return this.franchises()
+      .map(franchise => ({
+        value: franchise.id || '',
+        label: franchise.name[lang] || franchise.name.en || 'Unnamed Franchise',
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
   });
 
   // ========================================

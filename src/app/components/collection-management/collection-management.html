@@ -1,39 +1,24 @@
 <div class="collection-management">
-
+  <!-- COLLECTIONS LIST -->
   <div class="container">
     <h3 class="container__title">Collection List</h3>
-    @if (loading()) {
-    <p>Loading...</p>
-    }
-    @if (error()) {
-    <p class="error">{{ error() }}</p>
-    }
-    @if (!loading() && !error()) {
-      @if (collections().length === 0) {
-      <p>No collections found</p>
-      } @else {
-
+    @if (!loading() && collections().length > 0) {
       <div class="collection-management__filters">
-        <div class="collection-management__filters--dropdown">
-          <app-dropdown-franchises
-            [filtered]="uniqueFranchiseIds()"
-            label="Filter by franchise"
-            [(value)]="franchiseSelection"
-            />
-        </div>
-        <button class="btn-primary"
-          (click)="clearFranchiseSelection()">
-          Clear
+        <app-dropdown-franchises
+          [filtered]="uniqueFranchiseIds()"
+          label="Filter by franchise"
+          [(value)]="franchiseSelection"
+          />
+        <button class="btn-primary" (click)="clearFranchiseSelection()">
+          <span class="material-icons-outlined">filter_alt_off</span>
         </button>
       </div>
-
 
       <table class="collection-management__list">
         <thead>
           <tr>
             <th>Name (en)</th>
             <th>Slug</th>
-            <th>Franchise</th>
             <th>Manufacturer</th>
             <th>Status</th>
             <th>Actions</th>
@@ -45,10 +30,18 @@
           }
         </tbody>
       </table>
-      }
+    }
+    <!-- LOADING -->
+    @if (loading()) {
+      <p>Loading...</p>
+    }
+    <!-- EMPTY LIST -->
+    @if (!loading() && collections().length === 0) {
+      <p>No collections found</p>
     }
   </div>
 
+  <!-- ADD NEW COLLECTION -->
   <div class="container">
     <h3 class="container__title">Add New Collection</h3>
     <app-collection-form
