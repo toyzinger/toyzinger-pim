@@ -11,9 +11,7 @@ import { FormSelect, SelectOption } from '../form/form-select/form-select';
 export class DropdownManufacturers implements OnInit {
   private manufacturerService = inject(ManufacturerService);
 
-  // ========================================
-  // INPUTS
-  // ========================================
+  // ============ INPUTS ==================
 
   label = input<string>('Manufacturer');
   id = input<string>('manufacturer-select');
@@ -21,33 +19,28 @@ export class DropdownManufacturers implements OnInit {
   disabled = input<boolean>(false);
   placeholder = input<string>('Select a manufacturer');
 
-  // ========================================
-  // TWO-WAY BINDING
-  // ========================================
+  // ============ TWO-WAY BINDING ==================
 
-  // Model for selected manufacturer ID
-  value = model<string>('');
+  value = model<string>(''); // Model for selected manufacturer ID
 
-  // ========================================
-  // COMPUTED VALUES
-  // ========================================
+  // ============ COMPUTED VALUES ==================
 
   // Get all manufacturers sorted by order
   manufacturers = computed(() => {
-    return this.manufacturerService.sortedManufacturers();
+    return this.manufacturerService.manufacturers();
   });
 
   // Convert manufacturers to SelectOption[] for FormSelect
   manufacturerOptions = computed<SelectOption[]>(() => {
-    return this.manufacturers().map(manufacturer => ({
-      value: manufacturer.id || '',
-      label: manufacturer.name || 'Unnamed Manufacturer',
-    }));
+    return this.manufacturers()
+      .map(manufacturer => ({
+        value: manufacturer.id || '',
+        label: manufacturer.name || 'Unnamed Manufacturer',
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
   });
 
-  // ========================================
-  // LIFECYCLE
-  // ========================================
+  // ============ LIFECYCLE ==================
 
   ngOnInit() {
     // Load manufacturers when component is initialized

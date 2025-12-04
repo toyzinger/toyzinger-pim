@@ -12,23 +12,38 @@
     />
     <!-- ROW -->
     <div class="product-form__row">
-      <app-product-form-franchise
-        [(franchise)]="franchise"
+      <app-dropdown-manufacturers
+        label="Manufacturer"
+        [value]="manufacturerId()"
+        (valueChange)="manufacturerId.set($event)"
         [disabled]="loading()"
       />
-      <app-form-input
-        label="Collection"
-        placeholder="Enter collection name"
-        [(value)]="collection"
+      <app-dropdown-franchises
+        label="Franchise"
+        [value]="franchiseId()"
+        (valueChange)="franchiseId.set($event)"
         [disabled]="loading()"
       />
     </div>
     <!-- ROW -->
     <div class="product-form__row">
-      <app-product-form-manufacturer
-        [(manufacturer)]="manufacturer"
-        [disabled]="loading()"
+      <app-dropdown-collections
+        label="Collection"
+        [filteredByFranchise]="franchiseId()"
+        [value]="collectionId()"
+        (valueChange)="collectionId.set($event)"
+        [loading]="loading()"
       />
+      <app-dropdown-subcollections
+        label="SubCollection"
+        [filteredByCollection]="collectionId()"
+        [value]="subCollectionId()"
+        (valueChange)="subCollectionId.set($event)"
+        [loading]="loading()"
+      />
+    </div>
+    <!-- ROW -->
+    <div class="product-form__row">
       <app-form-input
         label="Year Released"
         type="number"
@@ -36,24 +51,21 @@
         [(value)]="yearReleased"
         [disabled]="loading()"
       />
-    </div>
-    <!-- ROW -->
-    <div class="product-form__row">
       <app-form-input
         label="Size"
         placeholder="Enter size"
         [(value)]="size"
         [disabled]="loading()"
       />
+    </div>
+    <!-- ROW -->
+    <div class="product-form__row">
       <app-form-input
         label="SKU"
         placeholder="Enter SKU"
         [(value)]="sku"
         [disabled]="loading()"
       />
-    </div>
-    <!-- ROW -->
-    <div class="product-form__row">
       <app-form-checkbox
         label="Active Product"
         [(checked)]="isActive"

@@ -40,11 +40,6 @@ export class ManufacturerService {
     return (id: string) => this._manufacturers().find(m => m.id === id);
   });
 
-  // Manufacturers sorted by order
-  sortedManufacturers = computed(() =>
-    [...this._manufacturers()].sort((a, b) => (a.order || 0) - (b.order || 0))
-  );
-
   // ========================================
   // ACTIONS - CRUD OPERATIONS
   // ========================================

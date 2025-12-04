@@ -11,9 +11,7 @@ import { FormSelect, SelectOption } from '../form/form-select/form-select';
 export class DropdownFranchises implements OnInit {
   private franchiseService = inject(FranchiseService);
 
-  // ========================================
-  // INPUTS
-  // ========================================
+  // ============ INPUTS ==================
 
   label = input<string>('Franchise');
   placeholder = input<string>('Select a franchise');
@@ -23,27 +21,18 @@ export class DropdownFranchises implements OnInit {
   language = input<'en' | 'es'>('en'); // Language for franchise names
   filtered = input<string[]>([]); // Array of franchise IDs to filter by
 
-  // ========================================
-  // TWO-WAY BINDING
-  // ========================================
+  // ============ TWO-WAY BINDING ==================
 
-  // Model for selected franchise ID
-  value = model<string>('');
+  value = model<string>(''); // Model for selected franchise ID
 
-  // ========================================
-  // COMPUTED VALUES
-  // ========================================
+  // ============ COMPUTED VALUES ==================
 
   // Get franchises, optionally filtered by ID array
   franchises = computed(() => {
-    const allFranchises = this.franchiseService.sortedFranchises();
+    const allFranchises = this.franchiseService.franchises();
     const filteredIds = this.filtered();
-
     // If filtered array is empty, return all franchises
-    if (filteredIds.length === 0) {
-      return allFranchises;
-    }
-
+    if (filteredIds.length === 0) return allFranchises;
     // Otherwise, only return franchises whose ID is in the filtered array
     return allFranchises.filter(franchise => filteredIds.includes(franchise.id || ''));
   });
@@ -59,50 +48,43 @@ export class DropdownFranchises implements OnInit {
       .sort((a, b) => a.label.localeCompare(b.label));
   });
 
-  // ========================================
-  // CONSTRUCTOR
-  // ========================================
+  // ============ EFFECTS ==================
 
   private isInitialized = false;
 
   constructor() {
-    // Effect 1: Track global changes, update local (untracked read of local)
-    // Only applies after initialization to avoid overwriting parent-provided value
-    effect(() => {
-      const globalFranchiseId = this.franchiseService.selectedFranchiseId();
-
-      // Skip on initialization - let the parent's value take precedence
-      if (!this.isInitialized) {
-        return;
-      }
-
-      // Read local value without tracking it
-      const localValue = untracked(() => this.value());
-      // Only update if different and franchise is in filtered list
-      if (globalFranchiseId !== localValue) {
-        const franchiseIds = untracked(() => this.franchises().map(f => f.id || ''));
-
-        if (globalFranchiseId === '' || franchiseIds.includes(globalFranchiseId)) {
-          this.value.set(globalFranchiseId);
-        }
-      }
-    });
-
-    // Effect 2: Track local changes, update global (untracked read of global)
-    effect(() => {
-      const localValue = this.value();
-      // Read global value without tracking it
-      const globalFranchiseId = untracked(() => this.franchiseService.selectedFranchiseId());
-      // Only update global if local changed and is different
-      if (localValue !== globalFranchiseId) {
-        this.franchiseService.setSelectedFranchiseId(localValue);
-      }
-    });
+    effect(() => this.syncGlobalToLocal());
+    effect(() => this.syncLocalToGlobal());
   }
 
-  // ========================================
-  // LIFECYCLE
-  // ========================================
+  // Sync global selectedFranchiseId to local value (after initialization)
+  private syncGlobalToLocal(): void {
+    const globalFranchiseId = this.franchiseService.selectedFranchiseId();
+    // Skip on initialization - let the parent's value take precedence
+    if (!this.isInitialized) return;
+    // Read local value without tracking it
+    const localValue = untracked(() => this.value());
+    // Only update if different and franchise is in filtered list
+    if (globalFranchiseId !== localValue) {
+      const franchiseIds = untracked(() => this.franchises().map(f => f.id || ''));
+      if (globalFranchiseId === '' || franchiseIds.includes(globalFranchiseId)) {
+        this.value.set(globalFranchiseId);
+      }
+    }
+  }
+
+  // Sync local value to global selectedFranchiseId
+  private syncLocalToGlobal(): void {
+    const localValue = this.value();
+    // Read global value without tracking it
+    const globalFranchiseId = untracked(() => this.franchiseService.selectedFranchiseId());
+    // Only update global if local changed and is different
+    if (localValue !== globalFranchiseId) {
+      this.franchiseService.setSelectedFranchiseId(localValue);
+    }
+  }
+
+  // ============ LIFECYCLE ==================
 
   ngOnInit() {
     // Load franchises when component is initialized

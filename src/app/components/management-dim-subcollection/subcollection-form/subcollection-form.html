@@ -2,7 +2,7 @@
   <div class="subcollection-form__row">
     <app-dropdown-collections
       [label]="'Collection'"
-      [disabled]="loading()"
+      [loading]="loading()"
       [(value)]="collectionId"
       [filteredByFranchise]="franchiseId()"
     />

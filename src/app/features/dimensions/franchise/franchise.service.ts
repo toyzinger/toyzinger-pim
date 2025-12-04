@@ -21,45 +21,24 @@ export class FranchiseService {
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
   private _selectedFranchiseId = signal<string>(''); // Global selected franchise ID
 
-  // ========================================
-  // SELECTORS (Public readonly)
-  // ========================================
+  // ============ SELECTORS (Public readonly) ============
 
   franchises = this._franchises.asReadonly();
   loading = this._loading.asReadonly();
   error = this._error.asReadonly();
   selectedFranchiseId = this._selectedFranchiseId.asReadonly();
 
-  // ========================================
-  // COMPUTED VALUES
-  // ========================================
+  // ============ COMPUTED VALUES ============
 
   // Total count of franchises
   franchiseCount = computed(() => this._franchises().length);
-
-  // Only active franchises
-  activeFranchises = computed(() =>
-    this._franchises().filter(f => f.isActive)
-  );
-
-  // Only inactive franchises
-  inactiveFranchises = computed(() =>
-    this._franchises().filter(f => !f.isActive)
-  );
 
   // Get franchise by ID
   getFranchiseById = computed(() => {
     return (id: string) => this._franchises().find(f => f.id === id);
   });
 
-  // Franchises sorted by order
-  sortedFranchises = computed(() =>
-    [...this._franchises()].sort((a, b) => (a.order || 0) - (b.order || 0))
-  );
-
-  // ========================================
-  // ACTIONS - CRUD OPERATIONS
-  // ========================================
+  // ============ ACTIONS - CRUD OPERATIONS ============
 
   // Ensure franchises are loaded (only loads once per session)
   async ensureFranchisesLoaded(): Promise<void> {

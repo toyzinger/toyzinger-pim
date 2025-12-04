@@ -10,8 +10,8 @@
         <app-dropdown-collections
           [filteredByFranchise]="franchiseSelection()"
           label="Filter by collection"
-          [disabled]="franchiseSelection() === ''"
           [(value)]="collectionSelection"
+          [loading]="loading()"
           />
         <button class="btn-primary" (click)="clearCollectionSelection()">
           <span class="material-icons-outlined">filter_alt_off</span>
