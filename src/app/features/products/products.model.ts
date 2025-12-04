@@ -5,17 +5,18 @@ export interface Product {
   id?: string;
   name: string;
   folderId?: string; // Optional folder assignment
-  franchise?: MultilingualString;
-  manufacturer?: MultilingualString;
+  franchiseId?: string; // Reference to franchise dimension
+  collectionId?: string; // Reference to collection dimension
+  subCollectionId?: string; // Reference to subcollection dimension
+  manufacturerId?: string; // Reference to manufacturer dimension
   yearReleased?: number;
-  collection?: string;
   size?: string;
   accessories?: MultilingualStringArray;
   toyDescription?: MultilingualString;
   characterDescription?: MultilingualString;
   images?: ProductImage[];
   slug?: string;
-  //
+  // Not used
   createdAt?: Date;
   updatedAt?: Date;
   isActive: boolean;
@@ -31,8 +32,14 @@ export interface Product {
 export function createEmptyProduct(): Omit<Product, 'id'> {
   return {
     name: '',
-    collection: '',
     isActive: true,
+    // Optional ID references
+    folderId: undefined,
+    franchiseId: undefined,
+    collectionId: undefined,
+    subCollectionId: undefined,
+    manufacturerId: undefined,
+    // Optional fields
     sku: undefined,
     size: undefined,
     yearReleased: undefined,
@@ -40,7 +47,5 @@ export function createEmptyProduct(): Omit<Product, 'id'> {
     toyDescription: undefined,
     characterDescription: undefined,
     images: undefined,
-    franchise: undefined,
-    manufacturer: undefined,
   };
 }

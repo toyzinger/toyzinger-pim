@@ -4,16 +4,22 @@ import { ProductsService } from '../../features/products/products.service';
 import { ProductForm } from '../../components/product-form/product-form';
 import { createEmptyProduct, Product } from '../../features/products/products.model';
 import { RouterLink } from '@angular/router';
+import { ToastService } from '../../features/toast/toast.service';
 
 @Component({
   selector: 'app-edit-product',
   standalone: true,
-  imports: [CommonModule, ProductForm, RouterLink],
+  imports: [
+    CommonModule,
+    ProductForm,
+    RouterLink
+  ],
   templateUrl: './edit-product.html',
   styleUrl: './edit-product.scss',
 })
 export class EditProduct implements OnInit {
   private productsService = inject(ProductsService);
+  private toastService = inject(ToastService);
 
   // Input from route param :id
   id = input.required<string>();
@@ -42,12 +48,13 @@ export class EditProduct implements OnInit {
     this.updatedProductData.set(updatedProductData);
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (!this.isDataValid() || this.loading()) {
       return;
     }
     try {
-      this.productsService.updateProduct(this.id(), this.updatedProductData());
+      await this.productsService.updateProduct(this.id(), this.updatedProductData());
+      this.toastService.success('Product updated successfully');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error updating product:', error);

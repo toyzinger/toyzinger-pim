@@ -63,10 +63,19 @@ export class DropdownFranchises implements OnInit {
   // CONSTRUCTOR
   // ========================================
 
+  private isInitialized = false;
+
   constructor() {
     // Effect 1: Track global changes, update local (untracked read of local)
+    // Only applies after initialization to avoid overwriting parent-provided value
     effect(() => {
       const globalFranchiseId = this.franchiseService.selectedFranchiseId();
+
+      // Skip on initialization - let the parent's value take precedence
+      if (!this.isInitialized) {
+        return;
+      }
+
       // Read local value without tracking it
       const localValue = untracked(() => this.value());
       // Only update if different and franchise is in filtered list
@@ -98,5 +107,9 @@ export class DropdownFranchises implements OnInit {
   ngOnInit() {
     // Load franchises when component is initialized
     this.franchiseService.ensureFranchisesLoaded();
+    // Mark as initialized after potential parent value is set
+    setTimeout(() => {
+      this.isInitialized = true;
+    });
   }
 }

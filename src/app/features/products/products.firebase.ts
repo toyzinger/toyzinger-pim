@@ -8,7 +8,7 @@ import { removeUndefined, prepareUpdateData } from '../../utils/firestore.utils'
 })
 export class ProductsFirebase {
   private firestore = inject(Firestore);
-  private readonly COLLECTION_NAME = 'products';
+  private readonly COLLECTION_NAME = 'toy_products';
 
   // ========================================
   // CRUD OPERATIONS

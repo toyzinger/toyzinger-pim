@@ -118,6 +118,7 @@ export class ProductsService {
   async updateProduct(id: string, data: Partial<Product>): Promise<void> {
     this._loading.set(true);
     this._error.set(null);
+    console.log('updateProduct', id, data);
     try {
       // Optimistic update
       const currentProducts = this._products();
@@ -125,7 +126,6 @@ export class ProductsService {
         p.id === id ? { ...p, ...data, updatedAt: new Date() } : p
       );
       this._products.set(updatedProducts);
-
       // Update in Firebase
       await this.productsFirabse.updateProduct(id, data);
     } catch (error) {
