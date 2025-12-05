@@ -65,6 +65,9 @@ export class DropdownFranchises implements OnInit {
     // Read local value without tracking it
     const localValue = untracked(() => this.value());
     // Only update if different and franchise is in filtered list
+    console.log('syncGlobalToLocal ========', globalFranchiseId, localValue);
+    console.log('globalFranchiseId', globalFranchiseId);
+    console.log('localValue (untracked)', localValue);
     if (globalFranchiseId !== localValue) {
       const franchiseIds = untracked(() => this.franchises().map(f => f.id || ''));
       if (globalFranchiseId === '' || franchiseIds.includes(globalFranchiseId)) {
@@ -79,6 +82,9 @@ export class DropdownFranchises implements OnInit {
     // Read global value without tracking it
     const globalFranchiseId = untracked(() => this.franchiseService.selectedFranchiseId());
     // Only update global if local changed and is different
+    console.log('syncLocalToGlobal =======');
+    console.log('localValue', localValue);
+    console.log('globalFranchiseId (untracked)', globalFranchiseId);
     if (localValue !== globalFranchiseId) {
       this.franchiseService.setSelectedFranchiseId(localValue);
     }

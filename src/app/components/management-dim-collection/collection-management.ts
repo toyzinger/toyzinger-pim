@@ -74,9 +74,7 @@ export class CollectionManagement implements OnInit {
     }
   }
 
-  // ========================================
-  // LIFECYCLE
-  // ========================================
+  // ============= LIFECYCLE ===========================
 
   async ngOnInit() {
     await this.collectionService.ensureCollectionsLoaded();
