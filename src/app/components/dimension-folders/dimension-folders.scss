@@ -1,0 +1,72 @@
+@use '../../../styles/variables' as *;
+
+.dimensions-menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+
+  // HEADER
+  &__header {
+    padding: 0.5rem 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid $color-bg-light;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-text-light;
+    margin-bottom: 10px;
+  }
+
+  &__colapse {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: $color-text-light;
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  // LOADING
+  &__loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    color: $color-text-light;
+    font-size: 0.9rem;
+  }
+
+  // TREE
+  &__tree {
+    flex: 1;
+    overflow-y: auto;
+
+    // Discrete scrollbar styling
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba($color-text-light, 0.3);
+      border-radius: 3px;
+
+      &:hover {
+        background-color: rgba($color-text-light, 0.5);
+      }
+    }
+
+    // Firefox scrollbar
+    scrollbar-width: thin;
+    scrollbar-color: rgba($color-text-light, 0.3) transparent;
+  }
+}

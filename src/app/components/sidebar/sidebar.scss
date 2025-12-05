@@ -1,11 +1,11 @@
 @use '../../../styles/variables' as *;
 
 .sidebar {
-  width: 350px;
+  width: 450px;
   height: 100%;
   background-color: $color-bg-medium;
   border-right: 1px solid $color-bg-light;
-  padding: 1rem;
+  padding: 1rem 6px 1rem 1rem;
   position: relative;
   flex-shrink: 0;
 

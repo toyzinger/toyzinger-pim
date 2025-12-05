@@ -1,14 +1,14 @@
 import { Component, signal, HostListener } from '@angular/core';
-import { Foldersmenu } from '../folders-menu/folders-menu';
+import { DimensionFolders } from "../dimension-folders/dimension-folders";
 
 @Component({
   selector: 'app-sidebar',
-  imports: [Foldersmenu],
+  imports: [DimensionFolders],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
-  width = signal(350); // Initial width in pixels
+  width = signal(450); // Initial width in pixels
   private isResizing = false;
   private minWidth = 200;
   private maxWidth = 700;

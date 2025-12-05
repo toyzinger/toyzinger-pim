@@ -1,10 +1,12 @@
 <div class="edit-subcollection">
   <section class="edit-subcollection__content">
-    <div class="edit-subcollection__header">
-      <button class="material-icons-outlined" routerLink="/dimensions">arrow_back</button>
-      <h1>Edit SubCollection</h1>
-      <p>{{ id() }}</p>
-    </div>
+
+    <app-title-page
+      title="Edit SubCollection"
+      [subtitle]="id()"
+      backRoute="/dimensions"
+    />
+
     @if (loading()) {
       <div class="edit-subcollection__loading">Loading subcollection...</div>
     } @else if (error()) {

@@ -1,9 +1,8 @@
-import { Component, inject, effect, signal, OnInit } from '@angular/core';
-import { FoldersService } from '../../features/folders/folders.service';
-import { SPECIAL_FOLDERS } from '../../features/folders/folders.model';
+import { Component, inject, effect, signal, computed, OnInit } from '@angular/core';
+import { DimensionFoldersService } from '../../features/dimensions/dimension-folders.service';
+import { SPECIAL_DIM_FOLDERS } from '../../features/dimensions/dimensions.model';
 import { ProductsService } from '../../features/products/products.service';
 import { GlobalService } from '../../features/global/global.service';
-import { ToastService } from '../../features/toast/toast.service';
 import { ProductListItem } from './product-list-item/product-list-item';
 import { FormCheckbox } from '../form/form-checkbox/form-checkbox';
 
@@ -14,59 +13,64 @@ import { FormCheckbox } from '../form/form-checkbox/form-checkbox';
   styleUrl: './product-list.scss',
 })
 export class ProductList implements OnInit {
-  private foldersService = inject(FoldersService);
+  private dimensionFoldersService = inject(DimensionFoldersService);
   private productsService = inject(ProductsService);
   private global = inject(GlobalService);
-  private toastService = inject(ToastService);
 
   // Expose services to template
-  products = this.productsService.filteredProducts;
   loading = this.productsService.loading;
   error = this.productsService.error;
-  selectedFolder = this.foldersService.selectedFolder;
+  selectedNodeId = this.dimensionFoldersService.selectedNodeId;
+
+  // Filtered products based on selected dimension node
+  products = computed(() => {
+    const allProducts = this.productsService.products();
+    const selectedId = this.dimensionFoldersService.selectedNodeId();
+
+    // No selection - show nothing
+    if (!selectedId) {
+      return [];
+    }
+
+    // Unassigned folder - show products without subCollectionId
+    if (selectedId === SPECIAL_DIM_FOLDERS.UNASSIGNED) {
+      return allProducts.filter(p => !p.subCollectionId);
+    }
+
+    // SubCollection selected (isDroppable) - show products with matching subCollectionId
+    if (this.dimensionFoldersService.isDroppable(selectedId)) {
+      return allProducts.filter(p => p.subCollectionId === selectedId);
+    }
+
+    // Franchise or collection selected - show nothing (they are not selectable anyway)
+    return [];
+  });
 
   // Selection state
   selectedProducts = signal<Set<string>>(new Set());
   selectAll = signal(false);
 
+  // ============ EFFECTS ==================
+
   constructor() {
-    // Clear selection when folder changes
-    effect(() => {
-      const folder = this.foldersService.selectedFolder();
-      if (folder) {
-        this.clearSelection();
-      }
-    });
-
-    // Sync selectAll checkbox with actual selection
-    effect(() => {
-      const total = this.products().length;
-      const selected = this.selectedProducts().size;
-
-      // Only set to true if we have items AND all are selected
-      this.selectAll.set(total > 0 && selected === total);
-    });
-
-    // Listen for folder drop events
-    effect(() => {
-      const dropEvent = this.global.folderDrop();
-      const dragData = this.global.dragData();
-
-      // Only handle if we're dragging products AND there's a drop event
-      if (dropEvent && dragData?.type === 'products') {
-        // Handle the drop
-        this.handleFolderDrop(dropEvent.folderId, dragData.ids);
-
-        // Clear the drop event to prevent re-triggering
-        this.global.clearFolderDrop();
-      }
-    });
+    effect(() => this.clearSelectionOnNodeChange());
+    effect(() => this.syncSelectAllWithSelection());
   }
 
-  ngOnInit() {
-    // Load products only if not already loaded
-    this.productsService.ensureProductsLoaded();
+  private clearSelectionOnNodeChange() {
+    const nodeId = this.dimensionFoldersService.selectedNodeId();
+    if (nodeId) {
+      this.clearSelection();
+    }
   }
+
+  private syncSelectAllWithSelection() {
+    const total = this.products().length;
+    const selected = this.selectedProducts().size;
+    this.selectAll.set(total > 0 && selected === total);
+  }
+
+  // ============ ACTIONS ==================
 
   toggleSelectAll() {
     const allSelected = this.selectAll();
@@ -126,29 +130,14 @@ export class ProductList implements OnInit {
 
   onDragEnd() {
     this.global.clearDragData();
+    // Clear selection after drag ends (drop is handled by DimensionFoldersService)
+    this.clearSelection();
   }
 
-  /**
-   * Handle folder drop event by updating products
-   */
-  async handleFolderDrop(folderId: string, productIds: string[]) {
-    try {
-      // Special handling for UNASSIGNED folder - remove folderId assignment
-      if (folderId === SPECIAL_FOLDERS.UNASSIGNED) {
-        await this.productsService.updateMultipleProducts(productIds, { folderId: undefined });
-      } else {
-        await this.productsService.updateMultipleProducts(productIds, { folderId });
-      }
+  // ============ LIFECYCLE ==================
 
-      const count = productIds.length;
-      const folderName = folderId === SPECIAL_FOLDERS.UNASSIGNED ? 'unassigned' : 'folder';
-      this.toastService.success(`Moved ${count} product${count > 1 ? 's' : ''} to ${folderName}`);
-
-      // Clear selection after successful move
-      this.clearSelection();
-    } catch (error) {
-      this.toastService.error('Failed to move products');
-      console.error('Error moving products:', error);
-    }
+  ngOnInit() {
+    // Load products only if not already loaded
+    this.productsService.ensureProductsLoaded();
   }
 }

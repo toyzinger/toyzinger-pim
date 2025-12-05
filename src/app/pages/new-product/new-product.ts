@@ -3,19 +3,17 @@ import { Product, createEmptyProduct } from '../../features/products/products.mo
 import { ProductForm } from '../../components/product-form/product-form';
 import { ProductsService } from '../../features/products/products.service';
 import { ToastService } from '../../features/toast/toast.service';
-import { FoldersDropdown } from '../../components/folders-dropdown/folders-dropdown';
+import { TitlePage } from "../../components/title-page/title-page";
 
 @Component({
   selector: 'app-new-product',
-  imports: [ProductForm, FoldersDropdown],
+  imports: [ProductForm, TitlePage],
   templateUrl: './new-product.html',
   styleUrl: './new-product.scss',
 })
 export class NewProduct {
-  private productsStore = inject(ProductsService);
+  private productService = inject(ProductsService);
   private toastService = inject(ToastService);
-
-  selectedFolderId = signal<string | null>(null);
 
   // Product data bound to the form
   initialProductData: Product = createEmptyProduct();
@@ -24,7 +22,7 @@ export class NewProduct {
   updatedProductData = signal<Product>(createEmptyProduct());
 
   // Expose store state to template
-  loading = this.productsStore.loading;
+  loading = this.productService.loading;
 
   updatedProductDataChange(product: Product) {
     this.updatedProductData.set(product);
@@ -37,15 +35,9 @@ export class NewProduct {
       this.toastService.error('Product name is required');
       return;
     }
-    // Add selected folder to product data (convert null to undefined)
-    const folderId = this.selectedFolderId();
-    const productWithFolder = {
-      ...data,
-      ...(folderId && { folderId })
-    };
     // Create product
     try {
-      await this.productsStore.createProduct(productWithFolder);
+      await this.productService.createProduct(data);
       this.toastService.success(`Product Created: ${data.name}`);
       // Clear Necessary Data
       this.initialProductData = Object.assign(data, {

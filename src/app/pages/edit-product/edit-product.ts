@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../features/products/products.service';
 import { ProductForm } from '../../components/product-form/product-form';
 import { createEmptyProduct, Product } from '../../features/products/products.model';
-import { RouterLink } from '@angular/router';
 import { ToastService } from '../../features/toast/toast.service';
+import { TitlePage } from "../../components/title-page/title-page";
 
 @Component({
   selector: 'app-edit-product',
@@ -12,8 +12,8 @@ import { ToastService } from '../../features/toast/toast.service';
   imports: [
     CommonModule,
     ProductForm,
-    RouterLink
-  ],
+    TitlePage
+],
   templateUrl: './edit-product.html',
   styleUrl: './edit-product.scss',
 })

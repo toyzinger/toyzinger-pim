@@ -1,10 +1,12 @@
 <div class="edit-collection">
   <section class="edit-collection__content">
-    <div class="edit-collection__header">
-      <button class="material-icons-outlined" routerLink="/dimensions">arrow_back</button>
-      <h1>Edit Collection</h1>
-      <p>{{ id() }}</p>
-    </div>
+
+    <app-title-page
+      title="Edit Collection"
+      [subtitle]="id()"
+      backRoute="/dimensions"
+    />
+
     @if (loading()) {
       <div class="edit-collection__loading">Loading collection...</div>
     } @else if (error()) {

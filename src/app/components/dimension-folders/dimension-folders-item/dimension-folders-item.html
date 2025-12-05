@@ -1,0 +1,49 @@
+<div class="dimensions-menu-item">
+  <div class="dimensions-menu-item__node"
+    [class.dimensions-menu-item__node--selected]="isSelected()"
+    [class.dimensions-menu-item__node--drag-over]="isDragOver()"
+    [class.dimensions-menu-item__node--droppable]="node().isDroppable"
+    [style.padding-left.rem]="level() * 1"
+    (click)="onSelectNode($event)"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)">
+
+    @if (hasChildren()) {
+    <button class="dimensions-menu-item__toggle btn-tertiary btn-icon"
+      (click)="onToggleNode($event)"
+      type="button">
+      <span class="material-icons-outlined">
+        {{ isExpanded() ? 'expand_more' : 'chevron_right' }}
+      </span>
+    </button>
+    } @else {
+    <span class="dimensions-menu-item__spacer"></span>
+    }
+
+    <span class="material-icons-outlined dimensions-menu-item__icon">
+      {{ nodeIcon() }}
+    </span>
+
+    <span class="dimensions-menu-item__name">
+      {{ node().name }}
+      @if (node().type === 'collection' && node().years) { ({{ node().years }})}
+    </span>
+  </div>
+
+  @if (isExpanded() && hasChildren()) {
+  <div class="dimensions-menu-item__children">
+    @for (child of children(); track child.id) {
+    <app-dimension-folders-item
+      [node]="child"
+      [allNodes]="allNodes()"
+      [selectedNodeId]="selectedNodeId()"
+      [expandedNodeIds]="expandedNodeIds()"
+      [level]="level() + 1"
+      (nodeSelected)="nodeSelected.emit($event)"
+      (nodeToggled)="nodeToggled.emit($event)"
+    />
+    }
+  </div>
+  }
+</div>

@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ManufacturerService } from '../../features/dimensions/manufacturer/manufacturer.service';
 import { ManufacturerForm } from "../../components/management-dim-manufacturer/manufacturer-form/manufacturer-form";
 import { DimManufacturer, createEmptyManufacturer } from '../../features/dimensions/dimensions.model';
-import { RouterLink } from "@angular/router";
+import { TitlePage } from "../../components/title-page/title-page";
 
 @Component({
   selector: 'app-edit-manufacturer',
-  imports: [CommonModule, ManufacturerForm, RouterLink],
+  imports: [CommonModule, ManufacturerForm, TitlePage],
   templateUrl: './edit-manufacturer.html',
   styleUrl: './edit-manufacturer.scss',
 })

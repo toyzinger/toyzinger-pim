@@ -1,0 +1,31 @@
+<div class="dimensions-menu">
+
+  <div class="dimensions-menu__header">
+    <h3 class="dimensions-menu__title">Dimensions</h3>
+    <button class="btn-tertiary" (click)="collapseAll()">
+      <span class="material-icons-outlined">unfold_less_double</span>
+    </button>
+  </div>
+
+  @if (loading()) {
+  <div class="dimensions-menu__loading">
+    <span class="material-icons-outlined">hourglass_empty</span>
+    <span>Loading...</span>
+  </div>
+  } @else {
+  <div class="dimensions-menu__tree">
+    @for (node of rootNodes(); track node.id) {
+    <app-dimension-folders-item
+      [node]="node"
+      [allNodes]="allNodes()"
+      [selectedNodeId]="selectedNodeId()"
+      [expandedNodeIds]="expandedNodeIds()"
+      [level]="0"
+      (nodeSelected)="selectNode($event)"
+      (nodeToggled)="toggleNode($event)"
+    />
+    }
+  </div>
+  }
+
+</div>

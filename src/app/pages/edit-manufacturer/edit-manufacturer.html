@@ -1,10 +1,12 @@
 <div class="edit-manufacturer">
   <section class="edit-manufacturer__content">
-    <div class="edit-manufacturer__header">
-      <button class="material-icons-outlined" routerLink="/dimensions">arrow_back</button>
-      <h1>Edit Manufacturer</h1>
-      <p>{{ id() }}</p>
-    </div>
+
+    <app-title-page
+      title="Edit Manufacturer"
+      [subtitle]="id()"
+      backRoute="/dimensions"
+    />
+
     @if (loading()) {
       <div class="edit-manufacturer__loading">Loading manufacturer...</div>
     } @else if (error()) {

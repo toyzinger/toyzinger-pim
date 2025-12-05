@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 import { FranchiseForm } from "../../components/management-dim-franchise/franchise-form/franchise-form";
 import { DimFranchise, createEmptyFranchise } from '../../features/dimensions/dimensions.model';
-import { RouterLink } from "@angular/router";
+import { TitlePage } from "../../components/title-page/title-page";
 
 @Component({
   selector: 'app-edit-franchise',
-  imports: [CommonModule, FranchiseForm, RouterLink],
+  imports: [CommonModule, FranchiseForm, TitlePage],
   templateUrl: './edit-franchise.html',
   styleUrl: './edit-franchise.scss',
 })

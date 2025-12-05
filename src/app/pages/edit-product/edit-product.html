@@ -1,10 +1,12 @@
 <div class="edit-product">
   <section class="edit-product__content">
-    <div class="edit-product__header">
-      <button class="material-icons-outlined" routerLink="/products">arrow_back</button>
-      <h1>Edit Product</h1>
-      <p>{{ id() }}</p>
-    </div>
+
+    <app-title-page
+      title="Edit Product"
+      [subtitle]="id()"
+      backRoute="/products"
+    />
+
     @if (loading()) {
       <div class="edit-product__loading">Loading product...</div>
     } @else if (error()) {

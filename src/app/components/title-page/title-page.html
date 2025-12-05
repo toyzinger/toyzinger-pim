@@ -1,0 +1,13 @@
+<div class="title-page">
+  @if (backRoute()) {
+  <button class="title-page__back material-icons-outlined" [routerLink]="backRoute()">
+    arrow_back
+  </button>
+  }
+  <div class="title-page__content">
+    <h1 class="title-page__title">{{ title() }}</h1>
+    @if (subtitle()) {
+    <p class="title-page__subtitle">{{ subtitle() }}</p>
+    }
+  </div>
+</div>

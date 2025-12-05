@@ -6,6 +6,7 @@ import { FranchiseManagement } from '../../components/management-dim-franchise/f
 import { CollectionManagement } from "../../components/management-dim-collection/collection-management";
 import { ManufacturerManagement } from '../../components/management-dim-manufacturer/manufacturer-management';
 import { SubCollectionManagement } from "../../components/management-dim-subcollection/subcollection-management";
+import { TitlePage } from "../../components/title-page/title-page";
 
 @Component({
   selector: 'app-dashboard-dimensions',
@@ -14,7 +15,8 @@ import { SubCollectionManagement } from "../../components/management-dim-subcoll
     FranchiseManagement,
     CollectionManagement,
     ManufacturerManagement,
-    SubCollectionManagement
+    SubCollectionManagement,
+    TitlePage
 ],
   templateUrl: './dashboard-dimensions.html',
   styleUrl: './dashboard-dimensions.scss',

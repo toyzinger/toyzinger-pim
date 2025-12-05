@@ -4,7 +4,6 @@ import { ProductImage } from '../productimages/productimages.model';
 export interface Product {
   id?: string;
   name: string;
-  folderId?: string; // Optional folder assignment
   franchiseId?: string; // Reference to franchise dimension
   collectionId?: string; // Reference to collection dimension
   subCollectionId?: string; // Reference to subcollection dimension
@@ -33,8 +32,7 @@ export function createEmptyProduct(): Omit<Product, 'id'> {
   return {
     name: '',
     isActive: true,
-    // Optional ID references
-    folderId: undefined,
+    // Dimensions
     franchiseId: undefined,
     collectionId: undefined,
     subCollectionId: undefined,

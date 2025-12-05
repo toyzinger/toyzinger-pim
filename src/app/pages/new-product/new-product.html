@@ -1,12 +1,10 @@
 <main class="new-product">
   <section class="new-product__content">
-    <h1>New Product</h1>
-    <p>Create a new product in the catalog</p>
 
-    <div class="container">
-      <h3 class="container__title">Select Folder</h3>
-      <app-folders-dropdown [(selectedFolderId)]="selectedFolderId" />
-    </div>
+    <app-title-page
+      title="New Product"
+      subtitle="Create a new product in the catalog"
+    />
 
     <app-product-form [product]="initialProductData" [loading]="loading()" (updatedProduct)="updatedProductDataChange($event)"></app-product-form>
 

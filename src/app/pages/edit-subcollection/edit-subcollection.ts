@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
 import { SubCollectionForm } from "../../components/management-dim-subcollection/subcollection-form/subcollection-form";
 import { DimSubCollection, createEmptySubCollection } from '../../features/dimensions/dimensions.model';
-import { RouterLink } from "@angular/router";
+import { TitlePage } from "../../components/title-page/title-page";
 
 @Component({
   selector: 'app-edit-subcollection',
-  imports: [CommonModule, SubCollectionForm, RouterLink],
+  imports: [CommonModule, SubCollectionForm, TitlePage],
   templateUrl: './edit-subcollection.html',
   styleUrl: './edit-subcollection.scss',
 })

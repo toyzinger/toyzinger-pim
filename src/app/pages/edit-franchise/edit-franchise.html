@@ -1,10 +1,12 @@
 <div class="edit-franchise">
   <section class="edit-franchise__content">
-    <div class="edit-franchise__header">
-      <button class="material-icons-outlined" routerLink="/dimensions">arrow_back</button>
-      <h1>Edit Franchise</h1>
-      <p>{{ id() }}</p>
-    </div>
+
+    <app-title-page
+      title="Edit Franchise"
+      [subtitle]="id()"
+      backRoute="/dimensions"
+    />
+
     @if (loading()) {
       <div class="edit-franchise__loading">Loading franchise...</div>
     } @else if (error()) {
@@ -27,5 +29,6 @@
       </div>
       }
     }
+
   </section>
 </div>

@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { CollectionService } from '../../features/dimensions/collection/collection.service';
 import { CollectionForm } from "../../components/management-dim-collection/collection-form/collection-form";
 import { DimCollection, createEmptyCollection } from '../../features/dimensions/dimensions.model';
-import { RouterLink } from "@angular/router";
+import { TitlePage } from "../../components/title-page/title-page";
 
 @Component({
   selector: 'app-edit-collection',
-  imports: [CommonModule, CollectionForm, RouterLink],
+  imports: [CommonModule, CollectionForm, TitlePage],
   templateUrl: './edit-collection.html',
   styleUrl: './edit-collection.scss',
 })

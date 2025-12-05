@@ -121,3 +121,26 @@ export function createEmptyManufacturer(): Omit<DimManufacturer, 'id'> {
     order: undefined,
   };
 }
+
+// ====================
+// Dimension Tree Node (for hierarchical navigation)
+// ====================
+
+// Node types for the dimensions tree
+export type DimensionNodeType = 'special' | 'franchise' | 'collection' | 'subcollection';
+
+// Unified tree node structure
+export interface DimensionNode {
+  id: string;
+  name: string;
+  type: DimensionNodeType;
+  parentId?: string;
+  isDroppable: boolean;
+  years?: string; // For collections
+}
+
+// Special folder IDs for dimension navigation
+export const SPECIAL_DIM_FOLDERS = {
+  UNASSIGNED: '__dim_unassigned__',
+  ALL: '__dim_all__',
+};

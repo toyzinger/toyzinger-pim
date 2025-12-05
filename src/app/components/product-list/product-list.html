@@ -1,6 +1,6 @@
 <div class="header">
-    @if (selectedFolder()) {
-    <p>{{ selectedFolder()!.name }} - {{ products().length }} products</p>
+    @if (selectedNodeId()) {
+    <p>{{ products().length }} products</p>
     } @else {
     <p>Select a folder to view products</p>
     }

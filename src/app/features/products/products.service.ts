@@ -9,7 +9,6 @@ import { SPECIAL_FOLDERS } from '../folders/folders.model';
 })
 export class ProductsService {
   private productsFirabse = inject(ProductsFirebase);
-  private foldersService = inject(FoldersService);
 
   // ========================================
   // STATE (Private signals)
@@ -34,25 +33,6 @@ export class ProductsService {
 
   // Total count of products
   productCount = computed(() => this._products().length);
-
-  // Products filtered by folder
-  filteredProducts = computed(() => {
-    let products = this._products();
-    const selectedFolder = this.foldersService.selectedFolder();
-
-    // Filter by folder (same pattern as ImagesService)
-    if (!selectedFolder) {
-      return [];
-    }
-
-    if (selectedFolder.id === SPECIAL_FOLDERS.UNASSIGNED) {
-      products = products.filter(p => !p.folderId);
-    } else if (selectedFolder.id !== SPECIAL_FOLDERS.ROOT) {
-      products = products.filter(p => p.folderId === selectedFolder.id);
-    }
-
-    return products;
-  });
 
   // Only active products
   activeProducts = computed(() =>

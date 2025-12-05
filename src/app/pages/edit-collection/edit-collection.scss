@@ -7,30 +7,6 @@
     padding: 2rem;
   }
 
-  &__header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-
-    button {
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      color: $color-primary;
-    }
-
-    h1 {
-      color: $color-primary;
-    }
-
-    p {
-      flex: 1;
-      text-align: right;
-      color: $color-text-medium;
-    }
-  }
-
   &__loading, &__error, &__not-found {
     padding: 2rem;
     text-align: center;
