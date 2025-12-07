@@ -18,18 +18,16 @@ export class DropdownFranchises implements OnInit {
   id = input<string>('franchise-select');
   required = input<boolean>(false);
   disabled = input<boolean>(false);
-  language = input<'en' | 'es'>('en'); // Language for franchise names
+  language = input<'en' | 'es'>('en');
 
   // ============ TWO-WAY BINDING ==================
 
-  value = model<string>(''); // Model for selected franchise ID
+  value = model<string>('');
 
   // ============ COMPUTED VALUES ==================
 
-  // Get all franchises
   franchises = computed(() => this.franchiseService.franchises());
 
-  // Convert franchises to SelectOption[] for FormSelect
   franchiseOptions = computed<SelectOption[]>(() => {
     const lang = this.language();
     return this.franchises()
@@ -42,51 +40,34 @@ export class DropdownFranchises implements OnInit {
 
   // ============ EFFECTS ==================
 
-  private isInitialized = false;
-
   constructor() {
+    // Only sync FROM global TO local (one-way)
     effect(() => this.syncGlobalToLocal());
-    effect(() => this.syncLocalToGlobal());
   }
 
-  // Sync global selectedFranchiseId to local value (after initialization)
   private syncGlobalToLocal(): void {
+    console.log('===== syncGlobalToLocal');
     const globalFranchiseId = this.franchiseService.selectedFranchiseId();
-    // Skip on initialization - let the parent's value take precedence
-    if (!this.isInitialized) return;
-    // Read local value without tracking it
     const localValue = untracked(() => this.value());
-    // Only update if different
-    console.log('syncGlobalToLocal ========');
+    console.log('localValue', localValue);
     console.log('globalFranchiseId', globalFranchiseId);
-    console.log('localValue (untracked)', localValue);
     if (globalFranchiseId !== localValue) {
       this.value.set(globalFranchiseId);
     }
   }
 
-  // Sync local value to global selectedFranchiseId
-  private syncLocalToGlobal(): void {
-    const localValue = this.value();
-    // Read global value without tracking it
-    const globalFranchiseId = untracked(() => this.franchiseService.selectedFranchiseId());
-    // Only update global if local changed and is different
-    console.log('syncLocalToGlobal =======');
-    console.log('localValue', localValue);
-    console.log('globalFranchiseId (untracked)', globalFranchiseId);
-    if (localValue !== globalFranchiseId) {
-      this.franchiseService.setSelectedFranchiseId(localValue);
-    }
+  // ============ ACTIONS ==================
+
+  // Called when user explicitly changes the dropdown selection
+  onSelectionChange(newValue: string): void {
+    this.value.set(newValue);
+    // Only sync to global on explicit user interaction
+    this.franchiseService.setSelectedFranchiseId(newValue);
   }
 
   // ============ LIFECYCLE ==================
 
   ngOnInit() {
-    // Load franchises when component is initialized
     this.franchiseService.ensureFranchisesLoaded();
-    // Mark as initialized after potential parent value is set
-    setTimeout(() => {
-      this.isInitialized = true;
-    });
   }
 }

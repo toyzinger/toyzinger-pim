@@ -97,7 +97,7 @@ export class CollectionService {
       // Optimistic update
       const newCollection: DimCollection = { ...collection, id };
       this._collections.update(collections => [...collections, newCollection]);
-      this.toastService.success(`Collection Created: ${collection.name}`);
+      this.toastService.success(`Collection Created: ${collection.name.en}`);
     } catch (error) {
       this._error.set('Failed to create collection');
       console.error('Error creating collection:', error);

@@ -20,9 +20,10 @@ export class CollectionManagement implements OnInit {
   // Use service signals directly
   collections = this.collectionService.collections;
   loading = this.collectionService.loading;
-
-  newCollection = signal<DimCollection>(createEmptyCollection());
   franchiseSelection = this.franchiseService.selectedFranchiseId;
+
+  // Form data
+  newCollection = signal<DimCollection>(createEmptyCollection());
 
   isValidCollection = computed(() => {
     return this.newCollection().name.en.trim() !== '' && this.newCollection().name.es.trim() !== '';
@@ -65,8 +66,10 @@ export class CollectionManagement implements OnInit {
       await this.collectionService.createCollection(this.newCollection());
       // Clean Form except franchiseId and ManufacturerId
       const cleanCollection = createEmptyCollection();
-      cleanCollection.franchiseId = this.newCollection().franchiseId;
-      cleanCollection.manufacturerId = this.newCollection().manufacturerId;
+      const currentFranchiseId = this.newCollection().franchiseId;
+      const currentManufacturerId = this.newCollection().manufacturerId;
+      cleanCollection.franchiseId = currentFranchiseId;
+      cleanCollection.manufacturerId = currentManufacturerId;
       this.newCollection.set(cleanCollection);
     } catch (err) {
       // Error is already handled by the service
