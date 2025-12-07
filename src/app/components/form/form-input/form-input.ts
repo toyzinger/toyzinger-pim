@@ -1,4 +1,4 @@
-import { Component, input, output, model } from '@angular/core';
+import { Component, input, output, model, viewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-form-input',
@@ -7,6 +7,9 @@ import { Component, input, output, model } from '@angular/core';
   styleUrl: '../form.scss',
 })
 export class FormInput {
+  // ViewChild for focus control
+  private inputElement = viewChild<ElementRef<HTMLInputElement>>('inputEl');
+
   // Inputs
   type = input<string>('text');
   label = input<string>('');
@@ -29,4 +32,9 @@ export class FormInput {
   onBlur() {
     this.blur.emit();
   }
+
+  focus() {
+    this.inputElement()?.nativeElement.focus();
+  }
 }
+

@@ -1,6 +1,6 @@
-import { Component, signal, effect, input, output } from '@angular/core';
+import { Component, signal, effect, input, output, viewChild } from '@angular/core';
 import { DimSubCollection, createEmptySubCollection } from '../../../features/dimensions/dimensions.model';
-import { FormComponents } from '../../form/form';
+import { FormComponents, FormInput } from '../../form/form';
 import { ProductFormDualtextarea } from '../../product-form/product-form-dualtextarea/product-form-dualtextarea';
 import { slugify } from '../../../utils/slug.utils';
 import { DropdownCollections } from "../../dropdown-collections/dropdown-collections";
@@ -16,6 +16,9 @@ import { DropdownCollections } from "../../dropdown-collections/dropdown-collect
   styleUrl: './subcollection-form.scss',
 })
 export class SubCollectionForm {
+  // ViewChild for focus control
+  private nameEsInput = viewChild<FormInput>('nameEsInput');
+
 
   // SubCollection Data received from parent
   subcollection = input<DimSubCollection>(createEmptySubCollection());
@@ -86,6 +89,10 @@ export class SubCollectionForm {
 
   slugBlur() {
     this.slug.set(slugify(this.slug().trim()));
+  }
+
+  focusNameEs() {
+    this.nameEsInput()?.focus();
   }
 
   private loadSubCollectionData(sc: DimSubCollection): void {

@@ -46,11 +46,8 @@ export class DropdownFranchises implements OnInit {
   }
 
   private syncGlobalToLocal(): void {
-    console.log('===== syncGlobalToLocal');
     const globalFranchiseId = this.franchiseService.selectedFranchiseId();
     const localValue = untracked(() => this.value());
-    console.log('localValue', localValue);
-    console.log('globalFranchiseId', globalFranchiseId);
     if (globalFranchiseId !== localValue) {
       this.value.set(globalFranchiseId);
     }

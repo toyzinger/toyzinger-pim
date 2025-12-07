@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, computed, signal, effect } from '@angular/core';
+import { Component, inject, OnInit, computed, signal, effect, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
 import { SubCollectionForm } from "./subcollection-form/subcollection-form";
@@ -17,6 +17,9 @@ import { FranchiseService } from '../../features/dimensions/franchise/franchise.
 export class SubCollectionManagement implements OnInit {
   private subcollectionService = inject(SubCollectionService);
   private franchiseService = inject(FranchiseService);
+
+  // ViewChild for form focus control
+  private subcollectionForm = viewChild<SubCollectionForm>('subcollectionForm');
 
   // Use service signals directly
   subcollections = this.subcollectionService.subcollections;
@@ -84,6 +87,8 @@ export class SubCollectionManagement implements OnInit {
       const cleanSubCollection = createEmptySubCollection();
       cleanSubCollection.collectionId = this.newSubCollection().collectionId;
       this.newSubCollection.set(cleanSubCollection);
+      // Focus on Name.es input after a short delay
+      setTimeout(() => this.subcollectionForm()?.focusNameEs());
     } catch (err) {
       // Error is already handled by the service
       console.error(err);

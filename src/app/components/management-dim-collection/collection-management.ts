@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, computed, signal, model } from '@angular/core';
+import { Component, inject, OnInit, computed, signal, model, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CollectionService } from '../../features/dimensions/collection/collection.service';
 import { CollectionForm } from "./collection-form/collection-form";
@@ -16,6 +16,9 @@ import { FranchiseService } from '../../features/dimensions/franchise/franchise.
 export class CollectionManagement implements OnInit {
   private collectionService = inject(CollectionService);
   private franchiseService = inject(FranchiseService);
+
+  // ViewChild for form focus control
+  private collectionForm = viewChild<CollectionForm>('collectionForm');
 
   // Use service signals directly
   collections = this.collectionService.collections;
@@ -71,6 +74,8 @@ export class CollectionManagement implements OnInit {
       cleanCollection.franchiseId = currentFranchiseId;
       cleanCollection.manufacturerId = currentManufacturerId;
       this.newCollection.set(cleanCollection);
+      // Focus on Name.es input after a short delay to prevent refresh
+      setTimeout(() => this.collectionForm()?.focusNameEs(), 100);
     } catch (err) {
       // Error is already handled by the service
       console.error(err);

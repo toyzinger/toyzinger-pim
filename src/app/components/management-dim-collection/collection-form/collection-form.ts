@@ -1,6 +1,6 @@
-import { Component, signal, effect, input, output } from '@angular/core';
+import { Component, signal, effect, input, output, viewChild } from '@angular/core';
 import { DimCollection, createEmptyCollection } from '../../../features/dimensions/dimensions.model';
-import { FormComponents } from '../../form/form';
+import { FormComponents, FormInput } from '../../form/form';
 import { ProductFormDualtextarea } from '../../product-form/product-form-dualtextarea/product-form-dualtextarea';
 import { slugify } from '../../../utils/slug.utils';
 import { DropdownFranchises } from "../../dropdown-franchises/dropdown-franchises";
@@ -18,6 +18,8 @@ import { DropdownManufacturers } from "../../dropdown-manufacturers/dropdown-man
   styleUrl: './collection-form.scss',
 })
 export class CollectionForm {
+  // ViewChild for focus control
+  private nameEsInput = viewChild<FormInput>('nameEsInput');
 
   // ============ INPUTS ==================
 
@@ -106,5 +108,9 @@ export class CollectionForm {
 
   slugBlur() {
     this.slug.set(slugify(this.slug().trim()));
+  }
+
+  focusNameEs() {
+    this.nameEsInput()?.focus();
   }
 }

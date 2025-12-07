@@ -88,7 +88,7 @@ export class FranchiseService {
       // Optimistic update
       const newFranchise: DimFranchise = { ...franchise, id };
       this._franchises.update(franchises => [...franchises, newFranchise]);
-      this.toastService.success(`Franchise Created: ${franchise.name}`);
+      this.toastService.success(`Franchise Created: ${franchise.name.en}`);
     } catch (error) {
       this._error.set('Failed to create franchise');
       console.error('Error creating franchise:', error);

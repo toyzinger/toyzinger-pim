@@ -62,6 +62,7 @@
       </button>
     </div>
     <app-subcollection-form
+      #subcollectionForm
       [subcollection]="newSubCollection()"
       (updatedSubCollection)="onNewSubCollection($event)"
       [loading]="loading()"
