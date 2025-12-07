@@ -137,7 +137,7 @@ export class ProductForm {
       productData.accessories = acc;
     }
     // Emit updated product data
-    console.log('Product Data:', productData);
+    // console.log('Product Data:', productData);
     this.updatedProduct.emit(productData);
   }
 }

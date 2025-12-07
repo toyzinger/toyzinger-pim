@@ -5,7 +5,6 @@
     @if (!loading() && collections().length > 0) {
       <div class="collection-management__filters">
         <app-dropdown-franchises
-          [filtered]="uniqueFranchiseIds()"
           label="Filter by franchise"
         />
         <button class="btn-primary" (click)="clearFranchiseSelection()">

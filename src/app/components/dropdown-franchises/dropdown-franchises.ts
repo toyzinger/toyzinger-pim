@@ -19,7 +19,6 @@ export class DropdownFranchises implements OnInit {
   required = input<boolean>(false);
   disabled = input<boolean>(false);
   language = input<'en' | 'es'>('en'); // Language for franchise names
-  filtered = input<string[]>([]); // Array of franchise IDs to filter by
 
   // ============ TWO-WAY BINDING ==================
 
@@ -27,15 +26,8 @@ export class DropdownFranchises implements OnInit {
 
   // ============ COMPUTED VALUES ==================
 
-  // Get franchises, optionally filtered by ID array
-  franchises = computed(() => {
-    const allFranchises = this.franchiseService.franchises();
-    const filteredIds = this.filtered();
-    // If filtered array is empty, return all franchises
-    if (filteredIds.length === 0) return allFranchises;
-    // Otherwise, only return franchises whose ID is in the filtered array
-    return allFranchises.filter(franchise => filteredIds.includes(franchise.id || ''));
-  });
+  // Get all franchises
+  franchises = computed(() => this.franchiseService.franchises());
 
   // Convert franchises to SelectOption[] for FormSelect
   franchiseOptions = computed<SelectOption[]>(() => {
@@ -64,15 +56,12 @@ export class DropdownFranchises implements OnInit {
     if (!this.isInitialized) return;
     // Read local value without tracking it
     const localValue = untracked(() => this.value());
-    // Only update if different and franchise is in filtered list
-    console.log('syncGlobalToLocal ========', globalFranchiseId, localValue);
+    // Only update if different
+    console.log('syncGlobalToLocal ========');
     console.log('globalFranchiseId', globalFranchiseId);
     console.log('localValue (untracked)', localValue);
     if (globalFranchiseId !== localValue) {
-      const franchiseIds = untracked(() => this.franchises().map(f => f.id || ''));
-      if (globalFranchiseId === '' || franchiseIds.includes(globalFranchiseId)) {
-        this.value.set(globalFranchiseId);
-      }
+      this.value.set(globalFranchiseId);
     }
   }
 
