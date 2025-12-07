@@ -30,97 +30,82 @@
   color: $color-danger;
 }
 
+// ====== TABLE ==================
+
+$drag-width: 40px;
+$checkbox-width: 40px;
+$name-width: auto;
+$id-width: 200px;
+$actions-width: 110px;
+
 .products-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 0.5rem;
   background: transparent;
 
-  thead {
+  &__header {
     tr {
       background: transparent;
+      height: 45px;
     }
 
     th {
-      padding: 0.75rem 1.25rem;
-      text-align: left;
+      padding: 0.5rem;
       font-size: 0.8125rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: $gray-400;
       border-bottom: 2px solid $gray-700;
-    }
-  }
-
-  &__header {
-    &--checkbox {
-      width: 60px;
-      text-align: center;
+      text-align: left;
+      vertical-align: middle;
     }
 
     &--drag {
-      width: 50px;
+      width: $drag-width;
+      text-align: center;
+
+      .material-icons-outlined {
+        cursor: grab;
+        display: block;
+        font-size: 1.25rem;
+        color: $gray-500;
+        transition: opacity 0.2s ease, color 0.2s ease;
+      }
+    }
+
+    &--checkbox {
+      width: $checkbox-width;
       text-align: center;
     }
 
     &--name {
-      width: auto; // Flexible width
+      width: $name-width;
     }
 
     &--id {
-        width: 250px; // Fixed width for ID
+        width: $id-width;
     }
 
     &--actions {
-      width: 80px;
+      width: $actions-width;
       text-align: right;
-    }
-  }
-
-  tbody tr {
-    background: $gray-800;
-    border-radius: 8px;
-
-    &:first-child td:first-child {
-      border-top-left-radius: 8px;
-    }
-
-    &:first-child td:last-child {
-      border-top-right-radius: 8px;
-    }
-
-    &:last-child td:first-child {
-      border-bottom-left-radius: 8px;
-    }
-
-    &:last-child td:last-child {
-      border-bottom-right-radius: 8px;
     }
   }
 }
 
-// product-list-item styles
+// ====== PRODUCT LIST ITEM ==================
 .product-list-item {
-  background: $gray-800;
-  transition: background 0.2s ease;
+  background-color: $gray-800;
 
-  &:hover {
-    background: $gray-700;
-  }
-
-  td {
-    padding: 1rem 1.25rem;
+  &__td {
+    padding: 0.5rem;
     vertical-align: middle;
   }
 
-  &__checkbox {
-    width: 60px;
-    text-align: center;
-  }
-
-  &__drag {
-    width: 50px;
+  &--drag {
+    width: $drag-width;
     text-align: center;
     cursor: grab;
 
@@ -129,6 +114,7 @@
     }
 
     .material-icons-outlined {
+      display: block;
       font-size: 1.25rem;
       color: $gray-500;
       opacity: 0;
@@ -140,9 +126,12 @@
     }
   }
 
-  &__info {
-    padding-right: 1.5rem;
+  &--checkbox {
+    width: $checkbox-width;
+    text-align: center;
+  }
 
+  &--info {
     .name {
       font-size: 0.9375rem;
       font-weight: 500;
@@ -152,15 +141,16 @@
     }
   }
 
-  &__id {
-      color: $gray-400;
-      font-size: 0.875rem;
-      font-family: monospace; // Monospace for IDs
+  &--id {
+    color: $gray-400;
+    font-size: 0.875rem;
+    font-family: monospace;
   }
 
-  &__actions {
-    width: 80px;
-    text-align: center;
-    padding-left: 1rem;
+  &--actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
   }
 }

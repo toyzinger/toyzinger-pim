@@ -106,19 +106,24 @@ export class ProductList implements OnInit {
   }
 
   onDragStart(event: DragEvent) {
-    // Get the dragged row's product ID from the event target
+    // Check if dragging a specific row
     const row = (event.target as HTMLElement).closest('tr');
     const productId = row?.getAttribute('data-product-id');
 
-    if (!productId) return;
-
-    // If dragging an unselected product, select it first
-    if (!this.isProductSelected(productId)) {
+    // If dragging a row and it's not selected, select it
+    if (productId && !this.isProductSelected(productId)) {
       this.toggleProductSelection(productId);
     }
 
-    // Set drag data with all selected product IDs
     const selectedIds = Array.from(this.selectedProducts());
+
+    // If nothing selected (shouldn't happen for row drag due to logic above, but possible for header), prevent drag
+    if (selectedIds.length === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    // Set drag data with all selected product IDs
     this.global.setDragData({
       type: 'products',
       ids: selectedIds,

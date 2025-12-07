@@ -14,18 +14,26 @@
 <div class="empty">No products found in this folder</div>
 } @else {
 <table class="products-table">
-  <thead>
+  <thead class="products-table__header">
     <tr>
-      <th class="products-table__header products-table__header--drag"></th>
-      <th class="products-table__header products-table__header--checkbox">
+      <th class="products-table__header--drag">
+        @if (selectedProducts().size > 0) {
+        <span class="material-icons-outlined drag-handle"
+          [draggable]="selectedProducts().size > 0"
+          (dragstart)="onDragStart($event)">
+          open_with
+        </span>
+        }
+      </th>
+      <th class="products-table__header--checkbox">
         <app-form-checkbox
           [checked]="selectAll()"
           (checkedChange)="toggleSelectAll()"
         />
       </th>
-      <th class="products-table__header products-table__header--name">Name</th>
-      <th class="products-table__header products-table__header--id">ID</th>
-      <th class="products-table__header products-table__header--actions">Actions</th>
+      <th class="products-table__header--name">Name</th>
+      <th class="products-table__header--id">ID</th>
+      <th class="products-table__header--actions">Actions</th>
     </tr>
   </thead>
   <tbody
@@ -33,6 +41,7 @@
     (dragend)="onDragEnd()">
     @for (product of products(); track product.id) {
     <tr app-product-list-item
+      class="product-list-item"
       draggable="true"
       [attr.data-product-id]="product.id"
       [product]="product"

@@ -446,7 +446,7 @@ npm run build                         # → dist/
   (click)="onSelectFolder($event)">
 </div>
 
-<button class="btn-danger btn-icon"
+<button class="btn-danger"
   (click)="deleteImage()"
   title="Delete image">
   <span class="material-icons-outlined">delete</span>
