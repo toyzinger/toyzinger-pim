@@ -1,13 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Sidebar } from '../../components/sidebar/sidebar';
 import { GlobalService } from '../../features/global/global.service';
-import { ProductList } from "../../components/product-list/product-list";
+import { ManagementProduct } from "../../components/management-product/management-product";
 import { TitlePage } from "../../components/title-page/title-page";
 
 
 @Component({
   selector: 'app-dashboard-products',
-  imports: [Sidebar, ProductList, TitlePage],
+  imports: [Sidebar, ManagementProduct, TitlePage],
   templateUrl: './dashboard-products.html',
   styleUrl: './dashboard-products.scss',
 })

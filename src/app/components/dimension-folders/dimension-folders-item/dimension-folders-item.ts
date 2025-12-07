@@ -15,7 +15,7 @@ export class DimensionFoldersItem {
 
   node = input.required<DimensionNode>();
   allNodes = input.required<DimensionNode[]>();
-  selectedNodeId = input<string | null>(null);
+  activeNodeIds = input.required<Set<string>>();
   expandedNodeIds = input.required<Set<string>>();
   level = input<number>(0);
 
@@ -37,7 +37,7 @@ export class DimensionFoldersItem {
   });
 
   isExpanded = computed(() => this.expandedNodeIds().has(this.node().id));
-  isSelected = computed(() => this.selectedNodeId() === this.node().id);
+  isSelected = computed(() => this.activeNodeIds().has(this.node().id));
   hasChildren = computed(() => this.children().length > 0);
 
   // Get icon based on node type

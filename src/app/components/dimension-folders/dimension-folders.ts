@@ -88,6 +88,32 @@ export class DimensionFolders {
     return this.allNodes().filter(n => !n.parentId);
   });
 
+  // Set of active node IDs (selected node + ancestors)
+  activeNodeIds = computed<Set<string>>(() => {
+    const selectedId = this.selectedNodeId();
+    const activeIds = new Set<string>();
+
+    if (!selectedId) return activeIds;
+
+    // Add selected node
+    activeIds.add(selectedId);
+
+    // Build map for easy lookup
+    const nodeMap = new Map<string, DimensionNode>();
+    for (const node of this.allNodes()) {
+      nodeMap.set(node.id, node);
+    }
+
+    // Traverse up to find ancestors
+    let currentNode = nodeMap.get(selectedId);
+    while (currentNode && currentNode.parentId) {
+      activeIds.add(currentNode.parentId);
+      currentNode = nodeMap.get(currentNode.parentId);
+    }
+
+    return activeIds;
+  });
+
   // ============ ACTIONS ==================
 
   selectNode(node: DimensionNode) {

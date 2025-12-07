@@ -37,7 +37,7 @@
     <app-dimension-folders-item
       [node]="child"
       [allNodes]="allNodes()"
-      [selectedNodeId]="selectedNodeId()"
+      [activeNodeIds]="activeNodeIds()"
       [expandedNodeIds]="expandedNodeIds()"
       [level]="level() + 1"
       (nodeSelected)="nodeSelected.emit($event)"

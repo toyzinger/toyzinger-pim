@@ -7,12 +7,12 @@ import { ProductListItem } from './product-list-item/product-list-item';
 import { FormCheckbox } from '../form/form-checkbox/form-checkbox';
 
 @Component({
-  selector: 'app-product-list',
+  selector: 'app-management-product',
   imports: [ProductListItem, FormCheckbox],
-  templateUrl: './product-list.html',
-  styleUrl: './product-list.scss',
+  templateUrl: './management-product.html',
+  styleUrl: './management-product.scss',
 })
-export class ProductList implements OnInit {
+export class ManagementProduct implements OnInit {
   private dimensionFoldersService = inject(DimensionFoldersService);
   private productsService = inject(ProductsService);
   private global = inject(GlobalService);

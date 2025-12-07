@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
   selector: 'tr[app-product-list-item]',
   imports: [FormCheckbox, RouterLink],
   templateUrl: './product-list-item.html',
-  styleUrl: '../product-list.scss',
+  styleUrl: '../management-product.scss',
 })
 export class ProductListItem {
   private productsService = inject(ProductsService);
