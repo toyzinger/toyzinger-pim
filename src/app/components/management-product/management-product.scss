@@ -3,17 +3,28 @@
 .header {
   margin-bottom: 2rem;
 
+  &__info {
+    display: flex;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  &__count {
+    margin: 0;
+    color: $gray-200;
+  }
+
+  &__breadcrumb {
+    font-weight: 500;
+    font-style: italic;
+    color: $gray-400;
+  }
+
   h1 {
     margin: 0 0 0.5rem 0;
     font-size: 2rem;
     font-weight: 600;
     color: $color-text-light;
-  }
-
-  p {
-    margin: 0;
-    font-size: 0.875rem;
-    color: $gray-400;
   }
 }
 

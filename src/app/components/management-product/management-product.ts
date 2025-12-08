@@ -5,7 +5,6 @@ import { ProductsService } from '../../features/products/products.service';
 import { GlobalService } from '../../features/global/global.service';
 import { ProductListItem } from './product-list-item/product-list-item';
 import { FormCheckbox } from '../form/form-checkbox/form-checkbox';
-
 @Component({
   selector: 'app-management-product',
   imports: [ProductListItem, FormCheckbox],
@@ -21,6 +20,7 @@ export class ManagementProduct implements OnInit {
   loading = this.productsService.loading;
   error = this.productsService.error;
   selectedNodeId = this.dimensionFoldersService.selectedNodeId;
+  breadcrumb = this.dimensionFoldersService.breadcrumb;
 
   // Filtered products based on selected dimension node
   products = computed(() => {

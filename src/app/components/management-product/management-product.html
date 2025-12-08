@@ -1,6 +1,9 @@
 <div class="header">
     @if (selectedNodeId()) {
-    <p>{{ products().length }} products</p>
+    <div class="header__info">
+      <p class="header__count">{{ products().length }} products in:</p>
+      <p class="header__breadcrumb">{{ breadcrumb() }}</p>
+    </div>
     } @else {
     <p>Select a folder to view products</p>
     }
