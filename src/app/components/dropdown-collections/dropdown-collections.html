@@ -1,5 +1,6 @@
 <app-form-select
-  [(value)]="value"
+  [value]="currentValue()"
+  (valueChange)="onSelectionChange($event)"
   [label]="label()"
   [id]="id()"
   [required]="required()"

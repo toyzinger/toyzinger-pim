@@ -14,14 +14,11 @@
     <div class="product-form__row">
       <app-dropdown-manufacturers
         label="Manufacturer"
-        [value]="manufacturerId()"
-        (valueChange)="manufacturerId.set($event)"
+        [loading]="loading()"
         [disabled]="loading()"
       />
       <app-dropdown-franchises
         label="Franchise"
-        [value]="franchiseId()"
-        (valueChange)="franchiseId.set($event)"
         [disabled]="loading()"
       />
     </div>
@@ -29,16 +26,10 @@
     <div class="product-form__row">
       <app-dropdown-collections
         label="Collection"
-        [filteredByFranchise]="franchiseId()"
-        [value]="collectionId()"
-        (valueChange)="collectionId.set($event)"
         [loading]="loading()"
       />
       <app-dropdown-subcollections
         label="SubCollection"
-        [filteredByCollection]="collectionId()"
-        [value]="subCollectionId()"
-        (valueChange)="subCollectionId.set($event)"
         [loading]="loading()"
       />
     </div>

@@ -1,4 +1,4 @@
-import { Component, inject, model, input, computed, OnInit, effect, untracked } from '@angular/core';
+import { Component, inject, input, computed, OnInit } from '@angular/core';
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
 
@@ -20,13 +20,12 @@ export class DropdownFranchises implements OnInit {
   disabled = input<boolean>(false);
   language = input<'en' | 'es'>('en');
 
-  // ============ TWO-WAY BINDING ==================
-
-  value = model<string>('');
-
   // ============ COMPUTED VALUES ==================
 
   franchises = computed(() => this.franchiseService.franchises());
+
+  // Current value comes from the service
+  currentValue = computed(() => this.franchiseService.selectedFranchiseId());
 
   franchiseOptions = computed<SelectOption[]>(() => {
     const lang = this.language();
@@ -38,27 +37,11 @@ export class DropdownFranchises implements OnInit {
       .sort((a, b) => a.label.localeCompare(b.label));
   });
 
-  // ============ EFFECTS ==================
-
-  constructor() {
-    // Only sync FROM global TO local (one-way)
-    effect(() => this.syncGlobalToLocal());
-  }
-
-  private syncGlobalToLocal(): void {
-    const globalFranchiseId = this.franchiseService.selectedFranchiseId();
-    const localValue = untracked(() => this.value());
-    if (globalFranchiseId !== localValue) {
-      this.value.set(globalFranchiseId);
-    }
-  }
-
   // ============ ACTIONS ==================
 
   // Called when user explicitly changes the dropdown selection
   onSelectionChange(newValue: string): void {
-    this.value.set(newValue);
-    // Only sync to global on explicit user interaction
+    // Update the service, which is the Source of Truth
     this.franchiseService.setSelectedFranchiseId(newValue);
   }
 

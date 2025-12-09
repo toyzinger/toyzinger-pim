@@ -19,6 +19,7 @@ export class SubCollectionService {
   private _error = signal<string | null>(null); // Error state
   private _subcollectionsLoaded = signal<boolean>(false); // Track if subcollections have been loaded
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
+  private _selectedSubCollectionId = signal<string>(''); // Global selected subcollection ID
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -27,6 +28,7 @@ export class SubCollectionService {
   subcollections = this._subcollections.asReadonly();
   loading = this._loading.asReadonly();
   error = this._error.asReadonly();
+  selectedSubCollectionId = this._selectedSubCollectionId.asReadonly();
 
   // ========================================
   // COMPUTED VALUES
@@ -162,5 +164,15 @@ export class SubCollectionService {
   // Clear error
   clearError(): void {
     this._error.set(null);
+  }
+
+  // Set globally selected subcollection ID
+  setSelectedSubCollectionId(id: string): void {
+    this._selectedSubCollectionId.set(id);
+  }
+
+  // Clear globally selected subcollection ID
+  clearSelectedSubCollectionId(): void {
+    this._selectedSubCollectionId.set('');
   }
 }

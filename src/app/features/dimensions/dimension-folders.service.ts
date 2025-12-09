@@ -25,7 +25,8 @@ export class DimensionFoldersService {
 
   // ============ STATE ==================
 
-  private _selectedNodeId = signal<string | null>(null);
+  private readonly STORAGE_KEY = 'dim_folder_selection';
+  private _selectedNodeId = signal<string | null>(this.globalService.getLocalStorage<string | null>(this.STORAGE_KEY, null));
 
   // ============ SELECTORS ==================
 
@@ -92,10 +93,12 @@ export class DimensionFoldersService {
 
   selectNode(nodeId: string) {
     this._selectedNodeId.set(nodeId);
+    this.globalService.setLocalStorage(this.STORAGE_KEY, nodeId);
   }
 
   clearSelection() {
     this._selectedNodeId.set(null);
+    this.globalService.removeLocalStorage(this.STORAGE_KEY);
   }
 
   // ============ DRAG AND DROP ==================

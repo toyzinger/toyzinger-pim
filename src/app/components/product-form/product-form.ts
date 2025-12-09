@@ -1,4 +1,4 @@
-import { Component, signal, effect, input, output } from '@angular/core';
+import { Component, signal, effect, input, output, inject, computed } from '@angular/core';
 import { Product, createEmptyProduct } from '../../features/products/products.model';
 import { FormComponents } from '../form/form';
 import { DropdownFranchises } from '../dropdown-franchises/dropdown-franchises';
@@ -7,6 +7,10 @@ import { DropdownSubCollections } from '../dropdown-subcollections/dropdown-subc
 import { DropdownManufacturers } from '../dropdown-manufacturers/dropdown-manufacturers';
 import { ProductFormDualtextarea } from './product-form-dualtextarea/product-form-dualtextarea';
 import { ProductFormAccessories } from './product-form-accessories/product-form-accessories';
+import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
+import { CollectionService } from '../../features/dimensions/collection/collection.service';
+import { ManufacturerService } from '../../features/dimensions/manufacturer/manufacturer.service';
+import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
 
 @Component({
   selector: 'app-product-form',
@@ -23,6 +27,10 @@ import { ProductFormAccessories } from './product-form-accessories/product-form-
   styleUrl: './product-form.scss',
 })
 export class ProductForm {
+  private franchiseService = inject(FranchiseService);
+  private collectionService = inject(CollectionService);
+  private manufacturerService = inject(ManufacturerService);
+  private subCollectionService = inject(SubCollectionService);
 
   // =============== INPUTS =========================
 
@@ -42,15 +50,16 @@ export class ProductForm {
   size = signal<string>('');
   yearReleased = signal<number | undefined>(undefined);
   isActive = signal<boolean>(true);
-  franchiseId = signal<string>('');
-  collectionId = signal<string>('');
-  subCollectionId = signal<string>('');
-  manufacturerId = signal<string>('');
   toyDescription_es = signal<string>('');
   toyDescription_en = signal<string>('');
   characterDescription_es = signal<string>('');
   characterDescription_en = signal<string>('');
   accessories = signal<{ en: string[]; es: string[] }>({ en: [], es: [] });
+  // values from DIM dropdowns
+  franchiseId = computed(() => this.franchiseService.selectedFranchiseId());
+  collectionId = computed(() => this.collectionService.selectedCollectionId());
+  manufacturerId = computed(() => this.manufacturerService.selectedManufacturerId());
+  subCollectionId = computed(() => this.subCollectionService.selectedSubCollectionId());
 
   // =============== EFFECTS =========================
 
@@ -68,11 +77,13 @@ export class ProductForm {
     this.size.set(prod.size || '');
     this.yearReleased.set(prod.yearReleased);
     this.isActive.set(prod.isActive);
-    // set ID fields
-    this.franchiseId.set(prod.franchiseId || '');
-    this.collectionId.set(prod.collectionId || '');
-    this.subCollectionId.set(prod.subCollectionId || '');
-    this.manufacturerId.set(prod.manufacturerId || '');
+    // set DIM Dropdowns only if we have a real ID (edit mode)
+    if (prod.id) {
+      this.franchiseService.setSelectedFranchiseId(prod.franchiseId || '');
+      this.collectionService.setSelectedCollectionId(prod.collectionId || '');
+      this.manufacturerService.setSelectedManufacturerId(prod.manufacturerId || '');
+      this.subCollectionService.setSelectedSubCollectionId(prod.subCollectionId || '');
+    }
     // set multilingual fields
     if (prod.toyDescription) {
       this.toyDescription_en.set(prod.toyDescription.en || '');
@@ -108,10 +119,12 @@ export class ProductForm {
     productData.sku = this.sku().trim() || undefined;
     productData.size = this.size().trim() || undefined;
     productData.yearReleased = this.yearReleased() || undefined;
-    productData.franchiseId = this.franchiseId() || undefined;
-    productData.collectionId = this.collectionId() || undefined;
-    productData.subCollectionId = this.subCollectionId() || undefined;
-    productData.manufacturerId = this.manufacturerId() || undefined;
+
+    // Get Dimension values from Services
+    productData.franchiseId = this.franchiseService.selectedFranchiseId() || undefined;
+    productData.collectionId = this.collectionService.selectedCollectionId() || undefined;
+    productData.manufacturerId = this.manufacturerService.selectedManufacturerId() || undefined;
+    productData.subCollectionId = this.subCollectionService.selectedSubCollectionId() || undefined;
 
     // Add toy description if provided
     const toyDescEn = this.toyDescription_en().trim();
@@ -137,7 +150,6 @@ export class ProductForm {
       productData.accessories = acc;
     }
     // Emit updated product data
-    // console.log('Product Data:', productData);
     this.updatedProduct.emit(productData);
   }
 }

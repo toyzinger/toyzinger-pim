@@ -1,5 +1,6 @@
 import { Component, inject, model, input, computed, OnInit, effect, untracked } from '@angular/core';
 import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
+import { CollectionService } from '../../features/dimensions/collection/collection.service';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
 
 @Component({
@@ -10,6 +11,7 @@ import { FormSelect, SelectOption } from '../form/form-select/form-select';
 })
 export class DropdownSubCollections implements OnInit {
   private subCollectionService = inject(SubCollectionService);
+  private collectionService = inject(CollectionService);
 
   // ============ INPUTS ==================
 
@@ -19,25 +21,20 @@ export class DropdownSubCollections implements OnInit {
   required = input<boolean>(false);
   loading = input<boolean>(false);
   language = input<'en' | 'es'>('en'); // Language for subcollection names
-  filteredByCollection = input.required<string>(); // CollectionId to filter subcollections by
-
-  // ============ TWO-WAY BINDING ==================
-
-  value = model<string>(''); // Model for selected subcollection ID
 
   // ============ COMPUTED VALUES ==================
 
-  disabled = computed(() => !this.filteredByCollection() || this.loading());
+   // Current selected subcollection from service
+  currentValue = computed(() => this.subCollectionService.selectedSubCollectionId());
+  // Get current collection selection from service
+  collectionId = computed(() => this.collectionService.selectedCollectionId());
+  disabled = computed(() => !this.collectionId() || this.loading());
 
-  // ============ COMPUTED VALUES ==================
-
-  // Get subcollections, filtered by collection ID
+  // Get subcollections, filtered by global collection selection
   subcollections = computed(() => {
     const allSubCollections = this.subCollectionService.sortedSubCollections();
-    const collectionId = this.filteredByCollection();
+    const collectionId = this.collectionId();
 
-    // If no collection is selected, return empty list (or all? usually dependent dropdowns return empty)
-    // Based on user request "ha de recibir como input un collectionId obligatoriamente, ha de recoger este collectionId y filtrar"
     if (!collectionId) return [];
 
     return allSubCollections.filter(sc => sc.collectionId === collectionId);
@@ -54,25 +51,30 @@ export class DropdownSubCollections implements OnInit {
 
   // ============ EFFECTS ==================
 
-  private isInitialized = false;
-
   constructor() {
-    effect(() => this.clearValueIfNotInFilteredSubCollections());
+    // Validate subcollection when collection changes
+    effect(() => this.validateSubCollectionAgainstCollection());
   }
 
-  // Clear value if it's not in the filtered subcollections (only after initialization)
-  private clearValueIfNotInFilteredSubCollections(): void {
-    this.filteredByCollection(); // Track filter changes
-    // Skip on initialization - let the parent's value take precedence
-    if (!this.isInitialized) return;
-    // Read value without tracking to avoid circular dependency
-    const currentValue = untracked(() => this.value());
-    if (currentValue === '') return;
-    // Check if current value exists in filtered subcollections
-    const validIds = untracked(() => this.subcollections().map(sc => sc.id || ''));
-    if (!validIds.includes(currentValue)) {
-      this.value.set('');
+  // Ensure selected subcollection belongs to the selected collection
+  private validateSubCollectionAgainstCollection(): void {
+    const collectionId = this.collectionId();
+    const subCollectionId = untracked(() => this.subCollectionService.selectedSubCollectionId());
+
+    if (subCollectionId) {
+      const subCollection = this.subCollectionService.getSubCollectionById()(subCollectionId);
+      // Clear subcollection if collection is cleared OR if subcollection doesn't belong to new collection
+      if (!collectionId || (subCollection && subCollection.collectionId !== collectionId)) {
+        console.log('Clearing invalid subcollection for collection', collectionId);
+        this.subCollectionService.clearSelectedSubCollectionId();
+      }
     }
+  }
+
+  // ============ ACTIONS ==================
+
+  onSelectionChange(newValue: string): void {
+     this.subCollectionService.setSelectedSubCollectionId(newValue);
   }
 
   // ============ LIFECYCLE ==================
@@ -80,9 +82,5 @@ export class DropdownSubCollections implements OnInit {
   ngOnInit() {
     // Load subcollections when component is initialized
     this.subCollectionService.ensureSubCollectionsLoaded();
-    // Mark as initialized after potential parent value is set
-    setTimeout(() => {
-      this.isInitialized = true;
-    });
   }
 }

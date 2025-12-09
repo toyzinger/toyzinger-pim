@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { DimensionNode, SPECIAL_DIM_FOLDERS } from '../../features/dimensions/dimensions.model';
 import { DimensionFoldersService } from '../../features/dimensions/dimension-folders.service';
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
@@ -113,6 +113,20 @@ export class DimensionFolders {
 
     return activeIds;
   });
+
+  constructor() {
+    // Auto-expand active nodes (selected node path)
+    effect(() => {
+      const activeIds = this.activeNodeIds();
+      if (activeIds.size > 0) {
+        this.expandedNodeIds.update(current => {
+          const next = new Set(current);
+          activeIds.forEach(id => next.add(id));
+          return next;
+        });
+      }
+    });
+  }
 
   // ============ ACTIONS ==================
 

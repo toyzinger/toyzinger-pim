@@ -7,6 +7,7 @@ import { DimSubCollection, createEmptySubCollection } from '../../features/dimen
 import { DropdownCollections } from "../dropdown-collections/dropdown-collections";
 import { DropdownFranchises } from "../dropdown-franchises/dropdown-franchises";
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
+import { CollectionService } from '../../features/dimensions/collection/collection.service';
 
 @Component({
   selector: 'app-subcollection-management',
@@ -17,6 +18,7 @@ import { FranchiseService } from '../../features/dimensions/franchise/franchise.
 export class SubCollectionManagement implements OnInit {
   private subcollectionService = inject(SubCollectionService);
   private franchiseService = inject(FranchiseService);
+  private collectionService = inject(CollectionService);
 
   // ViewChild for form focus control
   private subcollectionForm = viewChild<SubCollectionForm>('subcollectionForm');
@@ -27,21 +29,10 @@ export class SubCollectionManagement implements OnInit {
 
   newSubCollection = signal<DimSubCollection>(createEmptySubCollection());
 
-  //Filters
-  franchiseSelection = this.franchiseService.selectedFranchiseId; // Use global franchise selection
-  collectionSelection = signal<string>('');
+  // ============ COMPUTED VALUES ==================
 
-  // ========================================
-  // CONSTRUCTOR
-  // ========================================
-
-  constructor() {
-    // Clear collection selection when franchise selection changes
-    effect(() => {
-      this.franchiseSelection(); // Track franchiseSelection
-      this.collectionSelection.set(''); // Clear collectionSelection
-    });
-  }
+  franchiseSelection = computed(() => this.franchiseService.selectedFranchiseId());
+  collectionSelection = computed(() => this.collectionService.selectedCollectionId());
 
   isValidSubCollection = computed(() => {
     return this.newSubCollection().name.en.trim() !== '' && this.newSubCollection().name.es.trim() !== '';
@@ -68,13 +59,15 @@ export class SubCollectionManagement implements OnInit {
     return [...new Set(collectionIds)] as string[];
   });
 
-  onNewSubCollection(subcollection: DimSubCollection) {
-    this.newSubCollection.set(subcollection);
+  // ============ ACTIONS ==================
+
+  clearFilters() {
+    this.franchiseService.clearSelectedFranchiseId();
+    this.collectionService.clearSelectedCollectionId();
   }
 
-  clearCollectionSelection() {
-    this.franchiseService.clearSelectedFranchiseId();
-    this.collectionSelection.set('');
+  onNewSubCollection(subcollection: DimSubCollection) {
+    this.newSubCollection.set(subcollection);
   }
 
   async addSubCollection() {
@@ -95,9 +88,7 @@ export class SubCollectionManagement implements OnInit {
     }
   }
 
-  // ========================================
-  // LIFECYCLE
-  // ========================================
+  // ================ LIFECYCLE ========================
 
   async ngOnInit() {
     await this.subcollectionService.ensureSubCollectionsLoaded();

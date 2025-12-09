@@ -25,13 +25,25 @@ export class ManufacturerForm {
   slug = signal<string>('');
   order = signal<number | undefined>(undefined);
 
+  // ============ EFFECTS ==================
+
   constructor() {
     // Load manufacturer data when manufacturer changes
-    effect(() => {
-      this.loadManufacturerData(this.manufacturer());
-    });
+    effect(() => this.syncInputToFormFields());
     // Update manufacturer model when form fields change
-    effect(() => {
+    effect(() => this.emitUpdatedManufacturer());
+  }
+
+  // Sync Input manufacturer to form fields
+  private syncInputToFormFields(): void {
+    const man = this.manufacturer();
+    this.name.set(man.name || '');
+    this.slug.set(man.slug || '');
+    this.order.set(man.order);
+  }
+
+  // Sync form fields to Output manufacturer
+  private emitUpdatedManufacturer(): void {
       const manufacturerData: DimManufacturer = {
         name: this.name(),
       };
@@ -45,8 +57,9 @@ export class ManufacturerForm {
       }
       // Emit updated manufacturer data
       this.updatedManufacturer.emit(manufacturerData);
-    });
   }
+
+  // ============ ACTIONS ==================
 
   nameBlur() {
     const manufacturerName = this.name().trim();
@@ -55,11 +68,5 @@ export class ManufacturerForm {
 
   slugBlur() {
     this.slug.set(slugify(this.slug().trim()));
-  }
-
-  private loadManufacturerData(man: DimManufacturer): void {
-    this.name.set(man.name || '');
-    this.slug.set(man.slug || '');
-    this.order.set(man.order);
   }
 }

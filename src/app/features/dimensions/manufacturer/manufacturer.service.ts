@@ -19,6 +19,7 @@ export class ManufacturerService {
   private _error = signal<string | null>(null); // Error state
   private _manufacturersLoaded = signal<boolean>(false); // Track if manufacturers have been loaded
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
+  private _selectedManufacturerId = signal<string>(''); // Global selected manufacturer ID
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -27,6 +28,7 @@ export class ManufacturerService {
   manufacturers = this._manufacturers.asReadonly();
   loading = this._loading.asReadonly();
   error = this._error.asReadonly();
+  selectedManufacturerId = this._selectedManufacturerId.asReadonly();
 
   // ========================================
   // COMPUTED VALUES
@@ -157,5 +159,15 @@ export class ManufacturerService {
   // Clear error
   clearError(): void {
     this._error.set(null);
+  }
+
+  // Set globally selected manufacturer ID
+  setSelectedManufacturerId(id: string): void {
+    this._selectedManufacturerId.set(id);
+  }
+
+  // Clear globally selected manufacturer ID
+  clearSelectedManufacturerId(): void {
+    this._selectedManufacturerId.set('');
   }
 }

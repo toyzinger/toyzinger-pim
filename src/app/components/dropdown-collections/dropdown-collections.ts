@@ -1,5 +1,6 @@
 import { Component, inject, model, input, computed, OnInit, effect, untracked } from '@angular/core';
 import { CollectionService } from '../../features/dimensions/collection/collection.service';
+import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
 
 @Component({
@@ -10,6 +11,7 @@ import { FormSelect, SelectOption } from '../form/form-select/form-select';
 })
 export class DropdownCollections implements OnInit {
   private collectionService = inject(CollectionService);
+  private franchiseService = inject(FranchiseService);
 
   // ============ INPUTS ==================
 
@@ -19,28 +21,22 @@ export class DropdownCollections implements OnInit {
   required = input<boolean>(false);
   loading = input<boolean>(false);
   language = input<'en' | 'es'>('en'); // Language for collection names
-  filteredByFranchise = input.required<string>(); // FranchiseId to filter collections by
-
-  // ============ TWO-WAY BINDING ==================
-
-  value = model<string>(''); // Model for selected collection ID
 
   // ============ COMPUTED VALUES ==================
 
-  disabled = computed(() => !this.filteredByFranchise() || this.loading());
-
-  // ============ COMPUTED VALUES ==================
-
-  // Get collections, optionally filtered by ID array
+  // Current selected collection from service
+  currentValue = computed(() => this.collectionService.selectedCollectionId());
+  // Get current franchise selection from service
+  franchiseId = computed(() => this.franchiseService.selectedFranchiseId());
+  // Disable if no franchise selected (unless loading)
+  disabled = computed(() => !this.franchiseId() || this.loading());
+  // Get collections, filtered by global franchise selection
   collections = computed(() => {
     const allCollections = this.collectionService.sortedCollections();
-    const franchiseId = this.filteredByFranchise();
-    // If filtered array is empty, return all collections
-    if (franchiseId === '') return allCollections;
-    // Otherwise, only return collections whose ID is in the filtered array
+    const franchiseId = this.franchiseId();
+    if (!franchiseId) return [];
     return allCollections.filter(collection => collection.franchiseId === franchiseId);
   });
-
   // Convert collections to SelectOption[] for FormSelect
   collectionOptions = computed<SelectOption[]>(() => {
     const lang = this.language();
@@ -52,25 +48,30 @@ export class DropdownCollections implements OnInit {
 
   // ============ EFFECTS ==================
 
-  private isInitialized = false;
-
   constructor() {
-    effect(() => this.clearValueIfNotInFilteredCollections());
+    // Validate collection when franchise changes
+    effect(() => this.validateCollectionAgainstFranchise());
   }
 
-  // Clear value if it's not in the filtered collections (only after initialization)
-  private clearValueIfNotInFilteredCollections(): void {
-    this.filteredByFranchise(); // Track filter changes
-    // Skip on initialization - let the parent's value take precedence
-    if (!this.isInitialized) return;
-    // Read value without tracking to avoid circular dependency
-    const currentValue = untracked(() => this.value());
-    if (currentValue === '') return;
-    // Check if current value exists in filtered collections
-    const validIds = untracked(() => this.collections().map(c => c.id || ''));
-    if (!validIds.includes(currentValue)) {
-      this.value.set('');
+  // Ensure selected collection belongs to the selected franchise
+  private validateCollectionAgainstFranchise(): void {
+    const franchiseId = this.franchiseId();
+    const collectionId = untracked(() => this.currentValue());
+
+    if (collectionId) {
+      const collection = this.collectionService.getCollectionById()(collectionId);
+      // Clear collection if franchise is cleared OR if collection doesn't belong to new franchise
+      if (!franchiseId || (collection && collection.franchiseId !== franchiseId)) {
+        console.log('Clearing invalid collection for franchise', franchiseId);
+        this.collectionService.clearSelectedCollectionId();
+      }
     }
+  }
+
+  // ============ ACTIONS ==================
+
+  onSelectionChange(newValue: string): void {
+     this.collectionService.setSelectedCollectionId(newValue);
   }
 
   // ============ LIFECYCLE ==================
@@ -78,9 +79,5 @@ export class DropdownCollections implements OnInit {
   ngOnInit() {
     // Load collections when component is initialized
     this.collectionService.ensureCollectionsLoaded();
-    // Mark as initialized after potential parent value is set
-    setTimeout(() => {
-      this.isInitialized = true;
-    });
   }
 }

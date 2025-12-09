@@ -19,6 +19,7 @@ export class CollectionService {
   private _error = signal<string | null>(null); // Error state
   private _collectionsLoaded = signal<boolean>(false); // Track if collections have been loaded
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
+  private _selectedCollectionId = signal<string>(''); // Global selected collection ID
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -27,6 +28,7 @@ export class CollectionService {
   collections = this._collections.asReadonly();
   loading = this._loading.asReadonly();
   error = this._error.asReadonly();
+  selectedCollectionId = this._selectedCollectionId.asReadonly();
 
   // ========================================
   // COMPUTED VALUES
@@ -162,5 +164,15 @@ export class CollectionService {
   // Clear error
   clearError(): void {
     this._error.set(null);
+  }
+
+  // Set globally selected collection ID
+  setSelectedCollectionId(id: string): void {
+    this._selectedCollectionId.set(id);
+  }
+
+  // Clear globally selected collection ID
+  clearSelectedCollectionId(): void {
+    this._selectedCollectionId.set('');
   }
 }

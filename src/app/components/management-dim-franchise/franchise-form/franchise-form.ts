@@ -12,6 +12,8 @@ import { slugify } from '../../../utils/slug.utils';
 })
 export class FranchiseForm {
 
+  // =============== INPUTS/OUTPUTS =========================
+
   // Franchise Data received from parent
   franchise = input<DimFranchise>(createEmptyFranchise());
   // Loading state
@@ -21,7 +23,8 @@ export class FranchiseForm {
   // Event emitter for updated franchiseData
   updatedFranchise = output<DimFranchise>();
 
-  // Form fields
+  // =============== FORMFIELDS =========================
+
   name_en = signal<string>('');
   name_es = signal<string>('');
   text_en = signal<string>('');
@@ -32,13 +35,31 @@ export class FranchiseForm {
   isActive = signal<boolean>(true);
   order = signal<number | undefined>(undefined);
 
+  // ============ EFFECTS ==================
+
   constructor() {
     // Load franchise data when franchise changes
-    effect(() => {
-      this.loadFranchiseData(this.franchise());
-    });
+    effect(() => this.syncInputToFormFields());
     // Update franchise model when form fields change
-    effect(() => {
+    effect(() => this.emitUpdatedFranchise());
+  }
+
+  // Sync Input franchise to form fields
+  private syncInputToFormFields(): void {
+    const fran = this.franchise();
+    this.name_en.set(fran.name?.en || '');
+    this.name_es.set(fran.name?.es || '');
+    this.text_en.set(fran.text?.en || '');
+    this.text_es.set(fran.text?.es || '');
+    this.slug.set(fran.slug || '');
+    this.imgLogoPath.set(fran.imgLogoPath || '');
+    this.imgJumbotronPath.set(fran.imgJumbotronPath || '');
+    this.isActive.set(fran.isActive);
+    this.order.set(fran.order);
+  }
+
+  // Sync form fields to Output franchise
+  private emitUpdatedFranchise(): void {
       const franchiseData: DimFranchise = {
         name: {
           en: this.name_en(),
@@ -72,8 +93,9 @@ export class FranchiseForm {
       }
       // Emit updated franchise data
       this.updatedFranchise.emit(franchiseData);
-    });
   }
+
+  // ============ ACTIONS ==================
 
   nameENBlur() {
     const englishName = this.name_en().trim();
@@ -83,17 +105,5 @@ export class FranchiseForm {
 
   slugBlur() {
     this.slug.set(slugify(this.slug().trim()));
-  }
-
-  private loadFranchiseData(fran: DimFranchise): void {
-    this.name_en.set(fran.name?.en || '');
-    this.name_es.set(fran.name?.es || '');
-    this.text_en.set(fran.text?.en || '');
-    this.text_es.set(fran.text?.es || '');
-    this.slug.set(fran.slug || '');
-    this.imgLogoPath.set(fran.imgLogoPath || '');
-    this.imgJumbotronPath.set(fran.imgJumbotronPath || '');
-    this.isActive.set(fran.isActive);
-    this.order.set(fran.order);
   }
 }

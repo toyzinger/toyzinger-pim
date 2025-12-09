@@ -1,4 +1,4 @@
-import { Component, inject, model, input, computed, OnInit } from '@angular/core';
+import { Component, inject, input, computed, OnInit, effect, untracked } from '@angular/core';
 import { ManufacturerService } from '../../features/dimensions/manufacturer/manufacturer.service';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
 
@@ -17,19 +17,17 @@ export class DropdownManufacturers implements OnInit {
   id = input<string>('manufacturer-select');
   required = input<boolean>(false);
   disabled = input<boolean>(false);
+  loading = input<boolean>(false);
   placeholder = input<string>('Select a manufacturer');
-
-  // ============ TWO-WAY BINDING ==================
-
-  value = model<string>(''); // Model for selected manufacturer ID
 
   // ============ COMPUTED VALUES ==================
 
+  // Current selected manufacturer from service
+  currentValue = computed(() => this.manufacturerService.selectedManufacturerId());
   // Get all manufacturers sorted by order
   manufacturers = computed(() => {
     return this.manufacturerService.manufacturers();
   });
-
   // Convert manufacturers to SelectOption[] for FormSelect
   manufacturerOptions = computed<SelectOption[]>(() => {
     return this.manufacturers()
@@ -39,6 +37,12 @@ export class DropdownManufacturers implements OnInit {
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
   });
+
+  // ============ ACTIONS ==================
+
+  onSelectionChange(newValue: string): void {
+     this.manufacturerService.setSelectedManufacturerId(newValue);
+  }
 
   // ============ LIFECYCLE ==================
 

@@ -6,14 +6,13 @@
       <div class="subcollection-management__filters">
         <app-dropdown-franchises
           label="Filter by franchise"
+          [disabled]="loading()"
         />
         <app-dropdown-collections
-          [filteredByFranchise]="franchiseSelection()"
           label="Filter by collection"
-          [(value)]="collectionSelection"
           [loading]="loading()"
           />
-        <button class="btn-primary" (click)="clearCollectionSelection()">
+        <button class="btn-primary" (click)="clearFilters()">
           <span class="material-icons-outlined">filter_alt_off</span>
         </button>
       </div>
@@ -57,7 +56,7 @@
       <app-dropdown-franchises
         label="Filter by franchise"
       />
-      <button class="btn-primary" (click)="clearCollectionSelection()">
+      <button class="btn-primary" (click)="clearFilters()">
         <span class="material-icons-outlined">filter_alt_off</span>
       </button>
     </div>
@@ -67,7 +66,6 @@
       (updatedSubCollection)="onNewSubCollection($event)"
       [loading]="loading()"
       [reduced]="true"
-      [franchiseId]="franchiseSelection()"
     />
     <button class="btn-primary"
       (click)="addSubCollection()"
