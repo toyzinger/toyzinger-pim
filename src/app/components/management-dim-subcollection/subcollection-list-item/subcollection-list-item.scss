@@ -4,9 +4,41 @@
   &__name,
   &__slug,
   &__collection,
-  &__status {
+  &__order {
     padding: 0.5rem;
     color: $color-text-dark;
+  }
+
+  &__order {
+    input[type='number'] {
+      width: 70px;
+      background-color: $gray-600;
+      border: 1px solid $gray-600;
+      border-radius: 4px;
+      color: $color-text-light;
+      font-size: 1rem;
+      text-align: center;
+
+      &:focus {
+        outline: none;
+        border-color: $color-primary;
+      }
+
+      // Forzar que las flechas siempre sean visibles y clickeables
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        opacity: 1;
+        cursor: pointer;
+        margin-left: 5px;
+      }
+
+      // Firefox
+      -moz-appearance: textfield;
+      &:hover,
+      &:focus {
+        -moz-appearance: number-input;
+      }
+    }
   }
 
   &__actions {

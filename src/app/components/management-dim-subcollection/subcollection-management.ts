@@ -39,14 +39,15 @@ export class SubCollectionManagement implements OnInit {
   });
 
   filteredSortedSubCollections = computed(() => {
-    let finalSubCollections = this.subcollections();
+    let finalSubCollections = [...this.subcollections()];
     // Filter by Collection ID
     if (this.collectionSelection() !== '') {
-      finalSubCollections = this.subcollections().filter(subcollection => {
+      finalSubCollections = finalSubCollections.filter(subcollection => {
         return subcollection.collectionId === this.collectionSelection();
       });
     }
-    return finalSubCollections;
+    // Sort by order
+    return finalSubCollections.sort((a, b) => (a.order || 0) - (b.order || 0));
   });
 
   // Get unique collection IDs from all subcollections

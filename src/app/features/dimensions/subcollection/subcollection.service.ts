@@ -2,6 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { DimSubCollection } from '../dimensions.model';
 import { SubCollectionFirebase } from './subcollection.firebase';
 import { ToastService } from '../../toast/toast.service';
+import { GlobalService } from '../../global/global.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,9 @@ import { ToastService } from '../../toast/toast.service';
 export class SubCollectionService {
   private subcollectionFirebase = inject(SubCollectionFirebase);
   private toastService = inject(ToastService);
+  private globalService = inject(GlobalService);
+
+  private readonly STORAGE_KEY = 'selectedSubCollectionId';
 
   // ========================================
   // STATE (Private signals)
@@ -19,7 +23,9 @@ export class SubCollectionService {
   private _error = signal<string | null>(null); // Error state
   private _subcollectionsLoaded = signal<boolean>(false); // Track if subcollections have been loaded
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
-  private _selectedSubCollectionId = signal<string>(''); // Global selected subcollection ID
+  private _selectedSubCollectionId = signal<string>(
+    this.globalService.getLocalStorage(this.STORAGE_KEY, '')
+  ); // Global selected subcollection ID (persisted)
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -123,7 +129,8 @@ export class SubCollectionService {
 
       // Update in Firebase
       await this.subcollectionFirebase.updateSubCollection(id, data);
-      this.toastService.success(`SubCollection Updated: ${data.name?.en}`);
+      const name = data.name ? data.name.en || data.name.es : '';
+      this.toastService.success(`SubCollection Updated: ${name}`);
     } catch (error) {
       this._error.set('Failed to update subcollection');
       console.error('Error updating subcollection:', error);
@@ -169,10 +176,12 @@ export class SubCollectionService {
   // Set globally selected subcollection ID
   setSelectedSubCollectionId(id: string): void {
     this._selectedSubCollectionId.set(id);
+    this.globalService.setLocalStorage(this.STORAGE_KEY, id);
   }
 
   // Clear globally selected subcollection ID
   clearSelectedSubCollectionId(): void {
     this._selectedSubCollectionId.set('');
+    this.globalService.removeLocalStorage(this.STORAGE_KEY);
   }
 }

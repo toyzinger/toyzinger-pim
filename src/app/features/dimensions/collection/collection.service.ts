@@ -2,6 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { DimCollection } from '../dimensions.model';
 import { CollectionFirebase } from './collection.firebase';
 import { ToastService } from '../../toast/toast.service';
+import { GlobalService } from '../../global/global.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,9 @@ import { ToastService } from '../../toast/toast.service';
 export class CollectionService {
   private collectionFirebase = inject(CollectionFirebase);
   private toastService = inject(ToastService);
+  private globalService = inject(GlobalService);
+
+  private readonly STORAGE_KEY = 'selectedCollectionId';
 
   // ========================================
   // STATE (Private signals)
@@ -19,7 +23,9 @@ export class CollectionService {
   private _error = signal<string | null>(null); // Error state
   private _collectionsLoaded = signal<boolean>(false); // Track if collections have been loaded
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
-  private _selectedCollectionId = signal<string>(''); // Global selected collection ID
+  private _selectedCollectionId = signal<string>(
+    this.globalService.getLocalStorage(this.STORAGE_KEY, '')
+  ); // Global selected collection ID (persisted)
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -169,10 +175,12 @@ export class CollectionService {
   // Set globally selected collection ID
   setSelectedCollectionId(id: string): void {
     this._selectedCollectionId.set(id);
+    this.globalService.setLocalStorage(this.STORAGE_KEY, id);
   }
 
   // Clear globally selected collection ID
   clearSelectedCollectionId(): void {
     this._selectedCollectionId.set('');
+    this.globalService.removeLocalStorage(this.STORAGE_KEY);
   }
 }

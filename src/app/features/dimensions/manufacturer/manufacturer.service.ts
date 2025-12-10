@@ -2,6 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { DimManufacturer } from '../dimensions.model';
 import { ManufacturerFirebase } from './manufacturer.firebase';
 import { ToastService } from '../../toast/toast.service';
+import { GlobalService } from '../../global/global.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,9 @@ import { ToastService } from '../../toast/toast.service';
 export class ManufacturerService {
   private manufacturerFirebase = inject(ManufacturerFirebase);
   private toastService = inject(ToastService);
+  private globalService = inject(GlobalService);
+
+  private readonly STORAGE_KEY = 'selectedManufacturerId';
 
   // ========================================
   // STATE (Private signals)
@@ -19,7 +23,9 @@ export class ManufacturerService {
   private _error = signal<string | null>(null); // Error state
   private _manufacturersLoaded = signal<boolean>(false); // Track if manufacturers have been loaded
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
-  private _selectedManufacturerId = signal<string>(''); // Global selected manufacturer ID
+  private _selectedManufacturerId = signal<string>(
+    this.globalService.getLocalStorage(this.STORAGE_KEY, '')
+  ); // Global selected manufacturer ID (persisted)
 
   // ========================================
   // SELECTORS (Public readonly)
@@ -164,10 +170,12 @@ export class ManufacturerService {
   // Set globally selected manufacturer ID
   setSelectedManufacturerId(id: string): void {
     this._selectedManufacturerId.set(id);
+    this.globalService.setLocalStorage(this.STORAGE_KEY, id);
   }
 
   // Clear globally selected manufacturer ID
   clearSelectedManufacturerId(): void {
     this._selectedManufacturerId.set('');
+    this.globalService.removeLocalStorage(this.STORAGE_KEY);
   }
 }

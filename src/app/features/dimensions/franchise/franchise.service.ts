@@ -2,6 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { DimFranchise } from '../dimensions.model';
 import { FranchiseFirebase } from './franchise.firebase';
 import { ToastService } from '../../toast/toast.service';
+import { GlobalService } from '../../global/global.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,9 @@ import { ToastService } from '../../toast/toast.service';
 export class FranchiseService {
   private franchiseFirebase = inject(FranchiseFirebase);
   private toastService = inject(ToastService);
+  private globalService = inject(GlobalService);
+
+  private readonly STORAGE_KEY = 'selectedFranchiseId';
 
   // ========================================
   // STATE (Private signals)
@@ -19,7 +23,9 @@ export class FranchiseService {
   private _error = signal<string | null>(null); // Error state
   private _franchisesLoaded = signal<boolean>(false); // Track if franchises have been loaded
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
-  private _selectedFranchiseId = signal<string>(''); // Global selected franchise ID
+  private _selectedFranchiseId = signal<string>(
+    this.globalService.getLocalStorage(this.STORAGE_KEY, '')
+  ); // Global selected franchise ID (persisted)
 
   // ============ SELECTORS (Public readonly) ============
 
@@ -158,11 +164,13 @@ export class FranchiseService {
   // Set globally selected franchise ID
   setSelectedFranchiseId(id: string): void {
     this._selectedFranchiseId.set(id);
+    this.globalService.setLocalStorage(this.STORAGE_KEY, id);
   }
 
   // Clear globally selected franchise ID
   clearSelectedFranchiseId(): void {
     this._selectedFranchiseId.set('');
+    this.globalService.removeLocalStorage(this.STORAGE_KEY);
   }
 
   // ========================================
