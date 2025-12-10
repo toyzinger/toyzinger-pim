@@ -1,16 +1,16 @@
-<div class="accessories">
-  <div class="accessories__grid">
+<div class="form__accessories">
+  <div class="form__accessories-grid">
 
     <!-- ====================== HEADER ========================= -->
-    <div class="accessories__header">Spanish</div>
-    <div class="accessories__header">English</div>
-    <div class="accessories__header accessories__header--actions"></div>
+    <div class="form__accessories-header">Spanish</div>
+    <div class="form__accessories-header">English</div>
+    <div class="form__accessories-header form__accessories-header--actions"></div>
     <!-- ====================== ACCESORIOS EXISTENTES ========================= -->
     @for (item of accessories().es; track $index) {
-      <div class="accessories__cell">
+      <div class="form__accessories-cell">
         @if (isEditing($index)) {
           <input
-            class="accessories__input accessories__input--edit"
+            class="form__accessories-input form__accessories-input--edit"
             type="text"
             [value]="accessories().es[$index]"
             (blur)="saveEdit($index, 'es', $any($event.target).value)"
@@ -20,14 +20,14 @@
             autofocus
           />
         } @else {
-          <span class="accessories__text">{{ item || '—' }}</span>
+          <span class="form__accessories-text">{{ item || '—' }}</span>
         }
       </div>
 
-      <div class="accessories__cell">
+      <div class="form__accessories-cell">
         @if (isEditing($index)) {
           <input
-            class="accessories__input accessories__input--edit"
+            class="form__accessories-input form__accessories-input--edit"
             type="text"
             [value]="accessories().en[$index]"
             (blur)="saveEdit($index, 'en', $any($event.target).value)"
@@ -36,14 +36,14 @@
             [disabled]="disabled()"
           />
         } @else {
-          <span class="accessories__text">{{ accessories().en[$index] || '—' }}</span>
+          <span class="form__accessories-text">{{ accessories().en[$index] || '—' }}</span>
         }
       </div>
 
-      <div class="accessories__cell accessories__cell--actions">
+      <div class="form__accessories-cell form__accessories-cell--actions">
         <button
           type="button"
-          class="accessories__btn"
+          class="form__accessories-btn"
           (click)="togleEdit($index)"
           [disabled]="disabled()"
           title="Edit"
@@ -56,7 +56,7 @@
         </button>
         <button
           type="button"
-          class="accessories__btn accessories__btn--danger"
+          class="form__accessories-btn form__accessories-btn--danger"
           (click)="removeAccessory($index)"
           [disabled]="disabled()"
           title="Delete"
@@ -66,10 +66,10 @@
       </div>
     }
     <!-- ====================== NEW ACCESSORY ========================= -->
-    <div class="accessories__cell">
+    <div class="form__accessories-cell">
       <input
         #newAccessoryInput
-        class="accessories__input"
+        class="form__accessories-input"
         type="text"
         placeholder="Add Spanish..."
         [value]="newAccessoryEs()"
@@ -79,9 +79,9 @@
       />
     </div>
 
-    <div class="accessories__cell">
+    <div class="form__accessories-cell">
       <input
-        class="accessories__input"
+        class="form__accessories-input"
         type="text"
         placeholder="Add English..."
         [value]="newAccessoryEn()"
@@ -91,10 +91,10 @@
       />
     </div>
 
-    <div class="accessories__cell accessories__cell--actions">
+    <div class="form__accessories-cell form__accessories-cell--actions">
       <button
         type="button"
-        class="accessories__btn accessories__btn--primary"
+        class="form__accessories-btn form__accessories-btn--primary"
         (click)="addAccessory()"
         [disabled]="disabled()"
         title="Add accessory"

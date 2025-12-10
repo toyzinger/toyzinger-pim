@@ -1,12 +1,12 @@
 import { Component, signal, effect, input, output } from '@angular/core';
 import { DimFranchise, createEmptyFranchise } from '../../../features/dimensions/dimensions.model';
 import { FormComponents } from '../../form/form';
-import { ProductFormDualtextarea } from '../../product-form/product-form-dualtextarea/product-form-dualtextarea';
+import { FormDualtextarea } from '../../form/form-dualtextarea/form-dualtextarea';
 import { slugify } from '../../../utils/slug.utils';
 
 @Component({
   selector: 'app-franchise-form',
-  imports: [FormComponents, ProductFormDualtextarea],
+  imports: [FormComponents, FormDualtextarea],
   templateUrl: './franchise-form.html',
   styleUrl: './franchise-form.scss',
 })

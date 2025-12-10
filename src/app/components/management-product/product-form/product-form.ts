@@ -1,16 +1,14 @@
 import { Component, signal, effect, input, output, inject, computed } from '@angular/core';
-import { Product, createEmptyProduct } from '../../features/products/products.model';
-import { FormComponents } from '../form/form';
-import { DropdownFranchises } from '../dropdown-franchises/dropdown-franchises';
-import { DropdownCollections } from '../dropdown-collections/dropdown-collections';
-import { DropdownSubCollections } from '../dropdown-subcollections/dropdown-subcollections';
-import { DropdownManufacturers } from '../dropdown-manufacturers/dropdown-manufacturers';
-import { ProductFormDualtextarea } from './product-form-dualtextarea/product-form-dualtextarea';
-import { ProductFormAccessories } from './product-form-accessories/product-form-accessories';
-import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
-import { CollectionService } from '../../features/dimensions/collection/collection.service';
-import { ManufacturerService } from '../../features/dimensions/manufacturer/manufacturer.service';
-import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
+import { Product, createEmptyProduct } from '../../../features/products/products.model';
+import { FormComponents } from '../../form/form';
+import { DropdownFranchises } from '../../dropdown-franchises/dropdown-franchises';
+import { DropdownCollections } from '../../dropdown-collections/dropdown-collections';
+import { DropdownSubCollections } from '../../dropdown-subcollections/dropdown-subcollections';
+import { DropdownManufacturers } from '../../dropdown-manufacturers/dropdown-manufacturers';
+import { FranchiseService } from '../../../features/dimensions/franchise/franchise.service';
+import { CollectionService } from '../../../features/dimensions/collection/collection.service';
+import { ManufacturerService } from '../../../features/dimensions/manufacturer/manufacturer.service';
+import { SubCollectionService } from '../../../features/dimensions/subcollection/subcollection.service';
 
 @Component({
   selector: 'app-product-form',
@@ -19,9 +17,7 @@ import { SubCollectionService } from '../../features/dimensions/subcollection/su
     DropdownFranchises,
     DropdownCollections,
     DropdownSubCollections,
-    DropdownManufacturers,
-    ProductFormDualtextarea,
-    ProductFormAccessories
+    DropdownManufacturers
   ],
   templateUrl: './product-form.html',
   styleUrl: './product-form.scss',

@@ -1,13 +1,13 @@
 import { Component, input, model } from '@angular/core';
-import { FormComponents } from '../../form/form';
+import { FormTextarea } from '../form-textarea/form-textarea';
 
 @Component({
-  selector: 'app-product-form-dualtextarea',
-  imports: [FormComponents],
-  templateUrl: './product-form-dualtextarea.html',
-  styleUrl: './product-form-dualtextarea.scss',
+  selector: 'app-form-dualtextarea',
+  imports: [FormTextarea],
+  templateUrl: 'form-dualtextarea.html',
+  styleUrl: '../form.scss',
 })
-export class ProductFormDualtextarea {
+export class FormDualtextarea {
   // Inputs
   disabled = input<boolean>(false);
 

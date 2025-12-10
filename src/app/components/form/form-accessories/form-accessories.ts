@@ -1,12 +1,12 @@
 import { Component, model, signal, input, viewChild, ElementRef } from '@angular/core';
 
 @Component({
-  selector: 'app-product-form-accessories',
+  selector: 'app-form-accessories',
   imports: [],
-  templateUrl: './product-form-accessories.html',
-  styleUrls: ['./product-form-accessories.scss'],
+  templateUrl: './form-accessories.html',
+  styleUrl: './form-accessories.scss',
 })
-export class ProductFormAccessories {
+export class FormAccessories {
   // Inputs
   disabled = input<boolean>(false);
 

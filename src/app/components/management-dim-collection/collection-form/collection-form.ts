@@ -1,7 +1,7 @@
 import { Component, signal, effect, input, output, viewChild, inject, computed } from '@angular/core';
 import { DimCollection, createEmptyCollection } from '../../../features/dimensions/dimensions.model';
 import { FormComponents, FormInput } from '../../form/form';
-import { ProductFormDualtextarea } from '../../product-form/product-form-dualtextarea/product-form-dualtextarea';
+import { FormDualtextarea } from '../../form/form-dualtextarea/form-dualtextarea';
 import { slugify } from '../../../utils/slug.utils';
 import { DropdownFranchises } from "../../dropdown-franchises/dropdown-franchises";
 import { DropdownManufacturers } from "../../dropdown-manufacturers/dropdown-manufacturers";
@@ -12,7 +12,7 @@ import { ManufacturerService } from '../../../features/dimensions/manufacturer/m
   selector: 'app-collection-form',
   imports: [
     FormComponents,
-    ProductFormDualtextarea,
+    FormDualtextarea,
     DropdownFranchises,
     DropdownManufacturers
   ],

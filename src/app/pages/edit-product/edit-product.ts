@@ -1,7 +1,7 @@
 import { Component, inject, input, computed, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../features/products/products.service';
-import { ProductForm } from '../../components/product-form/product-form';
+import { ProductForm } from '../../components/management-product/product-form/product-form';
 import { createEmptyProduct, Product } from '../../features/products/products.model';
 import { ToastService } from '../../features/toast/toast.service';
 import { TitlePage } from "../../components/title-page/title-page";

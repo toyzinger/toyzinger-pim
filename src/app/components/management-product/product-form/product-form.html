@@ -67,7 +67,7 @@
 
   <div class="container">
     <h3 class="container__title">Accessories</h3>
-    <app-product-form-accessories
+    <app-form-accessories
       [(accessories)]="accessories"
       [disabled]="loading()"
     />
@@ -75,7 +75,7 @@
 
   <div class="container">
     <h3 class="container__title">Toy Descriptions</h3>
-    <app-product-form-dualtextarea
+    <app-form-dualtextarea
       [(valueEn)]="toyDescription_en"
       [(valueEs)]="toyDescription_es"
       [disabled]="loading()"
@@ -84,7 +84,7 @@
 
   <div class="container">
     <h3 class="container__title">Character Descriptions</h3>
-    <app-product-form-dualtextarea
+    <app-form-dualtextarea
       [(valueEn)]="characterDescription_en"
       [(valueEs)]="characterDescription_es"
       [disabled]="loading()"

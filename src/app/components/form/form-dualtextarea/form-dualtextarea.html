@@ -1,4 +1,4 @@
-<div class="dual-textarea">
+<div class="form__group">
   <!-- ====================== SPANISH TEXTAREA ========================= -->
   <app-form-textarea
     label="SPANISH"
@@ -6,10 +6,10 @@
     [disabled]="disabled()"
   />
   <!-- ====================== ACTIONS ========================= -->
-  <div class="dual-textarea__actions">
+  <div class="form__dualtextarea-actions">
     <button
       type="button"
-      class="dual-textarea__action-btn btn-tertiary btn-sm"
+      class="form__dualtextarea-btn btn-tertiary btn-sm"
       (click)="copyToEnglish()"
       [disabled]="disabled() || !valueEs().trim()"
       title="Copy to English"
@@ -19,7 +19,7 @@
 
     <button
       type="button"
-      class="dual-textarea__action-btn btn-tertiary btn-sm"
+      class="form__dualtextarea-btn btn-tertiary btn-sm"
       (click)="translate()"
       [disabled]="disabled() || !valueEs().trim()"
       title="Translate"
@@ -29,7 +29,7 @@
 
     <button
       type="button"
-      class="dual-textarea__action-btn btn-tertiary btn-sm"
+      class="form__dualtextarea-btn btn-tertiary btn-sm"
       (click)="clear()"
       [disabled]="disabled() || (!valueEs().trim() && !valueEn().trim())"
       title="Clear both textareas"
@@ -43,5 +43,4 @@
     [(value)]="valueEn"
     [disabled]="disabled()"
   />
-  <!-- ====================== END ========================= -->
 </div>
