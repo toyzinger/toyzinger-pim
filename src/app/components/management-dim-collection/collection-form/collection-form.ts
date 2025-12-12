@@ -20,12 +20,14 @@ import { ManufacturerService } from '../../../features/dimensions/manufacturer/m
   styleUrl: './collection-form.scss',
 })
 export class CollectionForm {
+  // Injected Services
   private franchiseService = inject(FranchiseService);
   private manufacturerService = inject(ManufacturerService);
+
   // ViewChild for focus control
   private nameEsInput = viewChild<FormInput>('nameEsInput');
 
-  // ============ INPUTS ==================
+  // ============ INPUTS/OUTPUTS ==================
 
   // Collection Data received from parent
   collection = input<DimCollection>(createEmptyCollection());
@@ -33,9 +35,6 @@ export class CollectionForm {
   loading = input<boolean>(false);
   // Display reduced version of the form
   reduced = input<boolean>(false);
-
-  // ============ OUTPUTS ==================
-
   // Event emitter for updated collectionData
   updatedCollection = output<DimCollection>();
 

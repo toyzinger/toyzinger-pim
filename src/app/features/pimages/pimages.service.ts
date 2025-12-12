@@ -403,6 +403,62 @@ export class ImagesService {
     this._uploadQueue.update(queue => [...queue, ...items]);
   }
 
+  /**
+   * Clear subcollectionId from all images that belong to a specific subcollection
+   * @param subcollectionId - The subcollection ID to clear from images
+   */
+  async clearImagesBySubcollection(subcollectionId: string): Promise<void> {
+    if (!subcollectionId) return;
+
+    this._loading.set(true);
+    this._error.set(null);
+
+    try {
+      // Find all images with this subcollectionId
+      const imagesToUpdate = this._images().filter(img => img.subcollectionId === subcollectionId);
+
+      if (imagesToUpdate.length === 0) {
+        this._loading.set(false);
+        return;
+      }
+
+      const ids = imagesToUpdate.map(img => img.id!);
+
+      // Data to clear subcollectionId reference
+      const data: Partial<ProductImage> = {
+        subcollectionId: undefined,
+      };
+
+      // Prepare Firebase update - use deleteField for undefined
+      const updateData: any = {
+        subcollectionId: deleteField()
+      };
+
+      // 1. Optimistic update - update local cache immediately
+      this._images.update(images =>
+        images.map(img =>
+          ids.includes(img.id!)
+            ? { ...img, ...data }
+            : img
+        )
+      );
+
+      // 2. Sync to Firebase in background
+      await Promise.all(
+        ids.map(id => this.imagesFirebase.updateProductImage(id, updateData))
+      );
+
+    } catch (error) {
+      this._error.set('Failed to clear images by subcollection');
+      console.error('Error clearing images by subcollection:', error);
+      // On failure: reload all images from Firebase to restore correct state
+      await this.loadImages();
+      throw error;
+    } finally {
+      this._loading.set(false);
+    }
+  }
+
   // ========================================
   // UI STATE ACTIONS
   // ========================================

@@ -40,6 +40,8 @@ export class DimensionInfo {
     }
   });
 
+  // ===== LIFECYCLE =====
+
   ngOnInit() {
     this.franchiseService.ensureFranchisesLoaded();
     this.collectionService.ensureCollectionsLoaded();

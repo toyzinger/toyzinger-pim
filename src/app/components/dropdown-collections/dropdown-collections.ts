@@ -62,7 +62,6 @@ export class DropdownCollections implements OnInit {
       const collection = this.collectionService.getCollectionById()(collectionId);
       // Clear collection if franchise is cleared OR if collection doesn't belong to new franchise
       if (!franchiseId || (collection && collection.franchiseId !== franchiseId)) {
-        console.log('Clearing invalid collection for franchise', franchiseId);
         this.collectionService.clearSelectedCollectionId();
       }
     }

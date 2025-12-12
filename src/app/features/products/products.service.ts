@@ -8,26 +8,20 @@ import { ProductsFirebase } from './products.firebase';
 export class ProductsService {
   private productsFirebase = inject(ProductsFirebase);
 
-  // ========================================
-  // STATE (Private signals)
-  // ========================================
+  // =============== STATE (Private signals) =========================
 
   private _products = signal<Product[]>([]); // Array of all products
   private _loading = signal<boolean>(false); // Loading state
   private _error = signal<string | null>(null); // Error state
   private _productsLoaded = signal<boolean>(false); // Track if products have been loaded
 
-  // ========================================
-  // SELECTORS (Public readonly)
-  // ========================================
+  // ============== SELECTORS (Public readonly) ========================
 
   products = this._products.asReadonly();
   loading = this._loading.asReadonly();
   error = this._error.asReadonly();
 
-  // ========================================
-  // COMPUTED VALUES
-  // ========================================
+  // ================ COMPUTED VALUES ========================
 
   // Total count of products
   productCount = computed(() => this._products().length);
@@ -47,9 +41,7 @@ export class ProductsService {
     return (id: string) => this._products().find(p => p.id === id);
   });
 
-  // ========================================
-  // ACTIONS - CRUD OPERATIONS
-  // ========================================
+  // ================== ACTIONS - CRUD OPERATIONS ===========================
 
   // Ensure products are loaded (only loads once per session)
   async ensureProductsLoaded(): Promise<void> {
@@ -138,18 +130,14 @@ export class ProductsService {
     }
   }
 
-  // ========================================
-  // UI STATE ACTIONS
-  // ========================================
+  // =============== UI STATE ACTIONS =========================
 
   // Clear error
   clearError(): void {
     this._error.set(null);
   }
 
-  // ========================================
-  // BATCH OPERATIONS
-  // ========================================
+  // =============== BATCH OPERATIONS =========================
 
   // Update multiple products with the same data
   async updateMultipleProducts(ids: string[], data: Partial<Product>): Promise<void> {
@@ -163,14 +151,63 @@ export class ProductsService {
       this._products.update(products =>
         products.map(p => ids.includes(p.id!) ? { ...p, ...data } : p)
       );
-
       // 2. Sync to Firebase in background
       await Promise.all(ids.map(id => this.productsFirebase.updateProduct(id, data)));
 
     } catch (error) {
       this._error.set('Failed to update products');
       console.error('Error updating multiple products:', error);
+      // On failure: reload all products from Firebase
+      await this.loadProducts();
+      throw error;
+    } finally {
+      this._loading.set(false);
+    }
+  }
 
+  /**
+   * Remove dimension references from products with a specific subcollectionId
+   * Clears subcollectionId, collectionId, and franchiseId
+   * @param subcollectionId - The subcollection ID to search for
+   */
+  async clearProductsBySubcollection(subcollectionId: string): Promise<void> {
+    if (!subcollectionId) return;
+
+    this._loading.set(true);
+    this._error.set(null);
+
+    try {
+      // Find all products with this subcollectionId
+      const productsToUpdate = this._products().filter(p => p.subCollectionId === subcollectionId);
+
+      if (productsToUpdate.length === 0) {
+        this._loading.set(false);
+        return;
+      }
+
+      const ids = productsToUpdate.map(p => p.id!);
+
+      // Data to clear dimension references
+      const data: Partial<Product> = {
+        subCollectionId: undefined,
+        collectionId: undefined,
+        franchiseId: undefined,
+      };
+
+      // 1. Optimistic update - update local cache immediately
+      this._products.update(products =>
+        products.map(p =>
+          ids.includes(p.id!)
+            ? { ...p, ...data }
+            : p
+        )
+      );
+      // 2. Sync to Firebase in background
+      await Promise.all(ids.map(id => this.productsFirebase.updateProduct(id, data)));
+
+    } catch (error) {
+      this._error.set('Failed to clear dimension references');
+      console.error('Error clearing dimension references:', error);
       // On failure: reload all products from Firebase
       await this.loadProducts();
       throw error;

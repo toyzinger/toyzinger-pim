@@ -147,9 +147,12 @@ export class SubCollectionService {
     this._loading.set(true);
     this._error.set(null);
     try {
+      // Clear selected subcollection if it's the one being deleted
+      if (this._selectedSubCollectionId() === id) {
+        this.clearSelectedSubCollectionId();
+      }
       // Optimistic update
       this._subcollections.update(subcollections => subcollections.filter(sc => sc.id !== id));
-
       // Delete from Firebase
       await this.subcollectionFirebase.deleteSubCollection(id);
       this.toastService.success(`SubCollection Deleted: ${id}`);
