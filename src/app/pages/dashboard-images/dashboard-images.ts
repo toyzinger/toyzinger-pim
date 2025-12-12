@@ -1,7 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Sidebar } from '../../components/sidebar/sidebar';
 import { ManagementPimages } from '../../components/management-pimages/management-pimages';
-import { GlobalService } from '../../features/global/global.service';
 import { TitlePage } from "../../components/title-page/title-page";
 
 @Component({
@@ -10,10 +9,4 @@ import { TitlePage } from "../../components/title-page/title-page";
   templateUrl: './dashboard-images.html',
   styleUrl: './dashboard-images.scss',
 })
-export class DashboardImages implements OnInit {
-  private globalService = inject(GlobalService);
-
-  ngOnInit() {
-    this.globalService.setItemType('images');
-  }
-}
+export class DashboardImages {}

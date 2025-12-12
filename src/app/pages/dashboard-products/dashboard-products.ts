@@ -1,6 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Sidebar } from '../../components/sidebar/sidebar';
-import { GlobalService } from '../../features/global/global.service';
 import { ManagementProduct } from "../../components/management-product/management-product";
 import { TitlePage } from "../../components/title-page/title-page";
 
@@ -11,10 +10,4 @@ import { TitlePage } from "../../components/title-page/title-page";
   templateUrl: './dashboard-products.html',
   styleUrl: './dashboard-products.scss',
 })
-export class DashboardProducts implements OnInit {
-  private globalService = inject(GlobalService);
-
-  ngOnInit() {
-    this.globalService.setItemType('products');
-  }
-}
+export class DashboardProducts {}

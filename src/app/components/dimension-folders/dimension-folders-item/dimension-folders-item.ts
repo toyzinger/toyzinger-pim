@@ -1,6 +1,6 @@
 import { Component, inject, input, output, signal, computed } from '@angular/core';
 import { DimensionNode, SPECIAL_DIM_FOLDERS } from '../../../features/dimensions/dimensions.model';
-import { GlobalService } from '../../../features/global/global.service';
+import { DimensionFoldersService } from '../../../features/dimensions/dimension-folders.service';
 
 @Component({
   selector: 'app-dimension-folders-item',
@@ -9,7 +9,7 @@ import { GlobalService } from '../../../features/global/global.service';
   styleUrl: './dimension-folders-item.scss',
 })
 export class DimensionFoldersItem {
-  private globalService = inject(GlobalService);
+  private dimensionFoldersService = inject(DimensionFoldersService);
 
   // ============ INPUTS ==================
 
@@ -111,7 +111,7 @@ export class DimensionFoldersItem {
       return;
     }
 
-    // Notify global service about the drop
-    this.globalService.notifyFolderDrop(this.node().id);
+    // Notify dimension folders service about the drop
+    this.dimensionFoldersService.notifyFolderDrop(this.node().id);
   }
 }

@@ -116,3 +116,23 @@ export const SPECIAL_DIM_FOLDERS = {
   UNASSIGNED: '__dim_unassigned__',
   ALL: '__dim_all__',
 };
+
+// ====================
+// Drag and Drop for Dimension Nodes
+// ====================
+
+/**
+ * Data structure for drag operations
+ */
+export interface DragData {
+  type: 'images' | 'products'
+  ids: string[];
+}
+
+/**
+ * Folder drop event with timestamp
+ */
+export interface FolderDropEvent {
+  folderId: string;
+  timestamp: number;
+}

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { GlobalService } from '../../features/global/global.service';
 import { DimensionInfo } from '../../components/dimension-info/dimension-info';
 import { dimensionType } from '../../features/dimensions/dimensions.model';
@@ -21,7 +21,7 @@ import { TitlePage } from "../../components/title-page/title-page";
   templateUrl: './dashboard-dimensions.html',
   styleUrl: './dashboard-dimensions.scss',
 })
-export class DashboardDimensions implements OnInit {
+export class DashboardDimensions {
   private globalService = inject(GlobalService);
 
   private readonly TAB_STORAGE_KEY = 'dashboard-dimensions-tab';
@@ -30,10 +30,6 @@ export class DashboardDimensions implements OnInit {
   tab = signal<dimensionType>(
     this.globalService.getLocalStorage<dimensionType>(this.TAB_STORAGE_KEY, 'franchise')
   );
-
-  ngOnInit() {
-    this.globalService.setItemType('dimensions');
-  }
 
   onDimensionClick(type: dimensionType) {
     this.tab.set(type);

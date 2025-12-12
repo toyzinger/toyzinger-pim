@@ -17,7 +17,6 @@ export class ManagementPimages implements OnInit {
   private dimensionFoldersService = inject(DimensionFoldersService);
   private imagesService = inject(ImagesService);
   private global = inject(GlobalService);
-  private toastService = inject(ToastService);
 
   // Expose services to template
   loading = this.imagesService.loading;
@@ -128,17 +127,17 @@ export class ManagementPimages implements OnInit {
     }
 
     // Set drag data with all selected image IDs
-    this.global.setDragData({
+    this.dimensionFoldersService.setDragData({
       type: 'images',
       ids: selectedIds,
     });
 
     // Create custom drag preview
-    this.global.createDragPreview(event, selectedIds.length, 'photo_library', 'image');
+    this.dimensionFoldersService.createDragPreview(event, selectedIds.length);
   }
 
   onDragEnd() {
-    this.global.clearDragData();
+    this.dimensionFoldersService.clearDragData();
     // Clear selection after drag ends (drop is handled by DimensionFoldersService)
     this.clearSelection();
   }

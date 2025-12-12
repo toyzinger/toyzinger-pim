@@ -124,17 +124,17 @@ export class ManagementProduct implements OnInit {
     }
 
     // Set drag data with all selected product IDs
-    this.global.setDragData({
+    this.dimensionFoldersService.setDragData({
       type: 'products',
       ids: selectedIds,
     });
 
     // Create custom drag preview
-    this.global.createDragPreview(event, selectedIds.length, 'inventory_2', 'product');
+    this.dimensionFoldersService.createDragPreview(event, selectedIds.length);
   }
 
   onDragEnd() {
-    this.global.clearDragData();
+    this.dimensionFoldersService.clearDragData();
     // Clear selection after drag ends (drop is handled by DimensionFoldersService)
     this.clearSelection();
   }

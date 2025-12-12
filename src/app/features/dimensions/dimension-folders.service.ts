@@ -5,8 +5,7 @@ import { SubCollectionService } from './subcollection/subcollection.service';
 import { ProductsService } from '../products/products.service';
 import { ImagesService } from '../pimages/pimages.service';
 import { GlobalService } from '../global/global.service';
-import { ToastService } from '../toast/toast.service';
-import { SPECIAL_DIM_FOLDERS } from './dimensions.model';
+import { SPECIAL_DIM_FOLDERS, DragData, FolderDropEvent } from './dimensions.model';
 
 
 /**
@@ -17,6 +16,7 @@ import { SPECIAL_DIM_FOLDERS } from './dimensions.model';
   providedIn: 'root',
 })
 export class DimensionFoldersService {
+  // Service Injections
   private franchiseService = inject(FranchiseService);
   private collectionService = inject(CollectionService);
   private subCollectionService = inject(SubCollectionService);
@@ -29,16 +29,25 @@ export class DimensionFoldersService {
   private readonly STORAGE_KEY = 'dim_folder_selection';
   private readonly EXPANDED_STORAGE_KEY = 'dim_folder_expanded';
 
+  // Selected and expanded nodes
   private _selectedNodeId = signal<string | null>(
     this.globalService.getLocalStorage<string | null>(this.STORAGE_KEY, null));
   private _expandedNodeIds = signal<Set<string>>(
     new Set(this.globalService.getLocalStorage<string[]>(this.EXPANDED_STORAGE_KEY, []))
   );
 
+  // Drag and drop state
+  private _dragData = signal<DragData | null>(null);
+  private _folderDrop = signal<FolderDropEvent | null>(null);
+
   // ============ SELECTORS ==================
 
   selectedNodeId = this._selectedNodeId.asReadonly();
   expandedNodeIds = this._expandedNodeIds.asReadonly();
+
+  // Drag and drop selectors
+  dragData = this._dragData.asReadonly();
+  folderDrop = this._folderDrop.asReadonly();
 
   // Breadcrumb for selected folder
   breadcrumb = computed(() => {
@@ -49,7 +58,6 @@ export class DimensionFoldersService {
     if (selectedId === SPECIAL_DIM_FOLDERS.UNASSIGNED) {
       return 'Unassigned';
     }
-
     // 1. Check SubCollection
     const subcollection = this.subCollectionService.subcollections().find(s => s.id === selectedId);
     if (subcollection) {
@@ -62,7 +70,6 @@ export class DimensionFoldersService {
 
       return `${franchiseName} > ${collectionName} > ${subcollectionName}`;
     }
-
     // 2. Check Collection
     const collection = this.collectionService.collections().find(c => c.id === selectedId);
     if (collection) {
@@ -72,7 +79,6 @@ export class DimensionFoldersService {
 
       return `${franchiseName} > ${collectionName}`;
     }
-
     // 3. Check Franchise
     const franchise = this.franchiseService.franchises().find(f => f.id === selectedId);
     if (franchise) {
@@ -90,10 +96,10 @@ export class DimensionFoldersService {
   }
 
   private handleFolderDropEffect() {
-    const dropEvent = this.globalService.folderDrop();
+    const dropEvent = this._folderDrop();
     if (!dropEvent) return;
 
-    const dragData = this.globalService.dragData();
+    const dragData = this._dragData();
     if (!dragData) return;
 
     // Delegate to appropriate handler
@@ -107,8 +113,8 @@ export class DimensionFoldersService {
     this.selectNode(dropEvent.folderId);
 
     // Clear drag data (common for all drops)
-    this.globalService.clearDragData();
-    this.globalService.clearFolderDrop();
+    this.clearDragData();
+    this.clearFolderDrop();
   }
 
   private persistExpandedNodesToStorage() {
@@ -116,7 +122,7 @@ export class DimensionFoldersService {
     this.globalService.setLocalStorage(this.EXPANDED_STORAGE_KEY, Array.from(expanded));
   }
 
-  // ============ ACTIONS ==================
+  // ============ SELECT AND EXPAND = ACTIONS ==================
 
   selectNode(nodeId: string) {
     this._selectedNodeId.set(nodeId);
@@ -168,7 +174,61 @@ export class DimensionFoldersService {
     });
   }
 
-  // ============ DRAG AND DROP ==================
+  // ============ DRAG AND DROP = ACTIONS ==================
+
+  /**
+   * Create a custom drag preview element
+   * @param event - The drag event
+   * @param count - Number of items being dragged
+   */
+  createDragPreview( event: DragEvent, count: number): void {
+    const dragImage = document.createElement('div');
+    dragImage.className = 'drag-preview';
+
+    dragImage.innerHTML = `
+      <span class="material-icons-outlined">inventory_2</span>
+      <span>Moving ${count} item${count > 1 ? 's' : ''}</span>
+    `;
+
+    document.body.appendChild(dragImage);
+
+    // Set as drag image (offset from cursor)
+    event.dataTransfer?.setDragImage(dragImage, 60, 30);
+
+    // Remove after drag starts
+    setTimeout(() => dragImage.remove(), 0);
+  }
+
+  /**
+   * Set drag data when drag operation starts
+   */
+  setDragData(data: DragData): void {
+    this._dragData.set(data);
+  }
+
+  /**
+   * Clear drag data when drag operation ends
+   */
+  clearDragData(): void {
+    this._dragData.set(null);
+  }
+
+  /**
+   * Notify that a folder drop occurred
+   */
+  notifyFolderDrop(folderId: string): void {
+    this._folderDrop.set({
+      folderId,
+      timestamp: Date.now(),
+    });
+  }
+
+  /**
+   * Clear folder drop event
+   */
+  clearFolderDrop(): void {
+    this._folderDrop.set(null);
+  }
 
   /**   * Check if a node ID represents a droppable target
    */
