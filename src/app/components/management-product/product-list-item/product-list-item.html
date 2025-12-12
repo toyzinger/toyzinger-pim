@@ -13,6 +13,14 @@
   <p class="name">{{ product().name }}</p>
 </td>
 
+<td class="product-list-item__td product-list-item--order">
+  <input
+    type="number"
+    [value]="product().order"
+    (blur)="updateOrder($event)"
+  />
+</td>
+
 <td class="product-list-item__td product-list-item--id">
   {{ product().id || '-' }}
 </td>

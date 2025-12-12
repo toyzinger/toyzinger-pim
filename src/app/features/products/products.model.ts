@@ -15,6 +15,7 @@ export interface Product {
   characterDescription?: MultilingualString;
   images?: ProductImage[];
   slug?: string;
+  order?: number;
   // Not used
   createdAt?: Date;
   updatedAt?: Date;

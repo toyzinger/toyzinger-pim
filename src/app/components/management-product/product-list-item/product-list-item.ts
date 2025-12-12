@@ -42,4 +42,17 @@ export class ProductListItem {
       this.selectionChange.emit(productId);
     }
   }
+
+  async updateOrder(event: Event) {
+    const productId = this.product().id;
+    if (!productId) return;
+
+    const newOrderStr = (event.target as HTMLInputElement).value;
+    const newOrder = parseInt(newOrderStr, 10);
+
+    // Validate it's a valid number and different from current
+    if (!isNaN(newOrder) && newOrder !== this.product().order) {
+      await this.productsService.updateProduct(productId, { order: newOrder });
+    }
+  }
 }
