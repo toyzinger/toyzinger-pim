@@ -23,16 +23,22 @@ export class DimensionFoldersService {
   private productsService = inject(ProductsService);
   private imagesService = inject(ImagesService);
   private globalService = inject(GlobalService);
-  private toastService = inject(ToastService);
 
   // ============ STATE ==================
 
   private readonly STORAGE_KEY = 'dim_folder_selection';
-  private _selectedNodeId = signal<string | null>(this.globalService.getLocalStorage<string | null>(this.STORAGE_KEY, null));
+  private readonly EXPANDED_STORAGE_KEY = 'dim_folder_expanded';
+
+  private _selectedNodeId = signal<string | null>(
+    this.globalService.getLocalStorage<string | null>(this.STORAGE_KEY, null));
+  private _expandedNodeIds = signal<Set<string>>(
+    new Set(this.globalService.getLocalStorage<string[]>(this.EXPANDED_STORAGE_KEY, []))
+  );
 
   // ============ SELECTORS ==================
 
   selectedNodeId = this._selectedNodeId.asReadonly();
+  expandedNodeIds = this._expandedNodeIds.asReadonly();
 
   // Breadcrumb for selected folder
   breadcrumb = computed(() => {
@@ -80,6 +86,7 @@ export class DimensionFoldersService {
 
   constructor() {
     effect(() => this.handleFolderDropEffect());
+    effect(() => this.persistExpandedNodesToStorage());
   }
 
   private handleFolderDropEffect() {
@@ -89,11 +96,24 @@ export class DimensionFoldersService {
     const dragData = this.globalService.dragData();
     if (!dragData) return;
 
+    // Delegate to appropriate handler
     if (dragData.type === 'products') {
       this.handleProductDrop(dropEvent.folderId, dragData.ids);
     } else if (dragData.type === 'images') {
       this.handleImageDrop(dropEvent.folderId, dragData.ids);
     }
+
+    // Select the drop target node (common for all drops)
+    this.selectNode(dropEvent.folderId);
+
+    // Clear drag data (common for all drops)
+    this.globalService.clearDragData();
+    this.globalService.clearFolderDrop();
+  }
+
+  private persistExpandedNodesToStorage() {
+    const expanded = this._expandedNodeIds();
+    this.globalService.setLocalStorage(this.EXPANDED_STORAGE_KEY, Array.from(expanded));
   }
 
   // ============ ACTIONS ==================
@@ -106,6 +126,46 @@ export class DimensionFoldersService {
   clearSelection() {
     this._selectedNodeId.set(null);
     this.globalService.removeLocalStorage(this.STORAGE_KEY);
+  }
+
+  toggleNode(nodeId: string) {
+    this._expandedNodeIds.update(set => {
+      const newSet = new Set(set);
+      if (newSet.has(nodeId)) {
+        newSet.delete(nodeId);
+      } else {
+        newSet.add(nodeId);
+      }
+      return newSet;
+    });
+  }
+
+  expandNode(nodeId: string) {
+    this._expandedNodeIds.update(set => {
+      const newSet = new Set(set);
+      newSet.add(nodeId);
+      return newSet;
+    });
+  }
+
+  collapseNode(nodeId: string) {
+    this._expandedNodeIds.update(set => {
+      const newSet = new Set(set);
+      newSet.delete(nodeId);
+      return newSet;
+    });
+  }
+
+  collapseAll() {
+    this._expandedNodeIds.set(new Set());
+  }
+
+  expandNodes(nodeIds: Set<string>) {
+    this._expandedNodeIds.update(current => {
+      const next = new Set(current);
+      nodeIds.forEach(id => next.add(id));
+      return next;
+    });
   }
 
   // ============ DRAG AND DROP ==================
@@ -126,10 +186,6 @@ export class DimensionFoldersService {
    */
   async handleProductDrop(nodeId: string, productIds: string[]): Promise<void> {
     await this.productsService.updateProductsByDrop(nodeId, productIds);
-
-    // Clear drag data
-    this.globalService.clearDragData();
-    this.globalService.clearFolderDrop();
   }
 
   /**
@@ -138,9 +194,5 @@ export class DimensionFoldersService {
    */
   async handleImageDrop(nodeId: string, imageIds: string[]): Promise<void> {
     await this.imagesService.updateImagesByDrop(nodeId, imageIds);
-
-    // Clear drag data
-    this.globalService.clearDragData();
-    this.globalService.clearFolderDrop();
   }
 }

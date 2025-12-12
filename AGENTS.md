@@ -338,8 +338,22 @@ class MyComponent {
 ```
 
 ### Effects
-Place in constructor to react to signal changes:
+Place in constructor to react to signal changes.
+
+**CRITICAL**: Always extract effect callbacks to named private methods for better readability and debugging:
+
 ```typescript
+// ✅ CORRECT - Named function
+constructor() {
+  effect(() => this.handleStateChange());
+}
+
+private handleStateChange() {
+  const value = this.someSignal();
+  // React to changes
+}
+
+// ❌ WRONG - Inline callback
 constructor() {
   effect(() => {
     const value = this.someSignal();
@@ -347,6 +361,12 @@ constructor() {
   });
 }
 ```
+
+**Benefits:**
+- Easier debugging (named stack traces)
+- Self-documenting code
+- Easier to test individual effects
+- Better code organization
 
 ---
 

@@ -21,10 +21,10 @@ export class DimensionFolders {
   // ============ UI STATE ==================
 
   loading = signal<boolean>(false);
-  expandedNodeIds = signal<Set<string>>(new Set());
 
-  // Expose service signal for template
+  // Expose service signals for template
   selectedNodeId = this.dimensionFoldersService.selectedNodeId;
+  expandedNodeIds = this.dimensionFoldersService.expandedNodeIds;
 
   // ============ COMPUTED VALUES ==================
 
@@ -69,8 +69,11 @@ export class DimensionFolders {
       });
     }
 
-    // SubCollections (children of their collection)
-    for (const subcollection of this.subCollectionService.subcollections()) {
+    // SubCollections (children of their collection) - sorted by order
+    const sortedSubCollections = [...this.subCollectionService.subcollections()]
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+    for (const subcollection of sortedSubCollections) {
       nodes.push({
         id: subcollection.id!,
         name: subcollection.name?.en || subcollection.name?.es || 'Unnamed SubCollection',
@@ -119,11 +122,7 @@ export class DimensionFolders {
     effect(() => {
       const activeIds = this.activeNodeIds();
       if (activeIds.size > 0) {
-        this.expandedNodeIds.update(current => {
-          const next = new Set(current);
-          activeIds.forEach(id => next.add(id));
-          return next;
-        });
+        this.dimensionFoldersService.expandNodes(activeIds);
       }
     });
   }
@@ -135,19 +134,11 @@ export class DimensionFolders {
   }
 
   toggleNode(nodeId: string) {
-    this.expandedNodeIds.update(set => {
-      const newSet = new Set(set);
-      if (newSet.has(nodeId)) {
-        newSet.delete(nodeId);
-      } else {
-        newSet.add(nodeId);
-      }
-      return newSet;
-    });
+    this.dimensionFoldersService.toggleNode(nodeId);
   }
 
   collapseAll() {
-    this.expandedNodeIds.set(new Set());
+    this.dimensionFoldersService.collapseAll();
   }
 
   // ============ LIFECYCLE ==================
