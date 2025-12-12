@@ -8,6 +8,7 @@ import { DropdownSubCollections } from "../dropdown-subcollections/dropdown-subc
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 import { CollectionService } from '../../features/dimensions/collection/collection.service';
 import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-upload-images',
@@ -21,6 +22,7 @@ import { SubCollectionService } from '../../features/dimensions/subcollection/su
   styleUrl: './upload-images.scss',
 })
 export class UploadImages {
+  private globalService = inject(GlobalService);
   private imagesService = inject(ImagesService);
   private subcollectionService = inject(SubCollectionService);
 
@@ -32,7 +34,7 @@ export class UploadImages {
 
   // Use store signals
   uploadQueue = this.imagesService.uploadQueue;
-  isUploading = this.imagesService.uploading;
+  isUploading = this.globalService.loading;
 
   // Computed signal to sort queue: Error items first, then by original order
   sortedQueue = computed(() => {

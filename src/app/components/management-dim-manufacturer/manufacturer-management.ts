@@ -4,6 +4,7 @@ import { ManufacturerService } from '../../features/dimensions/manufacturer/manu
 import { ManufacturerForm } from "./manufacturer-form/manufacturer-form";
 import { ManufacturerListItem } from "./manufacturer-list-item/manufacturer-list-item";
 import { DimManufacturer, createEmptyManufacturer } from '../../features/dimensions/dimensions.model';
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-manufacturer-management',
@@ -12,11 +13,12 @@ import { DimManufacturer, createEmptyManufacturer } from '../../features/dimensi
   styleUrl: './manufacturer-management.scss',
 })
 export class ManufacturerManagement implements OnInit {
+  private globalService = inject(GlobalService);
   private manufacturerService = inject(ManufacturerService);
 
   // Use service signals directly
   manufacturers = this.manufacturerService.manufacturers;
-  loading = this.manufacturerService.loading;
+  loading = this.globalService.loading;
   error = this.manufacturerService.error;
 
   newManufacturer = signal<DimManufacturer>(createEmptyManufacturer());

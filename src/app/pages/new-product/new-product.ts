@@ -4,6 +4,7 @@ import { ProductForm } from '../../components/management-product/product-form/pr
 import { ProductsService } from '../../features/products/products.service';
 import { ToastService } from '../../features/toast/toast.service';
 import { TitlePage } from "../../components/title-page/title-page";
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-new-product',
@@ -12,6 +13,7 @@ import { TitlePage } from "../../components/title-page/title-page";
   styleUrl: './new-product.scss',
 })
 export class NewProduct {
+  private globalService = inject(GlobalService);
   private productService = inject(ProductsService);
   private toastService = inject(ToastService);
 
@@ -22,7 +24,7 @@ export class NewProduct {
   updatedProductData = signal<Product>(createEmptyProduct());
 
   // Expose store state to template
-  loading = this.productService.loading;
+  loading = this.globalService.loading;
 
   updatedProductDataChange(product: Product) {
     this.updatedProductData.set(product);

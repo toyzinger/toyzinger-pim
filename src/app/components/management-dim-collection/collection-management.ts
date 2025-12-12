@@ -6,6 +6,7 @@ import { CollectionListItem } from "./collection-list-item/collection-list-item"
 import { DimCollection, createEmptyCollection } from '../../features/dimensions/dimensions.model';
 import { DropdownFranchises } from "../dropdown-franchises/dropdown-franchises";
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-collection-management',
@@ -14,6 +15,7 @@ import { FranchiseService } from '../../features/dimensions/franchise/franchise.
   styleUrl: './collection-management.scss',
 })
 export class CollectionManagement implements OnInit {
+  private globalService = inject(GlobalService);
   private collectionService = inject(CollectionService);
   private franchiseService = inject(FranchiseService);
 
@@ -22,7 +24,7 @@ export class CollectionManagement implements OnInit {
 
   // Use service signals directly
   collections = this.collectionService.collections;
-  loading = this.collectionService.loading;
+  loading = this.globalService.loading;
   franchiseSelection = this.franchiseService.selectedFranchiseId;
 
   // Form data

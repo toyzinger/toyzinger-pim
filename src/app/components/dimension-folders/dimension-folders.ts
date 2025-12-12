@@ -20,7 +20,7 @@ export class DimensionFolders {
 
   // ============ UI STATE ==================
 
-  loading = signal<boolean>(false);
+  loading = signal<boolean>(true);
 
   // Expose service signals for template
   selectedNodeId = this.dimensionFoldersService.selectedNodeId;
@@ -139,12 +139,12 @@ export class DimensionFolders {
 
   collapseAll() {
     this.dimensionFoldersService.collapseAll();
+    this.dimensionFoldersService.selectNode(SPECIAL_DIM_FOLDERS.UNASSIGNED);
   }
 
   // ============ LIFECYCLE ==================
 
   async ngOnInit() {
-    this.loading.set(true);
     try {
       await Promise.all([
         this.franchiseService.ensureFranchisesLoaded(),

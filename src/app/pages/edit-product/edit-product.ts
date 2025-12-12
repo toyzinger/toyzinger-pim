@@ -5,6 +5,7 @@ import { ProductForm } from '../../components/management-product/product-form/pr
 import { createEmptyProduct, Product } from '../../features/products/products.model';
 import { ToastService } from '../../features/toast/toast.service';
 import { TitlePage } from "../../components/title-page/title-page";
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-edit-product',
@@ -18,6 +19,7 @@ import { TitlePage } from "../../components/title-page/title-page";
   styleUrl: './edit-product.scss',
 })
 export class EditProduct implements OnInit {
+  private globalService = inject(GlobalService);
   private productsService = inject(ProductsService);
   private toastService = inject(ToastService);
 
@@ -35,7 +37,7 @@ export class EditProduct implements OnInit {
     return this.updatedProductData().name.trim() !== '';
   });
   // Loading state
-  loading = this.productsService.loading;
+  loading = this.globalService.loading;
   // Error state
   error = this.productsService.error;
 

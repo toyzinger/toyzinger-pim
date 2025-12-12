@@ -4,6 +4,7 @@ import { SubCollectionService } from '../../features/dimensions/subcollection/su
 import { SubCollectionForm } from "../../components/management-dim-subcollection/subcollection-form/subcollection-form";
 import { DimSubCollection, createEmptySubCollection } from '../../features/dimensions/dimensions.model';
 import { TitlePage } from "../../components/title-page/title-page";
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-edit-subcollection',
@@ -12,7 +13,8 @@ import { TitlePage } from "../../components/title-page/title-page";
   styleUrl: './edit-subcollection.scss',
 })
 export class EditSubCollection implements OnInit {
-private subcollectionService = inject(SubCollectionService);
+  private globalService = inject(GlobalService);
+  private subcollectionService = inject(SubCollectionService);
 
   // Input from route param :id
   id = input.required<string>();
@@ -22,7 +24,7 @@ private subcollectionService = inject(SubCollectionService);
     return this.subcollectionService.subcollections().find(sc => sc.id === subcollectionId);
   });
   // Loading state
-  loading = this.subcollectionService.loading;
+  loading = this.globalService.loading;
   // Error state
   error = this.subcollectionService.error;
 

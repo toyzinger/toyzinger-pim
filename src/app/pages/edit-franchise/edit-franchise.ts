@@ -4,6 +4,7 @@ import { FranchiseService } from '../../features/dimensions/franchise/franchise.
 import { FranchiseForm } from "../../components/management-dim-franchise/franchise-form/franchise-form";
 import { DimFranchise, createEmptyFranchise } from '../../features/dimensions/dimensions.model';
 import { TitlePage } from "../../components/title-page/title-page";
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-edit-franchise',
@@ -13,6 +14,7 @@ import { TitlePage } from "../../components/title-page/title-page";
 })
 export class EditFranchise implements OnInit {
 private franchiseService = inject(FranchiseService);
+private globalService = inject(GlobalService);
 
   // Input from route param :id
   id = input.required<string>();
@@ -22,7 +24,7 @@ private franchiseService = inject(FranchiseService);
     return this.franchiseService.franchises().find(p => p.id === franchiseId);
   });
   // Loading state
-  loading = this.franchiseService.loading;
+  loading = this.globalService.loading;
   // Error state
   error = this.franchiseService.error;
 

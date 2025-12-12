@@ -12,12 +12,12 @@ import { FormCheckbox } from '../form/form-checkbox/form-checkbox';
   styleUrl: './management-product.scss',
 })
 export class ManagementProduct implements OnInit {
+  private globalService = inject(GlobalService);
   private dimensionFoldersService = inject(DimensionFoldersService);
   private productsService = inject(ProductsService);
-  private global = inject(GlobalService);
 
   // Expose services to template
-  loading = this.productsService.loading;
+  loading = this.globalService.loading;
   error = this.productsService.error;
   selectedNodeId = this.dimensionFoldersService.selectedNodeId;
   breadcrumb = this.dimensionFoldersService.breadcrumb;

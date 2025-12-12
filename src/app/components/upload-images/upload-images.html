@@ -32,7 +32,7 @@
     (click)="!isUploading() && fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
     (drop)="onDrop($event)">
     @if (isUploading()) {
-    <p>Uploading...</p>
+    <p>Loading...</p>
     } @else {
     <p>Drag and drop images here or click to browse</p>
     }

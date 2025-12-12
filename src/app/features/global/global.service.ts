@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 /**
  * Global service for cross-component communication and shared state
@@ -9,12 +9,40 @@ import { Injectable } from '@angular/core';
 })
 export class GlobalService {
 
+  // ======================================================
+  //  LOADING STATE MANAGEMENT
+  // ======================================================
 
-  /**
-   * Save a value to localStorage
-   * @param key - The key to store the value under
-   * @param value - The value to store (will be JSON stringified)
-   */
+  private _loading = signal(false);
+  loading = this._loading.asReadonly();
+  private loadingDeactivationTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  activateLoading(): void {
+    // Cancel any pending deactivation
+    if (this.loadingDeactivationTimeout !== null) {
+      clearTimeout(this.loadingDeactivationTimeout);
+      this.loadingDeactivationTimeout = null;
+    }
+    this._loading.set(true);
+  }
+
+  deactivateLoading(): void {
+    // Cancel any existing deactivation timeout
+    if (this.loadingDeactivationTimeout !== null) {
+      clearTimeout(this.loadingDeactivationTimeout);
+    }
+
+    // Schedule deactivation after 200ms
+    this.loadingDeactivationTimeout = setTimeout(() => {
+      this._loading.set(false);
+      this.loadingDeactivationTimeout = null;
+    }, 200);
+  }
+
+  // ======================================================
+  //  LOCAL STORAGE UTILITIES
+  // ======================================================
+
   setLocalStorage<T>(key: string, value: T): void {
     // Check if running in browser environment
     if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
@@ -27,12 +55,6 @@ export class GlobalService {
     }
   }
 
-  /**
-   * Get a value from localStorage
-   * @param key - The key to retrieve
-   * @param defaultValue - Default value if key doesn't exist
-   * @returns The stored value or the default value
-   */
   getLocalStorage<T>(key: string, defaultValue: T): T {
     // Check if running in browser environment
     if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
@@ -47,10 +69,6 @@ export class GlobalService {
     }
   }
 
-  /**
-   * Remove a value from localStorage
-   * @param key - The key to remove
-   */
   removeLocalStorage(key: string): void {
     // Check if running in browser environment
     if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
@@ -63,9 +81,6 @@ export class GlobalService {
     }
   }
 
-  /**
-   * Clear all localStorage
-   */
   clearLocalStorage(): void {
     // Check if running in browser environment
     if (typeof window === 'undefined' || typeof localStorage === 'undefined') {

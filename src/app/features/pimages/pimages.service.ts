@@ -7,6 +7,7 @@ import { HttpEventType } from '@angular/common/http';
 import { SubCollectionService } from '../dimensions/subcollection/subcollection.service';
 import { ToastService } from '../toast/toast.service';
 import { SPECIAL_DIM_FOLDERS } from '../dimensions/dimensions.model';
+import { GlobalService } from '../global/global.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,16 +17,14 @@ export class ImagesService {
   private imagesService = inject(ImagesApi);
   private subCollectionService = inject(SubCollectionService);
   private toastService = inject(ToastService);
+  private globalService = inject(GlobalService);
 
   // ========================================
   // STATE (Private signals)
   // ========================================
 
   private _images = signal<ProductImage[]>([]);
-  private _loading = signal<boolean>(false);
-  private _error = signal<string | null>(null);
   private _uploadQueue = signal<UploadItem[]>([]);
-  private _uploading = signal<boolean>(false);
   private _imagesLoaded = signal<boolean>(false); // Track if images have been loaded
 
   // ========================================
@@ -33,10 +32,11 @@ export class ImagesService {
   // ========================================
 
   images = this._images.asReadonly();
-  loading = this._loading.asReadonly();
-  error = this._error.asReadonly();
   uploadQueue = this._uploadQueue.asReadonly();
-  uploading = this._uploading.asReadonly();
+
+  // TODO REMOVE: handle error globally
+  private _error = signal<string | null>(null);
+  error = this._error.asReadonly();
 
   // ========================================
   // COMPUTED VALUES
@@ -96,7 +96,7 @@ export class ImagesService {
 
   // Load all images (always fetches from Firebase)
   async loadImages(): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const images = await this.imagesFirebase.getProductImages();
@@ -106,13 +106,13 @@ export class ImagesService {
       this._error.set('Failed to load images');
       console.error('Error loading images:', error);
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Create image record in Firestore
   async createImage(image: Omit<ProductImage, 'id'>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const id = await this.imagesFirebase.addProductImage(image);
@@ -124,13 +124,13 @@ export class ImagesService {
       console.error('Error creating image:', error);
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Update image record
   async updateImage(id: string, data: Partial<ProductImage>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       // Optimistic update
@@ -149,13 +149,13 @@ export class ImagesService {
       await this.loadImages();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Delete image record
   async deleteImage(id: string): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       // Optimistic update
@@ -170,7 +170,7 @@ export class ImagesService {
       await this.loadImages();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
@@ -182,7 +182,7 @@ export class ImagesService {
   async updateMultipleImages(ids: string[], data: Partial<ProductImage>): Promise<void> {
     if (ids.length === 0) return;
 
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
 
     try {
@@ -216,7 +216,7 @@ export class ImagesService {
       await this.loadImages();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
@@ -226,7 +226,7 @@ export class ImagesService {
 
   // Upload multiple images to API only (no Firestore)
   async uploadImages(files: FileList | File[]): Promise<void> {
-    this._uploading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
 
     // Add files to upload queue
@@ -249,7 +249,7 @@ export class ImagesService {
       this._error.set('Failed to upload images');
       console.error('Error uploading images:', error);
     } finally {
-      this._uploading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
@@ -318,7 +318,7 @@ export class ImagesService {
 
   // Upload files and save to Firestore with rollback on failure
   async processUploadQueue(files: FileList | File[], subcollectionId?: string, alt?: string): Promise<void> {
-    this._uploading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
 
     // Add files to upload queue
@@ -381,7 +381,7 @@ export class ImagesService {
       this._error.set('Failed to process upload queue');
       console.error('Error processing upload queue:', error);
     } finally {
-      this._uploading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
@@ -459,7 +459,7 @@ export class ImagesService {
   async clearImagesBySubcollection(subcollectionId: string): Promise<void> {
     if (!subcollectionId) return;
 
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
 
     try {
@@ -467,7 +467,7 @@ export class ImagesService {
       const imagesToUpdate = this._images().filter(img => img.subcollectionId === subcollectionId);
 
       if (imagesToUpdate.length === 0) {
-        this._loading.set(false);
+        this.globalService.deactivateLoading();
         return;
       }
 
@@ -504,7 +504,7 @@ export class ImagesService {
       await this.loadImages();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 

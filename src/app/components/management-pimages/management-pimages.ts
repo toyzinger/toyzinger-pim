@@ -14,12 +14,13 @@ import { FormCheckbox } from '../form/form-checkbox/form-checkbox';
   styleUrl: './management-pimages.scss',
 })
 export class ManagementPimages implements OnInit {
+  private globalService = inject(GlobalService);
   private dimensionFoldersService = inject(DimensionFoldersService);
   private imagesService = inject(ImagesService);
-  private global = inject(GlobalService);
+
 
   // Expose services to template
-  loading = this.imagesService.loading;
+  loading = this.globalService.loading;
   error = this.imagesService.error;
   selectedNodeId = this.dimensionFoldersService.selectedNodeId;
   breadcrumb = this.dimensionFoldersService.breadcrumb;

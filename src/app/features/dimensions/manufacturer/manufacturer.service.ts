@@ -19,8 +19,6 @@ export class ManufacturerService {
   // ========================================
 
   private _manufacturers = signal<DimManufacturer[]>([]); // Array of all manufacturers
-  private _loading = signal<boolean>(false); // Loading state
-  private _error = signal<string | null>(null); // Error state
   private _manufacturersLoaded = signal<boolean>(false); // Track if manufacturers have been loaded
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
   private _selectedManufacturerId = signal<string>(
@@ -32,9 +30,11 @@ export class ManufacturerService {
   // ========================================
 
   manufacturers = this._manufacturers.asReadonly();
-  loading = this._loading.asReadonly();
-  error = this._error.asReadonly();
   selectedManufacturerId = this._selectedManufacturerId.asReadonly();
+
+  // TODO REMOVE: handle error globally
+  private _error = signal<string | null>(null); // Error state
+  error = this._error.asReadonly();
 
   // ========================================
   // COMPUTED VALUES
@@ -77,7 +77,7 @@ export class ManufacturerService {
 
   // Load all manufacturers (always fetches from Firebase)
   async loadManufacturers(): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const manufacturers = await this.manufacturerFirebase.getManufacturers();
@@ -87,13 +87,13 @@ export class ManufacturerService {
       this._error.set('Failed to load manufacturers');
       console.error('Error loading manufacturers:', error);
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Create manufacturer
   async createManufacturer(manufacturer: Omit<DimManufacturer, 'id'>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const id = await this.manufacturerFirebase.addManufacturer(manufacturer);
@@ -106,13 +106,13 @@ export class ManufacturerService {
       console.error('Error creating manufacturer:', error);
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Update manufacturer
   async updateManufacturer(id: string, data: Partial<DimManufacturer>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       // Optimistic update
@@ -132,13 +132,13 @@ export class ManufacturerService {
       await this.loadManufacturers();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Delete manufacturer
   async deleteManufacturer(id: string): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       // Optimistic update
@@ -154,7 +154,7 @@ export class ManufacturerService {
       await this.loadManufacturers();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 

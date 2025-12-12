@@ -19,7 +19,6 @@ export class FranchiseService {
   // ========================================
 
   private _franchises = signal<DimFranchise[]>([]); // Array of all franchises
-  private _loading = signal<boolean>(false); // Loading state
   private _error = signal<string | null>(null); // Error state
   private _franchisesLoaded = signal<boolean>(false); // Track if franchises have been loaded
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
@@ -30,7 +29,6 @@ export class FranchiseService {
   // ============ SELECTORS (Public readonly) ============
 
   franchises = this._franchises.asReadonly();
-  loading = this._loading.asReadonly();
   error = this._error.asReadonly();
   selectedFranchiseId = this._selectedFranchiseId.asReadonly();
 
@@ -71,7 +69,7 @@ export class FranchiseService {
 
   // Load all franchises (always fetches from Firebase)
   async loadFranchises(): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const franchises = await this.franchiseFirebase.getFranchises();
@@ -81,13 +79,13 @@ export class FranchiseService {
       this._error.set('Failed to load franchises');
       console.error('Error loading franchises:', error);
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Create franchise
   async createFranchise(franchise: Omit<DimFranchise, 'id'>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const id = await this.franchiseFirebase.addFranchise(franchise);
@@ -100,13 +98,13 @@ export class FranchiseService {
       console.error('Error creating franchise:', error);
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Update franchise
   async updateFranchise(id: string, data: Partial<DimFranchise>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       // Optimistic update
@@ -126,13 +124,13 @@ export class FranchiseService {
       await this.loadFranchises();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Delete franchise
   async deleteFranchise(id: string): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       // Optimistic update
@@ -148,7 +146,7 @@ export class FranchiseService {
       await this.loadFranchises();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
@@ -181,7 +179,7 @@ export class FranchiseService {
   async updateMultipleFranchises(ids: string[], data: Partial<DimFranchise>): Promise<void> {
     if (ids.length === 0) return;
 
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
 
     try {
@@ -201,7 +199,7 @@ export class FranchiseService {
       await this.loadFranchises();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 }

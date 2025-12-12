@@ -18,23 +18,27 @@ export class SubCollectionService {
   // STATE (Private signals)
   // ========================================
 
-  private _subcollections = signal<DimSubCollection[]>([]); // Array of all subcollections
-  private _loading = signal<boolean>(false); // Loading state
-  private _error = signal<string | null>(null); // Error state
-  private _subcollectionsLoaded = signal<boolean>(false); // Track if subcollections have been loaded
-  private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
+  // Array of all subcollections
+  private _subcollections = signal<DimSubCollection[]>([]);
+  // Track if subcollections have been loaded
+  private _subcollectionsLoaded = signal<boolean>(false);
+  // Cache loading promise to prevent concurrent calls
+  private loadingPromise: Promise<void> | null = null;
+  // LocalStorage selected subcollectionId (persisted)
   private _selectedSubCollectionId = signal<string>(
     this.globalService.getLocalStorage(this.STORAGE_KEY, '')
-  ); // Global selected subcollection ID (persisted)
+  );
 
   // ========================================
   // SELECTORS (Public readonly)
   // ========================================
 
   subcollections = this._subcollections.asReadonly();
-  loading = this._loading.asReadonly();
-  error = this._error.asReadonly();
   selectedSubCollectionId = this._selectedSubCollectionId.asReadonly();
+
+  // TODO REMOVE: handle error globally
+  private _error = signal<string | null>(null);
+  error = this._error.asReadonly();
 
   // ========================================
   // COMPUTED VALUES
@@ -82,7 +86,7 @@ export class SubCollectionService {
 
   // Load all subcollections (always fetches from Firebase)
   async loadSubCollections(): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const subcollections = await this.subcollectionFirebase.getSubCollections();
@@ -92,13 +96,13 @@ export class SubCollectionService {
       this._error.set('Failed to load subcollections');
       console.error('Error loading subcollections:', error);
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Create subcollection
   async createSubCollection(subcollection: Omit<DimSubCollection, 'id'>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const id = await this.subcollectionFirebase.addSubCollection(subcollection);
@@ -111,13 +115,13 @@ export class SubCollectionService {
       console.error('Error creating subcollection:', error);
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Update subcollection
   async updateSubCollection(id: string, data: Partial<DimSubCollection>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       // Optimistic update
@@ -138,13 +142,13 @@ export class SubCollectionService {
       await this.loadSubCollections();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Delete subcollection
   async deleteSubCollection(id: string): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       // Clear selected subcollection if it's the one being deleted
@@ -163,7 +167,7 @@ export class SubCollectionService {
       await this.loadSubCollections();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 

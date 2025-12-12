@@ -4,6 +4,7 @@ import { CollectionService } from '../../features/dimensions/collection/collecti
 import { CollectionForm } from "../../components/management-dim-collection/collection-form/collection-form";
 import { DimCollection, createEmptyCollection } from '../../features/dimensions/dimensions.model';
 import { TitlePage } from "../../components/title-page/title-page";
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-edit-collection',
@@ -12,7 +13,8 @@ import { TitlePage } from "../../components/title-page/title-page";
   styleUrl: './edit-collection.scss',
 })
 export class EditCollection implements OnInit {
-private collectionService = inject(CollectionService);
+  private globalService = inject(GlobalService);
+  private collectionService = inject(CollectionService);
 
   // Input from route param :id
   id = input.required<string>();
@@ -22,7 +24,7 @@ private collectionService = inject(CollectionService);
     return this.collectionService.collections().find(c => c.id === collectionId);
   });
   // Loading state
-  loading = this.collectionService.loading;
+  loading = this.globalService.loading;
   // Error state
   error = this.collectionService.error;
 

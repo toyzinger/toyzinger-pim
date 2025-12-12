@@ -4,6 +4,7 @@ import { FranchiseService } from '../../features/dimensions/franchise/franchise.
 import { FranchiseForm } from "./franchise-form/franchise-form";
 import { FranchiseListItem } from "./franchise-list-item/franchise-list-item";
 import { DimFranchise, createEmptyFranchise } from '../../features/dimensions/dimensions.model';
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-franchise-management',
@@ -13,10 +14,11 @@ import { DimFranchise, createEmptyFranchise } from '../../features/dimensions/di
 })
 export class FranchiseManagement implements OnInit {
   private franchiseService = inject(FranchiseService);
+  private globalService = inject(GlobalService);
 
   // Use service signals directly
   franchises = this.franchiseService.franchises;
-  loading = this.franchiseService.loading;
+  loading = this.globalService.loading;
   error = this.franchiseService.error;
 
   newFranchise = signal<DimFranchise>(createEmptyFranchise());

@@ -19,7 +19,6 @@ export class CollectionService {
   // ========================================
 
   private _collections = signal<DimCollection[]>([]); // Array of all collections
-  private _loading = signal<boolean>(false); // Loading state
   private _error = signal<string | null>(null); // Error state
   private _collectionsLoaded = signal<boolean>(false); // Track if collections have been loaded
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
@@ -32,9 +31,10 @@ export class CollectionService {
   // ========================================
 
   collections = this._collections.asReadonly();
-  loading = this._loading.asReadonly();
-  error = this._error.asReadonly();
   selectedCollectionId = this._selectedCollectionId.asReadonly();
+
+  //TODO: global handle error
+  error = this._error.asReadonly();
 
   // ========================================
   // COMPUTED VALUES
@@ -82,7 +82,7 @@ export class CollectionService {
 
   // Load all collections (always fetches from Firebase)
   async loadCollections(): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const collections = await this.collectionFirebase.getCollections();
@@ -92,13 +92,13 @@ export class CollectionService {
       this._error.set('Failed to load collections');
       console.error('Error loading collections:', error);
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Create collection
   async createCollection(collection: Omit<DimCollection, 'id'>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const id = await this.collectionFirebase.addCollection(collection);
@@ -111,13 +111,13 @@ export class CollectionService {
       console.error('Error creating collection:', error);
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Update collection
   async updateCollection(id: string, data: Partial<DimCollection>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       // Optimistic update
@@ -137,13 +137,13 @@ export class CollectionService {
       await this.loadCollections();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Delete collection
   async deleteCollection(id: string): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       // Optimistic update
@@ -159,7 +159,7 @@ export class CollectionService {
       await this.loadCollections();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 

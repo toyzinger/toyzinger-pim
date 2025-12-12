@@ -4,6 +4,7 @@ import { ManufacturerService } from '../../features/dimensions/manufacturer/manu
 import { ManufacturerForm } from "../../components/management-dim-manufacturer/manufacturer-form/manufacturer-form";
 import { DimManufacturer, createEmptyManufacturer } from '../../features/dimensions/dimensions.model';
 import { TitlePage } from "../../components/title-page/title-page";
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-edit-manufacturer',
@@ -12,7 +13,8 @@ import { TitlePage } from "../../components/title-page/title-page";
   styleUrl: './edit-manufacturer.scss',
 })
 export class EditManufacturer implements OnInit {
-private manufacturerService = inject(ManufacturerService);
+  private globalService = inject(GlobalService);
+  private manufacturerService = inject(ManufacturerService);
 
   // Input from route param :id
   id = input.required<string>();
@@ -22,7 +24,7 @@ private manufacturerService = inject(ManufacturerService);
     return this.manufacturerService.manufacturers().find(m => m.id === manufacturerId);
   });
   // Loading state
-  loading = this.manufacturerService.loading;
+  loading = this.globalService.loading;
   // Error state
   error = this.manufacturerService.error;
 

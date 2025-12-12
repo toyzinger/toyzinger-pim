@@ -5,6 +5,7 @@ import { SubCollectionService } from '../dimensions/subcollection/subcollection.
 import { CollectionService } from '../dimensions/collection/collection.service';
 import { SPECIAL_DIM_FOLDERS } from '../dimensions/dimensions.model';
 import { ToastService } from '../toast/toast.service';
+import { GlobalService } from '../global/global.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,18 +15,19 @@ export class ProductsService {
   private subCollectionService = inject(SubCollectionService);
   private collectionService = inject(CollectionService);
   private toastService = inject(ToastService);
+  private globalService = inject(GlobalService);
 
   // =============== STATE (Private signals) =========================
 
   private _products = signal<Product[]>([]); // Array of all products
-  private _loading = signal<boolean>(false); // Loading state
-  private _error = signal<string | null>(null); // Error state
   private _productsLoaded = signal<boolean>(false); // Track if products have been loaded
 
   // ============== SELECTORS (Public readonly) ========================
 
   products = this._products.asReadonly();
-  loading = this._loading.asReadonly();
+
+  // TODO REMOVE: handle error globally
+  private _error = signal<string | null>(null); // Error state
   error = this._error.asReadonly();
 
   // ================ COMPUTED VALUES ========================
@@ -59,7 +61,7 @@ export class ProductsService {
 
   // Load all products (always fetches from Firebase)
   async loadProducts(): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const products = await this.productsFirebase.getProducts();
@@ -69,13 +71,13 @@ export class ProductsService {
       this._error.set('Failed to load products');
       console.error('Error loading products:', error);
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Create product
   async createProduct(product: Omit<Product, 'id'>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       const id = await this.productsFirebase.addProduct(product);
@@ -87,13 +89,13 @@ export class ProductsService {
       console.error('Error creating product:', error);
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Update product
   async updateProduct(id: string, data: Partial<Product>): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     console.log('updateProduct', id, data);
     try {
@@ -112,13 +114,13 @@ export class ProductsService {
       await this.loadProducts();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
   // Delete product
   async deleteProduct(id: string): Promise<void> {
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
     try {
       // Optimistic update
@@ -133,7 +135,7 @@ export class ProductsService {
       await this.loadProducts();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
@@ -150,7 +152,7 @@ export class ProductsService {
   async updateMultipleProducts(ids: string[], data: Partial<Product>): Promise<void> {
     if (ids.length === 0) return;
 
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
 
     try {
@@ -168,7 +170,7 @@ export class ProductsService {
       await this.loadProducts();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 
@@ -237,7 +239,7 @@ export class ProductsService {
   async clearProductsBySubcollection(subcollectionId: string): Promise<void> {
     if (!subcollectionId) return;
 
-    this._loading.set(true);
+    this.globalService.activateLoading();
     this._error.set(null);
 
     try {
@@ -245,7 +247,7 @@ export class ProductsService {
       const productsToUpdate = this._products().filter(p => p.subCollectionId === subcollectionId);
 
       if (productsToUpdate.length === 0) {
-        this._loading.set(false);
+        this.globalService.deactivateLoading();
         return;
       }
 
@@ -277,7 +279,7 @@ export class ProductsService {
       await this.loadProducts();
       throw error;
     } finally {
-      this._loading.set(false);
+      this.globalService.deactivateLoading();
     }
   }
 }

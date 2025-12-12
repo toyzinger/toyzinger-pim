@@ -45,7 +45,7 @@
 
 $drag-width: 40px;
 $checkbox-width: 40px;
-$thumbnail-width: 100px;
+$thumbnail-width: 80px;
 $filename-width: auto;
 $alt-width: 250px;
 $actions-width: 110px;
@@ -150,6 +150,15 @@ $actions-width: 110px;
 
   &--thumbnail {
     width: $thumbnail-width;
+    text-align: center;
+
+    img {
+      width: 60px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 4px;
+      display: inline-block;
+    }
   }
 
   &--filename {

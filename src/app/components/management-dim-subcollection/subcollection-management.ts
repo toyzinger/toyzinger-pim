@@ -8,6 +8,7 @@ import { DropdownCollections } from "../dropdown-collections/dropdown-collection
 import { DropdownFranchises } from "../dropdown-franchises/dropdown-franchises";
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 import { CollectionService } from '../../features/dimensions/collection/collection.service';
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-subcollection-management',
@@ -16,16 +17,17 @@ import { CollectionService } from '../../features/dimensions/collection/collecti
   styleUrl: './subcollection-management.scss',
 })
 export class SubCollectionManagement implements OnInit {
-  private subcollectionService = inject(SubCollectionService);
+  private globalService = inject(GlobalService);
   private franchiseService = inject(FranchiseService);
   private collectionService = inject(CollectionService);
+  private subcollectionService = inject(SubCollectionService);
 
   // ViewChild for form focus control
   private subcollectionForm = viewChild<SubCollectionForm>('subcollectionForm');
 
   // Use service signals directly
   subcollections = this.subcollectionService.subcollections;
-  loading = this.subcollectionService.loading;
+  loading = this.globalService.loading;
 
   newSubCollection = signal<DimSubCollection>(createEmptySubCollection());
 
