@@ -30,7 +30,6 @@
 
     button {
       max-width: 50px;
-      margin-bottom: 0.5rem;
       min-height: 50px;
     }
   }
@@ -66,6 +65,10 @@
         }
       }
     }
+  }
+
+  app-subcollection-form {
+    margin-bottom: 1rem;
   }
 
 }

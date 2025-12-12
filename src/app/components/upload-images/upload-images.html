@@ -1,14 +1,31 @@
 <div class="upload-images">
-  <input class="upload-images__input" type="file" #fileInput accept=".jpg,.jpeg,.png,.gif,.webp,.svg" multiple
+  <input class="upload-images__input"
+    type="file"
+    #fileInput
+    accept=".jpg,.jpeg,.png,.gif,.webp,.svg"
+    multiple
     (change)="onFileSelected($event)">
 
   <div class="container">
-    <app-folders-dropdown [(selectedFolderId)]="selectedFolderId" />
+    <div class="upload-images__row">
+      <app-dropdown-franchises/>
+      <app-dropdown-collections/>
+    </div>
   </div>
 
   <div class="container">
-    <app-form-input id="alt-text" label="Alt text" placeholder="Enter alternative text for images"
-      [(value)]="altText" />
+    <div class="upload-images__row">
+      <app-dropdown-subcollections/>
+      <app-form-input
+        id="alt-text"
+        label="Alt text"
+        placeholder="Enter alternative text for images"
+        [(value)]="altText" />
+        <button class="upload-images__clear btn-primary"
+          (click)="clearFilters()">
+          <span class="material-icons-outlined">filter_alt_off</span>
+        </button>
+    </div>
   </div>
 
   <div class="drop-zone" [class.drag-over]="isDragOver()" [class.uploading]="isUploading()"

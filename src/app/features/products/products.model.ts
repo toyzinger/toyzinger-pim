@@ -1,5 +1,5 @@
 import { MultilingualStringArray, MultilingualString } from '../global/global.model';
-import { ProductImage } from '../productimages/productimages.model';
+import { ProductImage } from '../pimages/pimages.model';
 
 export interface Product {
   id?: string;

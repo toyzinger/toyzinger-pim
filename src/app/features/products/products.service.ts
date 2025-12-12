@@ -1,14 +1,12 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Product } from './products.model';
 import { ProductsFirebase } from './products.firebase';
-import { FoldersService } from '../folders/folders.service';
-import { SPECIAL_FOLDERS } from '../folders/folders.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
-  private productsFirabse = inject(ProductsFirebase);
+  private productsFirebase = inject(ProductsFirebase);
 
   // ========================================
   // STATE (Private signals)
@@ -65,7 +63,7 @@ export class ProductsService {
     this._loading.set(true);
     this._error.set(null);
     try {
-      const products = await this.productsFirabse.getProducts();
+      const products = await this.productsFirebase.getProducts();
       this._products.set(products);
       this._productsLoaded.set(true); // Mark as loaded
     } catch (error) {
@@ -81,7 +79,7 @@ export class ProductsService {
     this._loading.set(true);
     this._error.set(null);
     try {
-      const id = await this.productsFirabse.addProduct(product);
+      const id = await this.productsFirebase.addProduct(product);
       // Optimistic update
       const newProduct: Product = { ...product, id };
       this._products.update(products => [...products, newProduct]);
@@ -107,7 +105,7 @@ export class ProductsService {
       );
       this._products.set(updatedProducts);
       // Update in Firebase
-      await this.productsFirabse.updateProduct(id, data);
+      await this.productsFirebase.updateProduct(id, data);
     } catch (error) {
       this._error.set('Failed to update product');
       console.error('Error updating product:', error);
@@ -128,7 +126,7 @@ export class ProductsService {
       this._products.update(products => products.filter(p => p.id !== id));
 
       // Delete from Firebase
-      await this.productsFirabse.deleteProduct(id);
+      await this.productsFirebase.deleteProduct(id);
     } catch (error) {
       this._error.set('Failed to delete product');
       console.error('Error deleting product:', error);
@@ -167,7 +165,7 @@ export class ProductsService {
       );
 
       // 2. Sync to Firebase in background
-      await Promise.all(ids.map(id => this.productsFirabse.updateProduct(id, data)));
+      await Promise.all(ids.map(id => this.productsFirebase.updateProduct(id, data)));
 
     } catch (error) {
       this._error.set('Failed to update products');

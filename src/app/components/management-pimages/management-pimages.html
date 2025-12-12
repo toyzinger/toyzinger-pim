@@ -1,0 +1,60 @@
+<div class="header">
+    @if (selectedNodeId()) {
+    <div class="header__info">
+      <p class="header__count">{{ images().length }} images in:</p>
+      <p class="header__breadcrumb">{{ breadcrumb() }}</p>
+    </div>
+    } @else {
+    <p>Select a folder to view images</p>
+    }
+</div>
+
+@if (loading()) {
+<div class="loading">Loading images...</div>
+} @else if (error()) {
+<div class="error">{{ error() }}</div>
+} @else if (images().length === 0) {
+<div class="empty">No images found in this folder</div>
+} @else {
+<table class="images-table">
+  <!-- HEADER -->
+  <thead class="images-table__header">
+    <tr>
+      <th class="images-table__header--drag">
+        @if (selectedImages().size > 0) {
+        <span class="material-icons-outlined drag-handle"
+          [draggable]="selectedImages().size > 0"
+          (dragstart)="onDragStart($event)">
+          open_with
+        </span>
+        }
+      </th>
+      <th class="images-table__header--checkbox">
+        <app-form-checkbox
+          [checked]="selectAll()"
+          (checkedChange)="toggleSelectAll()"
+        />
+      </th>
+      <th class="images-table__header--thumbnail">Image</th>
+      <th class="images-table__header--filename">Filename</th>
+      <th class="images-table__header--alt">Alt Text</th>
+      <th class="images-table__header--actions">Actions</th>
+    </tr>
+  </thead>
+  <!-- BODY -->
+  <tbody
+    (dragstart)="onDragStart($event)"
+    (dragend)="onDragEnd()">
+    @for (image of images(); track image.id) {
+    <tr app-pimage-list-item
+      class="pimage-list-item"
+      draggable="true"
+      [attr.data-image-id]="image.id"
+      [image]="image"
+      [isSelected]="isImageSelected(image.id!)"
+      (selectionChange)="toggleImageSelection($event)">
+    </tr>
+    }
+  </tbody>
+</table>
+}

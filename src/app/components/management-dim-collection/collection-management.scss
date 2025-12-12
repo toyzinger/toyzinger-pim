@@ -31,7 +31,6 @@
     button {
       max-width: 50px;
       min-height: 50px;
-      margin-bottom: 0.5rem;
     }
   }
 
@@ -66,5 +65,9 @@
         }
       }
     }
+  }
+
+  app-collection-form {
+    margin-bottom: 1rem;
   }
 }

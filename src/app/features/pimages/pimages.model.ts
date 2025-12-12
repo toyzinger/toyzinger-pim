@@ -2,7 +2,7 @@ export interface ProductImage {
   id?: string;
   filename: string;
   alt?: string;
-  folderId?: string;
+  subcollectionId?: string;
 }
 
 export interface ImageUploadResponse {

@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Sidebar } from '../../components/sidebar/sidebar';
-import { ImgList } from '../../components/img-list/img-list';
+import { ManagementPimages } from '../../components/management-pimages/management-pimages';
 import { GlobalService } from '../../features/global/global.service';
 import { TitlePage } from "../../components/title-page/title-page";
 
 @Component({
   selector: 'app-dashboard-images',
-  imports: [Sidebar, ImgList, TitlePage],
+  imports: [Sidebar, ManagementPimages, TitlePage],
   templateUrl: './dashboard-images.html',
   styleUrl: './dashboard-images.scss',
 })

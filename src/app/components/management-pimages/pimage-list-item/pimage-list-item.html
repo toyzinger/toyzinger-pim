@@ -1,25 +1,25 @@
-<td class="img-list-item__drag">
+<td class="pimage-list-item__td pimage-list-item--drag">
   <span class="material-icons-outlined">open_with</span>
 </td>
 
-<td class="img-list-item__checkbox">
+<td class="pimage-list-item__td pimage-list-item--checkbox">
   <app-form-checkbox
     [checked]="isSelected()"
     (checkedChange)="onCheckboxChange()"
   />
 </td>
 
-<td class="img-list-item__thumbnail">
+<td class="pimage-list-item__td pimage-list-item--thumbnail">
   <img
     [src]="'uploads/images/' + image().filename"
     [alt]="image().alt || image().filename">
 </td>
 
-<td class="img-list-item__info">
+<td class="pimage-list-item__td pimage-list-item--filename">
   <p class="filename">{{ image().filename }}</p>
 </td>
 
-<td class="img-list-item__alt">
+<td class="pimage-list-item__td pimage-list-item--alt">
   <app-form-input
     id="alt-{{ image().id }}"
     placeholder="Enter alt text"
@@ -28,8 +28,8 @@
   />
 </td>
 
-<td class="img-list-item__actions">
-  <button class="btn-danger btn-icon"
+<td class="pimage-list-item__td pimage-list-item--actions">
+  <button class="btn-danger btn-sm"
     (click)="deleteImage()"
     title="Delete image">
     <span class="material-icons-outlined">delete</span>

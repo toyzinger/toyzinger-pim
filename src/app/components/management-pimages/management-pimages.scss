@@ -1,0 +1,171 @@
+@use '../../../styles/variables' as *;
+
+.header {
+  margin-bottom: 2rem;
+
+  &__info {
+    display: flex;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  &__count {
+    margin: 0;
+    color: $gray-200;
+  }
+
+  &__breadcrumb {
+    font-weight: 500;
+    font-style: italic;
+    color: $gray-400;
+  }
+
+  h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: $color-text-light;
+  }
+}
+
+.loading,
+.error,
+.empty {
+  padding: 2rem;
+  text-align: center;
+  color: $gray-400;
+  font-size: 0.875rem;
+}
+
+.error {
+  color: $color-danger;
+}
+
+// ====== TABLE ==================
+
+$drag-width: 40px;
+$checkbox-width: 40px;
+$thumbnail-width: 100px;
+$filename-width: auto;
+$alt-width: 250px;
+$actions-width: 110px;
+
+.images-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+  background: transparent;
+
+
+  &__header {
+    tr {
+      background: transparent;
+      height: 45px;
+    }
+
+    th {
+      padding: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: $gray-400;
+      border-bottom: 2px solid $gray-700;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    &--drag {
+      width: $drag-width;
+      text-align: center;
+
+      .material-icons-outlined {
+        cursor: grab;
+        display: block;
+        font-size: 1.25rem;
+        color: $gray-500;
+        transition: opacity 0.2s ease, color 0.2s ease;
+      }
+    }
+
+    &--checkbox {
+      width: $checkbox-width;
+      text-align: center;
+    }
+
+    &--thumbnail {
+      width: $thumbnail-width;
+    }
+
+    &--filename {
+      width: $filename-width;
+    }
+
+    &--alt {
+      width: $alt-width;
+    }
+
+    &--actions {
+      width: $actions-width;
+      text-align: right;
+    }
+  }
+}
+
+// img-list-item styles
+.pimage-list-item {
+  background-color: $gray-800;
+
+  &__td {
+    padding: 0.5rem;
+    vertical-align: middle;
+  }
+
+  &--drag {
+    width: $drag-width;
+    text-align: center;
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    .material-icons-outlined {
+      display: block;
+      font-size: 1.25rem;
+      color: $gray-500;
+      opacity: 0;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    &:hover .material-icons-outlined {
+      opacity: 1;
+    }
+  }
+
+  &--checkbox {
+    width: $checkbox-width;
+    text-align: center;
+  }
+
+  &--thumbnail {
+    width: $thumbnail-width;
+  }
+
+  &--filename {
+    width: $filename-width;
+  }
+
+  &--alt {
+    width: $alt-width;
+
+    .form__group {
+      margin: 0;
+    }
+  }
+
+  &--actions {
+    width: $actions-width;
+    text-align: center;
+  }
+}

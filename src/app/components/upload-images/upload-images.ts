@@ -1,25 +1,38 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { ImagesService } from '../../features/productimages/productimages.service';
-import { UploadItem } from '../../features/productimages/productimages.model';
-import { FoldersDropdown } from '../../components/folders-dropdown/folders-dropdown';
+import { ImagesService } from '../../features/pimages/pimages.service';
+import { UploadItem } from '../../features/pimages/pimages.model';
 import { FormInput } from '../../components/form/form-input/form-input';
+import { DropdownFranchises } from "../dropdown-franchises/dropdown-franchises";
+import { DropdownCollections } from "../dropdown-collections/dropdown-collections";
+import { DropdownSubCollections } from "../dropdown-subcollections/dropdown-subcollections";
+import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
+import { CollectionService } from '../../features/dimensions/collection/collection.service';
+import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
 
 @Component({
   selector: 'app-upload-images',
-  imports: [FoldersDropdown, FormInput],
+  imports: [
+    FormInput,
+    DropdownFranchises,
+    DropdownCollections,
+    DropdownSubCollections
+  ],
   templateUrl: './upload-images.html',
   styleUrl: './upload-images.scss',
 })
 export class UploadImages {
-  private imagesStore = inject(ImagesService);
+  private imagesService = inject(ImagesService);
+  private subcollectionService = inject(SubCollectionService);
 
-  selectedFolderId = signal<string>('');
+
+  // ===== SIGNALS ======
   altText = signal<string>('');
   isDragOver = signal(false);
+  subcollectionId = this.subcollectionService.selectedSubCollectionId;
 
   // Use store signals
-  uploadQueue = this.imagesStore.uploadQueue;
-  isUploading = this.imagesStore.uploading;
+  uploadQueue = this.imagesService.uploadQueue;
+  isUploading = this.imagesService.uploading;
 
   // Computed signal to sort queue: Error items first, then by original order
   sortedQueue = computed(() => {
@@ -30,6 +43,11 @@ export class UploadImages {
       return 0; // Keep original order otherwise
     });
   });
+
+  clearFilters() {
+    this.subcollectionService.clearSelectedSubCollectionId();
+    this.altText.set('');
+  }
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -88,22 +106,22 @@ export class UploadImages {
 
     // Add invalid items to the queue
     if (invalidItems.length > 0) {
-      this.imagesStore.addToQueue(invalidItems);
+      this.imagesService.addToQueue(invalidItems);
     }
 
     // Upload valid files and save to Firestore
     if (validFiles.length > 0) {
-      const folderId = this.selectedFolderId() || undefined;
+      const subcollectionId = this.subcollectionId() || undefined;
       const alt = this.altText() || undefined;
-      this.imagesStore.processUploadQueue(validFiles, folderId, alt);
+      this.imagesService.processUploadQueue(validFiles, subcollectionId, alt);
     }
   }
 
   retry(itemId: string) {
-    this.imagesStore.retryUpload(itemId);
+    this.imagesService.retryUpload(itemId);
   }
 
   resetQueue() {
-    this.imagesStore.clearUploadQueue();
+    this.imagesService.clearUploadQueue();
   }
 }

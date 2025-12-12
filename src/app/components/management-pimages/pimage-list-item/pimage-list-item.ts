@@ -1,16 +1,16 @@
 import { Component, input, output, inject, signal, effect } from '@angular/core';
-import { ProductImage } from '../../../features/productimages/productimages.model';
-import { ImagesService } from '../../../features/productimages/productimages.service';
+import { ProductImage } from '../../../features/pimages/pimages.model';
+import { ImagesService } from '../../../features/pimages/pimages.service';
 import { FormInput } from '../../form/form-input/form-input';
 import { FormCheckbox } from '../../form/form-checkbox/form-checkbox';
 
 @Component({
-  selector: 'tr[app-img-list-item]',
+  selector: 'tr[app-pimage-list-item]',
   imports: [FormInput, FormCheckbox],
-  templateUrl: './img-list-item.html',
-  styleUrl: '../img-list.scss',
+  templateUrl: './pimage-list-item.html',
+  styleUrl: '../management-pimages.scss',
 })
-export class ImgListItem {
+export class PimageListItem {
   private imagesService = inject(ImagesService);
 
   // Inputs from parent

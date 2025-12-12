@@ -1,11 +1,9 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { deleteField } from '@angular/fire/firestore';
-import { ProductImage, ImageUploadResult, UploadItem } from './productimages.model';
-import { ImagesFirebase } from './productimages.firebase';
-import { ImagesApi } from './productimages.api';
+import { ProductImage, ImageUploadResult, UploadItem } from './pimages.model';
+import { ImagesFirebase } from './pimages.firebase';
+import { ImagesApi } from './pimages.api';
 import { HttpEventType } from '@angular/common/http';
-import { FoldersService } from '../folders/folders.service';
-import { SPECIAL_FOLDERS } from '../folders/folders.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +11,6 @@ import { SPECIAL_FOLDERS } from '../folders/folders.model';
 export class ImagesService {
   private imagesFirebase = inject(ImagesFirebase);
   private imagesService = inject(ImagesApi);
-  private foldersService = inject(FoldersService);
 
   // ========================================
   // STATE (Private signals)
@@ -43,38 +40,14 @@ export class ImagesService {
   // Total count of images
   imageCount = computed(() => this._images().length);
 
-  // Images filtered by folder
-  filteredImages = computed(() => {
-    let images = this._images();
-    const selectedFolder = this.foldersService.selectedFolder();
-
-    // No folder selected - show nothing
-    if (!selectedFolder) {
-      return [];
-    }
-
-    // UNASSIGNED - show images without folderId
-    if (selectedFolder.id === SPECIAL_FOLDERS.UNASSIGNED) {
-      return images.filter(img => !img.folderId);
-    }
-
-    // ROOT - show all images
-    if (selectedFolder.id === SPECIAL_FOLDERS.ROOT) {
-      return images;
-    }
-
-    // Regular folder - filter by folderId
-    return images.filter(img => img.folderId === selectedFolder.id);
-  });
-
-  // Unorganized images (without folder)
+  // Unorganized images (without subcollection)
   unorganizedImages = computed(() =>
-    this._images().filter(img => !img.folderId)
+    this._images().filter(img => !img.subcollectionId)
   );
 
-  // Images by folder ID
-  imagesByFolder = computed(() => {
-    return (folderId: string) => this._images().filter(img => img.folderId === folderId);
+  // Images by subcollection ID
+  imagesBySubcollection = computed(() => {
+    return (subcollectionId: string) => this._images().filter(img => img.subcollectionId === subcollectionId);
   });
 
   // Get image by ID
@@ -339,7 +312,7 @@ export class ImagesService {
   }
 
   // Upload files and save to Firestore with rollback on failure
-  async processUploadQueue(files: FileList | File[], folderId?: string, alt?: string): Promise<void> {
+  async processUploadQueue(files: FileList | File[], subcollectionId?: string, alt?: string): Promise<void> {
     this._uploading.set(true);
     this._error.set(null);
 
@@ -370,7 +343,7 @@ export class ImagesService {
         if (uploadedItem?.result && uploadedItem.status === 'success') {
           const imageData: Omit<ProductImage, 'id'> = {
             filename: uploadedItem.result.filename,
-            ...(folderId && { folderId }), // Only include folderId if it has a value
+            ...(subcollectionId && { subcollectionId }), // Only include subcollectionId if it has a value
             ...(alt && { alt }), // Only include alt if it has a value
           };
 

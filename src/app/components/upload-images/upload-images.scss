@@ -10,6 +10,23 @@
     display: none;
   }
 
+  &__row {
+    display: flex;
+    width: 100%;
+    gap: 1rem;
+
+    & > * {
+      flex: 1;
+    }
+  }
+
+  &__clear {
+    max-width: 55px;
+    height: 50px;
+    margin-bottom: 0.5rem;
+    align-self: self-end;
+  }
+
   .queue-header {
     display: flex;
     align-items: center;

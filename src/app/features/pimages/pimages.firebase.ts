@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
-import { ProductImage } from './productimages.model';
+import { ProductImage } from './pimages.model';
 import { removeUndefined, prepareUpdateData } from '../../utils/firestore.utils';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { removeUndefined, prepareUpdateData } from '../../utils/firestore.utils'
 })
 export class ImagesFirebase {
   private firestore = inject(Firestore);
-  private readonly COLLECTION_NAME = 'productimages';
+  private readonly COLLECTION_NAME = 'toy_images';
 
   // ========================================
   // CRUD OPERATIONS
