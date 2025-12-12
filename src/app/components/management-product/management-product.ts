@@ -32,18 +32,23 @@ export class ManagementProduct implements OnInit {
       return [];
     }
 
+    let filteredProducts: typeof allProducts = [];
+
     // Unassigned folder - show products without subCollectionId
     if (selectedId === SPECIAL_DIM_FOLDERS.UNASSIGNED) {
-      return allProducts.filter(p => !p.subCollectionId);
+      filteredProducts = allProducts.filter(p => !p.subCollectionId);
     }
-
     // SubCollection selected (isDroppable) - show products with matching subCollectionId
-    if (this.dimensionFoldersService.isDroppable(selectedId)) {
-      return allProducts.filter(p => p.subCollectionId === selectedId);
+    else if (this.dimensionFoldersService.isDroppable(selectedId)) {
+      filteredProducts = allProducts.filter(p => p.subCollectionId === selectedId);
+    }
+    // Franchise or collection selected - show nothing (they are not selectable anyway)
+    else {
+      return [];
     }
 
-    // Franchise or collection selected - show nothing (they are not selectable anyway)
-    return [];
+    // Sort by order field
+    return filteredProducts.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   });
 
   // Selection state
