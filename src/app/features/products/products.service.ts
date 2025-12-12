@@ -1,12 +1,19 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Product } from './products.model';
 import { ProductsFirebase } from './products.firebase';
+import { SubCollectionService } from '../dimensions/subcollection/subcollection.service';
+import { CollectionService } from '../dimensions/collection/collection.service';
+import { SPECIAL_DIM_FOLDERS } from '../dimensions/dimensions.model';
+import { ToastService } from '../toast/toast.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
   private productsFirebase = inject(ProductsFirebase);
+  private subCollectionService = inject(SubCollectionService);
+  private collectionService = inject(CollectionService);
+  private toastService = inject(ToastService);
 
   // =============== STATE (Private signals) =========================
 
@@ -166,8 +173,65 @@ export class ProductsService {
   }
 
   /**
+   * Update products when dropped on a dimension node (folder).
+   * Handles both UNASSIGNED (clears dimensions) and subcollection drops.
+   * @param dimensionNodeId - The dimension node ID (UNASSIGNED or subcollection ID)
+   * @param productIds - Array of product IDs to update
+   */
+  async updateProductsByDrop(
+    dimensionNodeId: string,
+    productIds: string[]
+  ): Promise<void> {
+
+    if (productIds.length === 0) return;
+
+    // Build update data based on target node
+    const updateData: Partial<Product> = {};
+    let targetName = '';
+
+    if (dimensionNodeId === SPECIAL_DIM_FOLDERS.UNASSIGNED) {
+      // Dropping on Unassigned clears all dimension IDs
+      updateData.subCollectionId = undefined;
+      updateData.collectionId = undefined;
+      updateData.franchiseId = undefined;
+      updateData.manufacturerId = undefined;
+      targetName = 'Unassigned';
+    } else {
+      // Check if it's a subcollection
+      const subcollection = this.subCollectionService.subcollections().find(s => s.id === dimensionNodeId);
+
+      if (!subcollection) {
+        // Not a valid drop target
+        return;
+      }
+
+      updateData.subCollectionId = subcollection.id;
+      targetName = subcollection.name?.en || subcollection.name?.es || 'SubCollection';
+
+      // Find parent collection to get related dimension IDs
+      if (subcollection.collectionId) {
+        const collection = this.collectionService.collections().find(c => c.id === subcollection.collectionId);
+
+        if (collection) {
+          updateData.collectionId = collection.id;
+          if (collection.franchiseId) updateData.franchiseId = collection.franchiseId;
+          if (collection.manufacturerId) updateData.manufacturerId = collection.manufacturerId;
+        }
+      }
+    }
+
+    // Perform the update
+    try {
+      await this.updateMultipleProducts(productIds, updateData);
+      this.toastService.success(`Moved ${productIds.length} product(s) to "${targetName}"`);
+    } catch (error) {
+      this.toastService.error('Failed to move products');
+    }
+  }
+
+  /**
    * Remove dimension references from products with a specific subcollectionId
-   * Clears subcollectionId, collectionId, and franchiseId
+   * Clears subcollectionId, collectionId, franchiseId and manufacturerId
    * @param subcollectionId - The subcollection ID to search for
    */
   async clearProductsBySubcollection(subcollectionId: string): Promise<void> {
@@ -192,6 +256,7 @@ export class ProductsService {
         subCollectionId: undefined,
         collectionId: undefined,
         franchiseId: undefined,
+        manufacturerId: undefined,
       };
 
       // 1. Optimistic update - update local cache immediately

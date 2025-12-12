@@ -4,6 +4,9 @@ import { ProductImage, ImageUploadResult, UploadItem } from './pimages.model';
 import { ImagesFirebase } from './pimages.firebase';
 import { ImagesApi } from './pimages.api';
 import { HttpEventType } from '@angular/common/http';
+import { SubCollectionService } from '../dimensions/subcollection/subcollection.service';
+import { ToastService } from '../toast/toast.service';
+import { SPECIAL_DIM_FOLDERS } from '../dimensions/dimensions.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +14,8 @@ import { HttpEventType } from '@angular/common/http';
 export class ImagesService {
   private imagesFirebase = inject(ImagesFirebase);
   private imagesService = inject(ImagesApi);
+  private subCollectionService = inject(SubCollectionService);
+  private toastService = inject(ToastService);
 
   // ========================================
   // STATE (Private signals)
@@ -401,6 +406,50 @@ export class ImagesService {
   // Add items to upload queue
   addToQueue(items: UploadItem[]): void {
     this._uploadQueue.update(queue => [...queue, ...items]);
+  }
+
+  /**
+   * Update images when dropped on a dimension node (folder).
+   * Handles both UNASSIGNED (clears subcollectionId) and subcollection drops.
+   * Shows toast feedback directly.
+   * @param dimensionNodeId - The dimension node ID (UNASSIGNED or subcollection ID)
+   * @param imageIds - Array of image IDs to update
+   */
+  async updateImagesByDrop(
+    dimensionNodeId: string,
+    imageIds: string[]
+  ): Promise<void> {
+
+    if (imageIds.length === 0) return;
+
+    // Build update data based on target node
+    const updateData: Partial<ProductImage> = {};
+    let targetName = '';
+
+    if (dimensionNodeId === SPECIAL_DIM_FOLDERS.UNASSIGNED) {
+      // Dropping on Unassigned clears subcollectionId
+      updateData.subcollectionId = undefined;
+      targetName = 'Unassigned';
+    } else {
+      // Check if it's a subcollection
+      const subcollection = this.subCollectionService.subcollections().find(s => s.id === dimensionNodeId);
+
+      if (!subcollection) {
+        // Not a valid drop target
+        return;
+      }
+
+      updateData.subcollectionId = subcollection.id;
+      targetName = subcollection.name?.en || subcollection.name?.es || 'SubCollection';
+    }
+
+    // Perform the update
+    try {
+      await this.updateMultipleImages(imageIds, updateData);
+      this.toastService.success(`Moved ${imageIds.length} image(s) to "${targetName}"`);
+    } catch (error) {
+      this.toastService.error('Failed to move images');
+    }
   }
 
   /**
