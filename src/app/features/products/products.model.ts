@@ -33,12 +33,14 @@ export function createEmptyProduct(): Omit<Product, 'id'> {
   return {
     name: '',
     isActive: true,
+    order: 0,
     // Dimensions
     franchiseId: undefined,
     collectionId: undefined,
     subCollectionId: undefined,
     manufacturerId: undefined,
     // Optional fields
+    slug: undefined,
     sku: undefined,
     size: undefined,
     yearReleased: undefined,
