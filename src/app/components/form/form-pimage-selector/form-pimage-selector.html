@@ -1,0 +1,102 @@
+<!-- Trigger Button -->
+<button class="form-pimage-selector__trigger btn-secondary"
+  type="button"
+  (click)="openModal()">
+  <span class="material-icons-outlined">add_photo_alternate</span>
+  Select Images
+  @if (selectedImageIds().length > 0) {
+    <span class="form-pimage-selector__badge">{{ selectedImageIds().length }}</span>
+  }
+</button>
+
+<!-- Modal -->
+<dialog class="form-pimage-selector__dialog"
+  #dialogElement
+  (click)="onDialogClick($event)">
+  <div class="form-pimage-selector__modal"
+    (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="form-pimage-selector__header">
+      <h2>Select Images</h2>
+      <button class="btn-tertiary"
+        type="button"
+        (click)="closeModal()">
+        <span class="material-icons-outlined">close</span>
+      </button>
+    </div>
+    <!-- Modal Content -->
+    <div class="form-pimage-selector__content">
+      <!-- Content Left -->
+      <div class="form-pimage-selector__left">
+        <div class="form-pimage-selector__filters">
+          <app-dropdown-franchises />
+          <app-dropdown-collections />
+          <app-dropdown-subcollections />
+        </div>
+        <div class="form-pimage-selector__selectedList">
+          <h5>Selected Images</h5>
+          @if (selectedImageIds().length > 0) {
+            @for (imageId of selectedImageIds(); track imageId) {
+              @if (getImageById(imageId); as image) {
+                <div class="form-pimage-selector__selectedItem">
+                  <img [src]="getImageUrl(image.filename)"
+                    [alt]="image.alt || 'Product image'"
+                    loading="lazy" />
+                  <p>{{ imageId }}</p>
+                  <button type="button"
+                    (click)="toggleImageSelection(imageId)">
+                    <span class="material-icons-outlined">close</span>
+                  </button>
+                </div>
+              }
+            }
+          } @else {
+            <p class="form-pimage-selector__emptyMessage">No images selected</p>
+          }
+        </div>
+      </div>
+      <!-- Content Right -->
+      <div class="form-pimage-selector__right">
+        @if (loading()) {
+          <p class="form-pimage-selector__message">Loading images...</p>
+        } @else if (filteredImages().length === 0) {
+          <p class="form-pimage-selector__message">No images found. Try adjusting the filters.</p>
+        } @else {
+          <!-- Grid -->
+          <div class="form-pimage-selector__grid">
+            @for (image of filteredImages(); track image.id) {
+              <div class="form-pimage-selector__item"
+                [class.form-pimage-selector__item--selected]="isImageSelected(image.id!)"
+                (click)="toggleImageSelection(image.id!)">
+                <img class="form-pimage-selector__image"
+                  [src]="getImageUrl(image.filename)"
+                  [alt]="image.alt || 'Product image'"
+                  loading="lazy" />
+                @if (isImageSelected(image.id!)) {
+                  <div class="form-pimage-selector__check">
+                    <span class="material-icons-outlined">check_circle</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+    <!-- Modal Footer -->
+    <div class="form-pimage-selector__footer">
+      <button class="btn-secondary"
+        type="button"
+        (click)="clearSelection()">
+        <span class="material-icons-outlined">clear_all</span>
+        Clear All
+      </button>
+      <button class="btn-primary"
+        type="button"
+        (click)="closeModal()">
+        <span class="material-icons-outlined">check</span>
+        Done ({{ selectedImageIds().length }})
+      </button>
+    </div>
+  </div>
+</dialog>

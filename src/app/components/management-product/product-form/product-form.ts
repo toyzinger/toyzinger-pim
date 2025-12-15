@@ -51,6 +51,8 @@ export class ProductForm {
   characterDescription_es = signal<string>('');
   characterDescription_en = signal<string>('');
   accessories = signal<{ en: string[]; es: string[] }>({ en: [], es: [] });
+  order = signal<number>(0);
+  pimagesIds = signal<string[]>([]);
   // values from DIM dropdowns
   franchiseId = computed(() => this.franchiseService.selectedFranchiseId());
   collectionId = computed(() => this.collectionService.selectedCollectionId());
@@ -73,6 +75,8 @@ export class ProductForm {
     this.size.set(prod.size || '');
     this.yearReleased.set(prod.yearReleased);
     this.isActive.set(prod.isActive);
+    this.order.set(prod.order || 0);
+    this.pimagesIds.set(prod.pimagesIds || []);
     // set DIM Dropdowns only if we have a real ID (edit mode)
     if (prod.id) {
       this.franchiseService.setSelectedFranchiseId(prod.franchiseId || '');
@@ -115,6 +119,8 @@ export class ProductForm {
     productData.sku = this.sku().trim() || undefined;
     productData.size = this.size().trim() || undefined;
     productData.yearReleased = this.yearReleased() || undefined;
+    productData.order = this.order() || undefined;
+    productData.pimagesIds = this.pimagesIds() || undefined;
 
     // Get Dimension values from Services
     productData.franchiseId = this.franchiseService.selectedFranchiseId() || undefined;

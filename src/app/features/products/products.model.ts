@@ -13,7 +13,7 @@ export interface Product {
   accessories?: MultilingualStringArray;
   toyDescription?: MultilingualString;
   characterDescription?: MultilingualString;
-  images?: ProductImage[];
+  pimagesIds?: string[]; // Array of associated product image IDs
   slug?: string;
   order?: number;
   // Not used
@@ -47,6 +47,5 @@ export function createEmptyProduct(): Omit<Product, 'id'> {
     accessories: undefined,
     toyDescription: undefined,
     characterDescription: undefined,
-    images: undefined,
   };
 }

@@ -1,0 +1,27 @@
+@use 'sass:color';
+@use 'variables' as *;
+
+@mixin custom-scrollbar($width: 6px, $thumb-color: $color-text-light, $opacity: 0.3, $hover-opacity: 0.5) {
+  // Webkit browsers (Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $width; // For horizontal scrollbars
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: color.adjust($thumb-color, $alpha: -1 + $opacity);
+    border-radius: calc($width / 2);
+
+    &:hover {
+      background-color: color.adjust($thumb-color, $alpha: -1 + $hover-opacity);
+    }
+  }
+
+  // Firefox
+  scrollbar-width: thin;
+  scrollbar-color: color.adjust($thumb-color, $alpha: -1 + $opacity) transparent;
+}

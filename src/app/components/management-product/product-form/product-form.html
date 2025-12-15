@@ -57,6 +57,21 @@
         [(value)]="sku"
         [disabled]="loading()"
       />
+      <app-form-input
+        label="Order"
+        type="number"
+        placeholder="Display order"
+        [(value)]="order"
+        [disabled]="loading()"
+      />
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- ROW -->
+    <div class="product-form__row">
+      <app-form-pimage-selector
+        [(selectedImageIds)]="pimagesIds"/>
       <app-form-checkbox
         label="Active Product"
         [(checked)]="isActive"

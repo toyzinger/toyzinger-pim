@@ -1,4 +1,5 @@
 @use '../../../styles/variables' as *;
+@use '../../../styles/scrollbar' as *;
 
 .dimensions-menu {
   display: flex;
@@ -46,27 +47,6 @@
   &__tree {
     flex: 1;
     overflow-y: auto;
-
-    // Discrete scrollbar styling
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba($color-text-light, 0.3);
-      border-radius: 3px;
-
-      &:hover {
-        background-color: rgba($color-text-light, 0.5);
-      }
-    }
-
-    // Firefox scrollbar
-    scrollbar-width: thin;
-    scrollbar-color: rgba($color-text-light, 0.3) transparent;
+    @include custom-scrollbar();
   }
 }
