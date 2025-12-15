@@ -12,26 +12,13 @@
     />
     <!-- ROW -->
     <div class="product-form__row">
-      <app-dropdown-manufacturers
-        label="Manufacturer"
-        [loading]="loading()"
-        [disabled]="loading()"
-      />
-      <app-dropdown-franchises
-        label="Franchise"
-        [disabled]="loading()"
-      />
+      <app-dropdown-manufacturers/>
+      <app-dropdown-franchises/>
     </div>
     <!-- ROW -->
     <div class="product-form__row">
-      <app-dropdown-collections
-        label="Collection"
-        [loading]="loading()"
-      />
-      <app-dropdown-subcollections
-        label="SubCollection"
-        [loading]="loading()"
-      />
+      <app-dropdown-collections/>
+      <app-dropdown-subcollections/>
     </div>
     <!-- ROW -->
     <div class="product-form__row">
