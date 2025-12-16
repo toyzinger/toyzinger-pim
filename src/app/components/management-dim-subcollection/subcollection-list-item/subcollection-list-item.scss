@@ -1,12 +1,20 @@
 @use '../../../../styles/variables' as *;
 
+td {
+  padding: 0.25rem;
+  vertical-align: middle;
+}
+
 .subcollection-list-item {
-  &__name,
-  &__slug,
-  &__collection,
-  &__order {
-    padding: 0.5rem;
+  &__name {
+    font-weight: 500;
     color: $color-text-dark;
+  }
+
+  &__slug {
+    color: $color-text-medium;
+    font-family: monospace;
+    font-size: 0.9rem;
   }
 
   &__order {

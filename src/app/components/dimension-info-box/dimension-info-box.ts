@@ -5,19 +5,21 @@ import { FranchiseService } from '../../features/dimensions/franchise/franchise.
 import { CollectionService } from '../../features/dimensions/collection/collection.service';
 import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
 import { ManufacturerService } from '../../features/dimensions/manufacturer/manufacturer.service';
+import { SizeService } from '../../features/dimensions/size/size.service';
 
 @Component({
-  selector: 'app-dimension-info',
+  selector: 'app-dimension-info-box',
   imports: [CommonModule],
-  templateUrl: './dimension-info.html',
-  styleUrl: './dimension-info.scss',
+  templateUrl: './dimension-info-box.html',
+  styleUrl: './dimension-info-box.scss',
 })
-export class DimensionInfo {
+export class DimensionInfoBox {
   // Inject all dimension services
   private franchiseService = inject(FranchiseService);
   private collectionService = inject(CollectionService);
   private subcollectionService = inject(SubCollectionService);
   private manufacturerService = inject(ManufacturerService);
+  private sizeService = inject(SizeService);
 
   // Input: dimension type
   type = input.required<dimensionType>();
@@ -35,6 +37,8 @@ export class DimensionInfo {
         return this.subcollectionService.subcollectionCount();
       case 'manufacturer':
         return this.manufacturerService.manufacturerCount();
+      case 'size':
+        return this.sizeService.sizeCount();
       default:
         return 0;
     }
@@ -47,5 +51,6 @@ export class DimensionInfo {
     this.collectionService.ensureCollectionsLoaded();
     this.subcollectionService.ensureSubCollectionsLoaded();
     this.manufacturerService.ensureManufacturersLoaded();
+    this.sizeService.ensureSizesLoaded();
   }
 }

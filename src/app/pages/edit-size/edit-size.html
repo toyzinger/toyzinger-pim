@@ -1,0 +1,34 @@
+<div class="edit-size">
+  <section class="edit-size__content">
+
+    <app-title-page
+      title="Edit Size"
+      [subtitle]="id()"
+      backRoute="/dimensions"
+    />
+
+    @if (loading()) {
+      <div class="edit-size__loading">Loading size...</div>
+    } @else if (error()) {
+      <div class="edit-size__error">{{ error() }}</div>
+    } @else if (!size()) {
+      <div class="edit-size__not-found">Size not found</div>
+    } @else {
+      @if (size(); as s) {
+        <div class="edit-size__form">
+          <app-size-form
+            [size]="s"
+            (updatedSize)="onUpdatedSize($event)"
+            [loading]="loading()"
+          />
+          <button class="btn-primary"
+            type="button"
+            [disabled]="loading() || !isDataValid()"
+            (click)="onSubmit()">
+            {{ loading() ? 'Updating...' : 'Update Size' }}
+          </button>
+        </div>
+      }
+    }
+  </section>
+</div>

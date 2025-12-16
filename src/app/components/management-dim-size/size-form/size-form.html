@@ -1,0 +1,33 @@
+<div class="size-form">
+  <!-- ROW -->
+  <div class="size-form__row">
+    <app-form-input
+      label="Text"
+      placeholder="Enter size text"
+      [(value)]="text"
+      [disabled]="loading()"
+      [required]="true"
+      (blur)="textBlur()"
+    />
+    <app-form-input
+      label="Slug"
+      placeholder="Enter URL slug"
+      [(value)]="slug"
+      [disabled]="loading()"
+      (blur)="slugBlur()"
+    />
+  </div>
+
+  @if (!reduced()) {
+  <!-- ROW -->
+  <div class="size-form__row">
+    <app-form-input
+      label="Order"
+      type="number"
+      placeholder="Display order"
+      [(value)]="order"
+      [disabled]="loading()"
+    />
+  </div>
+  }
+</div>

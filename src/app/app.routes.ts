@@ -11,6 +11,7 @@ import { EditFranchise } from './pages/edit-franchise/edit-franchise';
 import { EditCollection } from './pages/edit-collection/edit-collection';
 import { EditManufacturer } from './pages/edit-manufacturer/edit-manufacturer';
 import { EditSubCollection } from './pages/edit-subcollection/edit-subcollection';
+import { EditSize } from './pages/edit-size/edit-size';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: 'collection/:id', component: EditCollection },
   { path: 'subcollection/:id', component: EditSubCollection },
   { path: 'manufacturer/:id', component: EditManufacturer },
+  { path: 'size/:id', component: EditSize },
   { path: 'new-images', component: NewImages },
   { path: '**', component: NotFound }
 ];

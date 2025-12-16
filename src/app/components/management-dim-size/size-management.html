@@ -1,0 +1,49 @@
+<div class="size-management">
+
+  <div class="container">
+    <h3 class="container__title">Size List</h3>
+    @if (loading()) {
+      <p>Loading sizes...</p>
+    }
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    @if (!loading() && !error()) {
+      @if (sizes().length === 0) {
+        <p>No sizes found</p>
+      } @else {
+        <table class="size-management__list">
+          <thead>
+            <tr>
+              <th>Text</th>
+              <th>Slug</th>
+              <th>Order</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (size of alphaSortSizes(); track size.id) {
+              <tr app-size-list-item [size]="size"></tr>
+            }
+          </tbody>
+        </table>
+      }
+    }
+  </div>
+
+  <div class="container">
+    <h3 class="container__title">Add New Size</h3>
+    <app-size-form
+      [size]="newSize()"
+      (updatedSize)="onNewSize($event)"
+      [loading]="loading()"
+      [reduced]="true"
+    />
+    <button class="btn-primary"
+      (click)="addSize()"
+      [disabled]="!isValidSize()">
+      Add Size
+    </button>
+  </div>
+
+</div>

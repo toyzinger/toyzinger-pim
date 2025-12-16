@@ -1,0 +1,29 @@
+@use '../../../styles/variables' as *;
+
+.edit-size {
+  &__content {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  &__loading, &__error, &__not-found {
+    padding: 2rem;
+    text-align: center;
+    color: $gray-400;
+  }
+
+  &__error {
+    color: $color-danger;
+  }
+
+  &__not-found {
+    color: $color-danger;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

@@ -1,23 +1,25 @@
 import { Component, inject, signal } from '@angular/core';
 import { GlobalService } from '../../features/global/global.service';
-import { DimensionInfo } from '../../components/dimension-info/dimension-info';
+import { DimensionInfoBox } from '../../components/dimension-info-box/dimension-info-box';
 import { dimensionType } from '../../features/dimensions/dimensions.model';
 import { FranchiseManagement } from '../../components/management-dim-franchise/franchise-management';
 import { CollectionManagement } from "../../components/management-dim-collection/collection-management";
 import { ManufacturerManagement } from '../../components/management-dim-manufacturer/manufacturer-management';
 import { SubCollectionManagement } from "../../components/management-dim-subcollection/subcollection-management";
 import { TitlePage } from "../../components/title-page/title-page";
+import { SizeManagement } from "../../components/management-dim-size/size-management";
 
 @Component({
   selector: 'app-dashboard-dimensions',
   imports: [
-    DimensionInfo,
+    DimensionInfoBox,
     FranchiseManagement,
     CollectionManagement,
     ManufacturerManagement,
     SubCollectionManagement,
-    TitlePage
-],
+    SizeManagement,
+    TitlePage,
+  ],
   templateUrl: './dashboard-dimensions.html',
   styleUrl: './dashboard-dimensions.scss',
 })

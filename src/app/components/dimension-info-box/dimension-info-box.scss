@@ -1,6 +1,6 @@
 @use '../../../styles/variables' as *;
 
-.dimension-info {
+.dimension-info-box {
   display: flex;
   align-items: center;
   gap: 2rem;
@@ -14,7 +14,7 @@
     border-radius: 50%;
     background-color: $color-primary;
     color: $gray-100;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: bolder;
   }
 

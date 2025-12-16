@@ -9,27 +9,27 @@
       <div class="container"
         (click)="onDimensionClick('franchise')"
         [class.container--active]="tab() === 'franchise'">
-        <app-dimension-info type="franchise"></app-dimension-info>
+        <app-dimension-info-box type="franchise"></app-dimension-info-box>
       </div>
       <div class="container"
         (click)="onDimensionClick('collection')"
         [class.container--active]="tab() === 'collection'">
-        <app-dimension-info type="collection"></app-dimension-info>
+        <app-dimension-info-box type="collection"></app-dimension-info-box>
       </div>
       <div class="container"
         (click)="onDimensionClick('subcollection')"
         [class.container--active]="tab() === 'subcollection'">
-        <app-dimension-info type="subcollection"></app-dimension-info>
+        <app-dimension-info-box type="subcollection"></app-dimension-info-box>
       </div>
       <div class="container"
         (click)="onDimensionClick('manufacturer')"
         [class.container--active]="tab() === 'manufacturer'">
-        <app-dimension-info type="manufacturer"></app-dimension-info>
+        <app-dimension-info-box type="manufacturer"></app-dimension-info-box>
       </div>
       <div class="container"
         (click)="onDimensionClick('size')"
         [class.container--active]="tab() === 'size'">
-        <app-dimension-info type="size"></app-dimension-info>
+        <app-dimension-info-box type="size"></app-dimension-info-box>
       </div>
     </div>
 
@@ -51,7 +51,7 @@
           <app-manufacturer-management/>
         }
         @case ('size') {
-          <p>Size management coming soon...</p>
+          <app-size-management/>
         }
       }
     </div>

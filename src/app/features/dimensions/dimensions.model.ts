@@ -45,7 +45,7 @@ export interface DimManufacturer {
 
 export interface DimSize {
   id?: string;
-  name: string;
+  text: string;
   slug?: string;
   order?: number;
 }
@@ -103,7 +103,7 @@ export function createEmptyManufacturer(): Omit<DimManufacturer, 'id'> {
 
 export function createEmptySize(): Omit<DimSize, 'id'> {
   return {
-    name: '',
+    text: '',
     slug: '',
     order: undefined,
   };

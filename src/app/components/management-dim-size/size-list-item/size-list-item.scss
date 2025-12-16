@@ -5,8 +5,8 @@ td {
     vertical-align: middle;
 }
 
-.collection-list-item {
-  &__name {
+.size-list-item {
+  &__text {
     font-weight: 500;
     color: $color-text-dark;
   }
@@ -14,16 +14,6 @@ td {
   &__slug {
     color: $color-text-medium;
     font-family: monospace;
-    font-size: 0.9rem;
-  }
-
-  &__franchise {
-    color: $color-text-medium;
-    font-size: 0.9rem;
-  }
-
-  &__manufacturer {
-    color: $color-text-medium;
     font-size: 0.9rem;
   }
 
