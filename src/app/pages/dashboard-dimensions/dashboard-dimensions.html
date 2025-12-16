@@ -26,6 +26,11 @@
         [class.container--active]="tab() === 'manufacturer'">
         <app-dimension-info type="manufacturer"></app-dimension-info>
       </div>
+      <div class="container"
+        (click)="onDimensionClick('size')"
+        [class.container--active]="tab() === 'size'">
+        <app-dimension-info type="size"></app-dimension-info>
+      </div>
     </div>
 
     <hr class="dashboard-dimensions__separator">
@@ -44,6 +49,9 @@
         }
         @case ('manufacturer') {
           <app-manufacturer-management/>
+        }
+        @case ('size') {
+          <p>Size management coming soon...</p>
         }
       }
     </div>

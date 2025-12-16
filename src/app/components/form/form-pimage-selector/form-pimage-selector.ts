@@ -34,6 +34,9 @@ export class FormPimageSelector implements OnInit {
   // Internal selection state (for UI)
   private _selectedIds = signal<Set<string>>(new Set());
 
+  // Subcollection ID from external event (takes priority over service value)
+  private _selectedSubcollectionId = signal<string | null>(null);
+
   // Dialog element reference
   dialogElement = viewChild<ElementRef<HTMLDialogElement>>('dialogElement');
 
@@ -42,7 +45,8 @@ export class FormPimageSelector implements OnInit {
     const allImages = this.imagesService.images();
     const franchiseId = this.franchiseService.selectedFranchiseId();
     const collectionId = this.collectionService.selectedCollectionId();
-    const subcollectionId = this.subCollectionService.selectedSubCollectionId();
+    // Priority: event value -> service value
+    const subcollectionId = this._selectedSubcollectionId() ?? this.subCollectionService.selectedSubCollectionId();
 
     let filtered = allImages;
 
@@ -90,6 +94,10 @@ export class FormPimageSelector implements OnInit {
   }
 
   // ============ METHODS ==================
+
+  onSubcollectionChange(subcollectionId: string): void {
+    this._selectedSubcollectionId.set(subcollectionId);
+  }
 
   toggleImageSelection(imageId: string): void {
     const current = new Set(this._selectedIds());

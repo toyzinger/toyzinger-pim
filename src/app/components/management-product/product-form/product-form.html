@@ -59,11 +59,13 @@
     <div class="product-form__row">
       <app-form-pimage-selector
         [(selectedImageIds)]="pimagesIds"/>
-      <app-form-checkbox
-        label="Active Product"
-        [(checked)]="isActive"
-        [disabled]="loading()"
-      />
+      <div class="product-form__active">
+        <app-form-checkbox
+          label="Active Product"
+          [(checked)]="isActive"
+          [disabled]="loading()"
+        />
+      </div>
     </div>
   </div>
 

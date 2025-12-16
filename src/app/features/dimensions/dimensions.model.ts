@@ -1,6 +1,6 @@
 import { createEmptyMultilingualString, MultilingualString } from '../global/global.model';
 
-export type dimensionType = 'franchise' | 'collection' | 'subcollection' | 'manufacturer';
+export type dimensionType = 'franchise' | 'collection' | 'subcollection' | 'manufacturer' | 'size';
 
 export interface DimFranchise {
   id?: string;
@@ -37,6 +37,13 @@ export interface DimSubCollection  {
 }
 
 export interface DimManufacturer {
+  id?: string;
+  name: string;
+  slug?: string;
+  order?: number;
+}
+
+export interface DimSize {
   id?: string;
   name: string;
   slug?: string;
@@ -87,6 +94,14 @@ export function createEmptySubCollection(): Omit<DimSubCollection, 'id'> {
 }
 
 export function createEmptyManufacturer(): Omit<DimManufacturer, 'id'> {
+  return {
+    name: '',
+    slug: '',
+    order: undefined,
+  };
+}
+
+export function createEmptySize(): Omit<DimSize, 'id'> {
   return {
     name: '',
     slug: '',

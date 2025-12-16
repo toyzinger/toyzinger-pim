@@ -16,4 +16,10 @@
       grid-template-columns: 1fr;
     }
   }
+
+  &__active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

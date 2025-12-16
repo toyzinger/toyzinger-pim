@@ -31,7 +31,9 @@
         <div class="form-pimage-selector__filters">
           <app-dropdown-franchises />
           <app-dropdown-collections />
-          <app-dropdown-subcollections />
+          <app-dropdown-subcollections
+            [useService]="false"
+            (onChange)="onSubcollectionChange($event)"/>
         </div>
         <div class="form-pimage-selector__selectedList">
           <h5>Selected Images</h5>

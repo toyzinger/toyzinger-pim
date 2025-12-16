@@ -1,7 +1,8 @@
-import { Component, inject, model, input, computed, OnInit, effect, untracked } from '@angular/core';
+import { Component, inject, model, input, computed, OnInit, effect, untracked, output } from '@angular/core';
 import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
 import { CollectionService } from '../../features/dimensions/collection/collection.service';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-dropdown-subcollections',
@@ -10,17 +11,23 @@ import { FormSelect, SelectOption } from '../form/form-select/form-select';
   styleUrl: 'dropdown-subcollections.scss',
 })
 export class DropdownSubCollections implements OnInit {
+  private globalService = inject(GlobalService);
   private subCollectionService = inject(SubCollectionService);
   private collectionService = inject(CollectionService);
 
-  // ============ INPUTS ==================
+  // ============ INPUTS / OUTPUTS ==================
 
   label = input<string>('SubCollection');
   placeholder = input<string>('Select a subcollection');
   id = input<string>('subcollection-select');
-  required = input<boolean>(false);
-  loading = input<boolean>(false);
   language = input<'en' | 'es'>('en'); // Language for subcollection names
+
+  // Prevents update Servic value, use Output instead to get value
+  useService = input<boolean>(true);
+  onChange = output<string>();
+
+  // Internal model for two-way binding with FormSelect
+  selectedValue = model<string>('');
 
   // ============ COMPUTED VALUES ==================
 
@@ -28,6 +35,9 @@ export class DropdownSubCollections implements OnInit {
   currentValue = computed(() => this.subCollectionService.selectedSubCollectionId());
   // Get current collection selection from service
   collectionId = computed(() => this.collectionService.selectedCollectionId());
+  // Get global loading state
+  loading = computed(() => this.globalService.loading());
+  // Disable dropdown if no collection selected or loading
   disabled = computed(() => !this.collectionId() || this.loading());
 
   // Get subcollections, filtered by global collection selection
@@ -74,7 +84,10 @@ export class DropdownSubCollections implements OnInit {
   // ============ ACTIONS ==================
 
   onSelectionChange(newValue: string): void {
-     this.subCollectionService.setSelectedSubCollectionId(newValue);
+    // Emit change event
+    this.onChange.emit(newValue);
+    // Update service selection if using service
+    if (this.useService()) this.subCollectionService.setSelectedSubCollectionId(newValue);
   }
 
   // ============ LIFECYCLE ==================
