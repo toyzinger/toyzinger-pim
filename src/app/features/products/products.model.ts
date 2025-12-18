@@ -8,8 +8,8 @@ export interface Product {
   collectionId?: string; // Reference to collection dimension
   subCollectionId?: string; // Reference to subcollection dimension
   manufacturerId?: string; // Reference to manufacturer dimension
+  sizeId?: string; // Reference to size dimension
   yearReleased?: number;
-  size?: string;
   accessories?: MultilingualStringArray;
   toyDescription?: MultilingualString;
   characterDescription?: MultilingualString;
@@ -39,10 +39,10 @@ export function createEmptyProduct(): Omit<Product, 'id'> {
     collectionId: undefined,
     subCollectionId: undefined,
     manufacturerId: undefined,
+    sizeId: undefined,
     // Optional fields
     slug: undefined,
     sku: undefined,
-    size: undefined,
     yearReleased: undefined,
     accessories: undefined,
     toyDescription: undefined,

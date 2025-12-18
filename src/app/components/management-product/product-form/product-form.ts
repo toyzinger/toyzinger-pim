@@ -9,6 +9,8 @@ import { FranchiseService } from '../../../features/dimensions/franchise/franchi
 import { CollectionService } from '../../../features/dimensions/collection/collection.service';
 import { ManufacturerService } from '../../../features/dimensions/manufacturer/manufacturer.service';
 import { SubCollectionService } from '../../../features/dimensions/subcollection/subcollection.service';
+import { DropdownSizes } from "../../dropdown-sizes/dropdown-sizes";
+import { SizeService } from '../../../features/dimensions/size/size.service';
 
 @Component({
   selector: 'app-product-form',
@@ -17,7 +19,8 @@ import { SubCollectionService } from '../../../features/dimensions/subcollection
     DropdownFranchises,
     DropdownCollections,
     DropdownSubCollections,
-    DropdownManufacturers
+    DropdownManufacturers,
+    DropdownSizes
   ],
   templateUrl: './product-form.html',
   styleUrl: './product-form.scss',
@@ -27,6 +30,7 @@ export class ProductForm {
   private collectionService = inject(CollectionService);
   private manufacturerService = inject(ManufacturerService);
   private subCollectionService = inject(SubCollectionService);
+  private sizeService = inject(SizeService);
 
   // =============== INPUTS =========================
 
@@ -43,7 +47,6 @@ export class ProductForm {
   // Form fields
   name = signal<string>('');
   sku = signal<string>('');
-  size = signal<string>('');
   yearReleased = signal<number | undefined>(undefined);
   isActive = signal<boolean>(true);
   toyDescription_es = signal<string>('');
@@ -56,8 +59,9 @@ export class ProductForm {
   // values from DIM dropdowns
   franchiseId = computed(() => this.franchiseService.selectedFranchiseId());
   collectionId = computed(() => this.collectionService.selectedCollectionId());
-  manufacturerId = computed(() => this.manufacturerService.selectedManufacturerId());
   subCollectionId = computed(() => this.subCollectionService.selectedSubCollectionId());
+  manufacturerId = computed(() => this.manufacturerService.selectedManufacturerId());
+  sizeId = computed(() => this.sizeService.selectedSizeId());
 
   // =============== EFFECTS =========================
 
@@ -72,7 +76,6 @@ export class ProductForm {
     // set Form fields
     this.name.set(prod.name || '');
     this.sku.set(prod.sku || '');
-    this.size.set(prod.size || '');
     this.yearReleased.set(prod.yearReleased);
     this.isActive.set(prod.isActive);
     this.order.set(prod.order || 0);
@@ -83,6 +86,7 @@ export class ProductForm {
       this.collectionService.setSelectedCollectionId(prod.collectionId || '');
       this.manufacturerService.setSelectedManufacturerId(prod.manufacturerId || '');
       this.subCollectionService.setSelectedSubCollectionId(prod.subCollectionId || '');
+      this.sizeService.setSelectedSizeId(prod.sizeId || '');
     }
     // set multilingual fields
     if (prod.toyDescription) {
@@ -117,7 +121,6 @@ export class ProductForm {
     productData.isActive = this.isActive();
 
     productData.sku = this.sku().trim() || undefined;
-    productData.size = this.size().trim() || undefined;
     productData.yearReleased = this.yearReleased() || undefined;
     productData.order = this.order() || undefined;
     productData.pimagesIds = this.pimagesIds() || undefined;
@@ -127,6 +130,7 @@ export class ProductForm {
     productData.collectionId = this.collectionService.selectedCollectionId() || undefined;
     productData.manufacturerId = this.manufacturerService.selectedManufacturerId() || undefined;
     productData.subCollectionId = this.subCollectionService.selectedSubCollectionId() || undefined;
+    productData.sizeId = this.sizeService.selectedSizeId() || undefined;
 
     // Add toy description if provided
     const toyDescEn = this.toyDescription_en().trim();

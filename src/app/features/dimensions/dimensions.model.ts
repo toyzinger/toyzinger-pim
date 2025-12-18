@@ -64,7 +64,7 @@ export function createEmptyFranchise(): Omit<DimFranchise, 'id'> {
     imgLogoPath: '',
     imgJumbotronPath: '',
     isActive: true,
-    order: undefined,
+    order: 0,
   };
 }
 
@@ -78,7 +78,7 @@ export function createEmptyCollection(): Omit<DimCollection, 'id'> {
     years: '',
     slug: '',
     isActive: true,
-    order: undefined,
+    order: 0,
   };
 }
 
@@ -89,7 +89,7 @@ export function createEmptySubCollection(): Omit<DimSubCollection, 'id'> {
     collectionId: '',
     slug: '',
     isActive: true,
-    order: undefined,
+    order: 0,
   };
 }
 
@@ -97,7 +97,7 @@ export function createEmptyManufacturer(): Omit<DimManufacturer, 'id'> {
   return {
     name: '',
     slug: '',
-    order: undefined,
+    order: 0,
   };
 }
 
@@ -105,7 +105,7 @@ export function createEmptySize(): Omit<DimSize, 'id'> {
   return {
     text: '',
     slug: '',
-    order: undefined,
+    order: 0,
   };
 }
 

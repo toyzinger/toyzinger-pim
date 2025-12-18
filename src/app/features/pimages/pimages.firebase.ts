@@ -24,11 +24,7 @@ export class ImagesFirebase {
   // Add product image
   async addProductImage(image: Omit<ProductImage, 'id'>): Promise<string> {
     const collectionRef = collection(this.firestore, this.COLLECTION_NAME);
-    const imageData = removeUndefined({
-      ...image,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
+    const imageData = removeUndefined(image);
     const docRef = await addDoc(collectionRef, imageData);
     return docRef.id;
   }
@@ -36,10 +32,7 @@ export class ImagesFirebase {
   // Update product image
   async updateProductImage(id: string, image: Partial<ProductImage>): Promise<void> {
     const docRef = doc(this.firestore, this.COLLECTION_NAME, id);
-    const updateData = prepareUpdateData({
-      ...image,
-      updatedAt: new Date()
-    });
+    const updateData = prepareUpdateData(image);
     await updateDoc(docRef, updateData);
   }
 

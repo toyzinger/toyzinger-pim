@@ -4,14 +4,8 @@
     <h3 class="container__title">SubCollection List</h3>
     @if (!loading() && subcollections().length > 0) {
       <div class="subcollection-management__filters">
-        <app-dropdown-franchises
-          label="Filter by franchise"
-          [disabled]="loading()"
-        />
-        <app-dropdown-collections
-          label="Filter by collection"
-          [loading]="loading()"
-          />
+        <app-dropdown-franchises label="Filter by franchise" />
+        <app-dropdown-collections label="Filter by collection"/>
         <button class="btn-primary" (click)="clearFilters()">
           <span class="material-icons-outlined">filter_alt_off</span>
         </button>

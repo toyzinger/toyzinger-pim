@@ -9,10 +9,9 @@ import {
   getDocs,
   query,
   orderBy,
-  Timestamp,
-  deleteField,
 } from '@angular/fire/firestore';
 import { DimSize } from '../dimensions.model';
+import { removeUndefined, prepareUpdateData } from '../../../utils/firestore.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +28,6 @@ export class SizeFirebase {
       const sizesCollection = collection(this.firestore, this.collectionName);
       const q = query(sizesCollection, orderBy('text', 'asc'));
       const snapshot = await getDocs(q);
-
       return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
@@ -46,15 +44,9 @@ export class SizeFirebase {
   async createSize(size: Omit<DimSize, 'id'>): Promise<string> {
     try {
       const sizesCollection = collection(this.firestore, this.collectionName);
-      const data = {
-        text: size.text,
-        ...(size.slug && { slug: size.slug }),
-        ...(size.order !== undefined && { order: size.order }),
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-      };
-
-      const docRef = await addDoc(sizesCollection, data);
+      // Remove undefined values (Firebase doesn't accept them)
+      const cleanSize = removeUndefined(size);
+      const docRef = await addDoc(sizesCollection, cleanSize);
       return docRef.id;
     } catch (error) {
       console.error('Error creating size:', error);
@@ -68,18 +60,9 @@ export class SizeFirebase {
   async updateSize(id: string, updates: Partial<DimSize>): Promise<void> {
     try {
       const sizeDoc = doc(this.firestore, this.collectionName, id);
-      const data: any = {
-        ...(updates.text !== undefined && { text: updates.text }),
-        ...(updates.slug !== undefined && updates.slug
-          ? { slug: updates.slug }
-          : { slug: deleteField() }),
-        ...(updates.order !== undefined && updates.order !== null
-          ? { order: updates.order }
-          : { order: deleteField() }),
-        updatedAt: Timestamp.now(),
-      };
-
-      await updateDoc(sizeDoc, data);
+      // Prepare data: replace undefined with deleteField()
+      const updateData = prepareUpdateData(updates);
+      await updateDoc(sizeDoc, updateData);
     } catch (error) {
       console.error('Error updating size:', error);
       throw error;

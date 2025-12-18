@@ -15,6 +15,9 @@ export class DropdownSubCollections implements OnInit {
   private subCollectionService = inject(SubCollectionService);
   private collectionService = inject(CollectionService);
 
+  // Get global loading state
+  loading = this.globalService.loading;
+
   // ============ INPUTS / OUTPUTS ==================
 
   label = input<string>('SubCollection');
@@ -35,8 +38,6 @@ export class DropdownSubCollections implements OnInit {
   currentValue = computed(() => this.subCollectionService.selectedSubCollectionId());
   // Get current collection selection from service
   collectionId = computed(() => this.collectionService.selectedCollectionId());
-  // Get global loading state
-  loading = computed(() => this.globalService.loading());
   // Disable dropdown if no collection selected or loading
   disabled = computed(() => !this.collectionId() || this.loading());
 

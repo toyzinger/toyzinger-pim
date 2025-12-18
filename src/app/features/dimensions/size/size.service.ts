@@ -12,16 +12,22 @@ export class SizeService {
   private toastService = inject(ToastService);
   private globalService = inject(GlobalService);
 
+  private readonly STORAGE_KEY = 'selectedSizeId';
+
   // Private state
   private _sizes = signal<DimSize[]>([]);
   private _error = signal<string | null>(null);
   private _isLoaded = signal(false);
   private loadingPromise: Promise<void> | null = null; // Cache loading promise to prevent concurrent calls
+  private _selectedSizeId = signal<string>(
+    this.globalService.getLocalStorage(this.STORAGE_KEY, '')
+  ); // Global selected size ID (persisted)
 
   // Public readonly selectors
   sizes = this._sizes.asReadonly();
   error = this._error.asReadonly();
   loading = this.globalService.loading;
+  selectedSizeId = this._selectedSizeId.asReadonly();
 
   // ========================================
   // COMPUTED VALUES
@@ -134,5 +140,21 @@ export class SizeService {
     } finally {
       this.globalService.deactivateLoading();
     }
+  }
+
+  // ========================================
+  // UI STATE ACTIONS
+  // ========================================
+
+  // Set globally selected size ID
+  setSelectedSizeId(id: string): void {
+    this._selectedSizeId.set(id);
+    this.globalService.setLocalStorage(this.STORAGE_KEY, id);
+  }
+
+  // Clear globally selected size ID
+  clearSelectedSizeId(): void {
+    this._selectedSizeId.set('');
+    this.globalService.removeLocalStorage(this.STORAGE_KEY);
   }
 }

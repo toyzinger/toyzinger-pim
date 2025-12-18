@@ -1,6 +1,7 @@
 import { Component, inject, input, computed, OnInit, effect, untracked } from '@angular/core';
 import { ManufacturerService } from '../../features/dimensions/manufacturer/manufacturer.service';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-dropdown-manufacturers',
@@ -9,15 +10,16 @@ import { FormSelect, SelectOption } from '../form/form-select/form-select';
   styleUrl: 'dropdown-manufacturers.scss',
 })
 export class DropdownManufacturers implements OnInit {
+  private globalService = inject(GlobalService);
   private manufacturerService = inject(ManufacturerService);
+
+  // Get global loading state
+  loading = this.globalService.loading;
 
   // ============ INPUTS ==================
 
   label = input<string>('Manufacturer');
   id = input<string>('manufacturer-select');
-  required = input<boolean>(false);
-  disabled = input<boolean>(false);
-  loading = input<boolean>(false);
   placeholder = input<string>('Select a manufacturer');
 
   // ============ COMPUTED VALUES ==================

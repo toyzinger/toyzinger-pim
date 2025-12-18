@@ -2,6 +2,7 @@ import { Component, inject, model, input, computed, OnInit, effect, untracked } 
 import { CollectionService } from '../../features/dimensions/collection/collection.service';
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-dropdown-collections',
@@ -10,16 +11,18 @@ import { FormSelect, SelectOption } from '../form/form-select/form-select';
   styleUrl: 'dropdown-collections.scss',
 })
 export class DropdownCollections implements OnInit {
+  private globalService = inject(GlobalService);
   private collectionService = inject(CollectionService);
   private franchiseService = inject(FranchiseService);
+
+  // Get global loading state
+  loading = this.globalService.loading;
 
   // ============ INPUTS ==================
 
   label = input<string>('Collection');
   placeholder = input<string>('Select a collection');
   id = input<string>('collection-select');
-  required = input<boolean>(false);
-  loading = input<boolean>(false);
   language = input<'en' | 'es'>('en'); // Language for collection names
 
   // ============ COMPUTED VALUES ==================
@@ -28,8 +31,6 @@ export class DropdownCollections implements OnInit {
   currentValue = computed(() => this.collectionService.selectedCollectionId());
   // Get current franchise selection from service
   franchiseId = computed(() => this.franchiseService.selectedFranchiseId());
-  // Disable if no franchise selected (unless loading)
-  disabled = computed(() => !this.franchiseId() || this.loading());
   // Get collections, filtered by global franchise selection
   collections = computed(() => {
     const allCollections = this.collectionService.sortedCollections();

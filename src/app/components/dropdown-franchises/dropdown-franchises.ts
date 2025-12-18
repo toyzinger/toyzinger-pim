@@ -1,6 +1,7 @@
 import { Component, inject, input, computed, OnInit } from '@angular/core';
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 import { FormSelect, SelectOption } from '../form/form-select/form-select';
+import { GlobalService } from '../../features/global/global.service';
 
 @Component({
   selector: 'app-dropdown-franchises',
@@ -9,15 +10,17 @@ import { FormSelect, SelectOption } from '../form/form-select/form-select';
   styleUrl: 'dropdown-franchises.scss',
 })
 export class DropdownFranchises implements OnInit {
+  private globalService = inject(GlobalService);
   private franchiseService = inject(FranchiseService);
+
+  // Get global loading state
+  loading = this.globalService.loading;
 
   // ============ INPUTS ==================
 
   label = input<string>('Franchise');
   placeholder = input<string>('Select a franchise');
   id = input<string>('franchise-select');
-  required = input<boolean>(false);
-  disabled = input<boolean>(false);
   language = input<'en' | 'es'>('en');
 
   // ============ COMPUTED VALUES ==================
