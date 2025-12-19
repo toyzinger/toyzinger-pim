@@ -43,6 +43,7 @@ export class FormInput {
 
     const currentValue = Number(this.value()) || 0;
     this.value.set(currentValue + 1);
+    this.focus();
   }
 
   decrement() {
@@ -50,6 +51,7 @@ export class FormInput {
 
     const currentValue = Number(this.value()) || 0;
     this.value.set(currentValue - 1);
+    this.focus();
   }
 }
 

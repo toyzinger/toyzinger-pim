@@ -2,12 +2,12 @@ import { Component, input, output, inject } from '@angular/core';
 import { Product } from '../../../features/products/products.model';
 import { ProductsService } from '../../../features/products/products.service';
 import { FormCheckbox } from '../../form/form-checkbox/form-checkbox';
-
 import { RouterLink } from '@angular/router';
+import { FormOrderList } from '../../form/form-order-list/form-order-list';
 
 @Component({
   selector: 'tr[app-product-list-item]',
-  imports: [FormCheckbox, RouterLink],
+  imports: [FormCheckbox, RouterLink, FormOrderList],
   templateUrl: './product-list-item.html',
   styleUrl: '../management-product.scss',
 })
@@ -43,16 +43,19 @@ export class ProductListItem {
     }
   }
 
-  async updateOrder(event: Event) {
+  updateOrder(newValue: number | undefined) {
     const productId = this.product().id;
-    if (!productId) return;
-
-    const newOrderStr = (event.target as HTMLInputElement).value;
-    const newOrder = parseInt(newOrderStr, 10);
-
-    // Validate it's a valid number and different from current
-    if (!isNaN(newOrder) && newOrder !== this.product().order) {
-      await this.productsService.updateProduct(productId, { order: newOrder });
+    if (
+      !productId
+      || newValue === undefined
+      || newValue < 0
+      || isNaN(newValue)
+      || newValue === this.product().order
+    ) {
+        //Escape hatch for invalid values
+        return;
     }
+
+    this.productsService.updateProduct(productId, { order: newValue });
   }
 }

@@ -26,7 +26,7 @@ export class SizeFirebase {
   async getSizes(): Promise<DimSize[]> {
     try {
       const sizesCollection = collection(this.firestore, this.collectionName);
-      const q = query(sizesCollection, orderBy('text', 'asc'));
+      const q = query(sizesCollection, orderBy('order', 'asc'));
       const snapshot = await getDocs(q);
       return snapshot.docs.map(doc => ({
         id: doc.id,

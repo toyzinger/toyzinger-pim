@@ -177,6 +177,8 @@ $input-funtionallity-bg: rgba($gray-500, 0.3);
     }
   }
 
+  // ==== DUAL TEXTAREA ====
+
   &__dualtextarea {
     &-actions {
       display: flex;
@@ -196,6 +198,83 @@ $input-funtionallity-bg: rgba($gray-500, 0.3);
       .material-icons-outlined {
         font-size: 1.25rem;
       }
+    }
+  }
+
+  // ==== ORDER LIST INPUT ====
+
+  &__order-wrapper {
+    position: relative;
+    width: 4rem;
+    display: inline-flex;
+  }
+
+  &__order-input {
+    width: 100%;
+    height: 2rem;
+    padding: 0.25rem 1.5rem 0.25rem 0.25rem;
+    background-color: $gray-600;
+    border: 1px solid $gray-600;
+    border-radius: 4px;
+    color: $color-text-light;
+    font-size: 0.875rem;
+    text-align: center;
+    font-weight: 500;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+    }
+
+    // Hide native spinners - we use custom controls
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  &__order-controls {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid $gray-700;
+    background-color: rgba($gray-700, 0.3);
+  }
+
+  &__order-btn {
+    flex: 1;
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: $color-text-light;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    padding: 0;
+
+    &:hover {
+      background-color: $input-funtionallity-bg;
+    }
+
+    &:active {
+      background-color: rgba($color-primary, 0.2);
+    }
+
+    .material-icons-outlined {
+      font-size: 0.875rem;
+      line-height: 1;
+    }
+
+    &--up {
+      border-bottom: 1px solid $gray-700;
     }
   }
 }

@@ -97,7 +97,7 @@ export class ProductsService {
   async updateProduct(id: string, data: Partial<Product>): Promise<void> {
     this.globalService.activateLoading();
     this._error.set(null);
-    console.log('updateProduct', id, data);
+    // console.log('updateProduct', id, data);
     try {
       // Optimistic update
       const currentProducts = this._products();

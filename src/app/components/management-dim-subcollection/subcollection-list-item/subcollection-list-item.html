@@ -3,10 +3,9 @@
 <td class="subcollection-list-item__slug">/{{ subcollection().slug }}</td>
 <td class="subcollection-list-item__collection">{{ collectionName() }}</td>
 <td class="subcollection-list-item__order">
-  <input
-    type="number"
+  <app-form-order-list
     [value]="subcollection().order"
-    (blur)="updateOrder($event)"
+    (valueChange)="updateOrder($event)"
   />
 </td>
 <td class="subcollection-list-item__actions">

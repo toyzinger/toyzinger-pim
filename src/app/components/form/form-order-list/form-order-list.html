@@ -1,0 +1,29 @@
+<div class="form__order-wrapper">
+  <input
+    #inputEl
+    class="form__order-input"
+    type="number"
+    min="0"
+    maxlength="3"
+    [value]="displayValue()"
+    (input)="onInput($event)"
+  />
+  <div class="form__order-controls">
+    <button
+      type="button"
+      class="form__order-btn form__order-btn--up"
+      (click)="increment()"
+      tabindex="-1"
+    >
+      <span class="material-icons-outlined">keyboard_arrow_up</span>
+    </button>
+    <button
+      type="button"
+      class="form__order-btn form__order-btn--down"
+      (click)="decrement()"
+      tabindex="-1"
+    >
+      <span class="material-icons-outlined">keyboard_arrow_down</span>
+    </button>
+  </div>
+</div>

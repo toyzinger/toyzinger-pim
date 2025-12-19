@@ -1,7 +1,12 @@
 
 <td class="size-list-item__text">{{ size().text }}</td>
 <td class="size-list-item__slug">/{{ size().slug }}</td>
-<td class="size-list-item__order">{{ size().order || '-' }}</td>
+<td class="size-list-item__order">
+  <app-form-order-list
+    [value]="size().order"
+    (valueChange)="updateOrder($event)"
+  />
+</td>
 <td class="size-list-item__actions">
   <button class="btn-sm btn-primary" (click)="onEdit()">
     <span class="material-icons-outlined">edit</span>

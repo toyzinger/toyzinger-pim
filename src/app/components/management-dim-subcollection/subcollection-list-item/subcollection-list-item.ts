@@ -6,11 +6,12 @@ import { SubCollectionService } from '../../../features/dimensions/subcollection
 import { CollectionService } from '../../../features/dimensions/collection/collection.service';
 import { FormsModule } from '@angular/forms';
 import { ImagesService } from '../../../features/pimages/pimages.service';
+import { FormOrderList } from "../../form/form-order-list/form-order-list";
 
 
 @Component({
   selector: 'tr[app-subcollection-list-item]',
-  imports: [FormsModule],
+  imports: [FormsModule, FormOrderList],
   templateUrl: './subcollection-list-item.html',
   styleUrl: './subcollection-list-item.scss',
 })
@@ -49,14 +50,19 @@ export class SubCollectionListItem {
     }
   }
 
-  updateOrder(event: Event) {
+  updateOrder(newValue: number | undefined) {
     const subcollectionId = this.subcollection().id;
-    const newOrderStr = (event.target as HTMLInputElement).value;
-    const newOrder = parseInt(newOrderStr, 10);
-
-    // Validate it's a valid number and different from current
-    if (subcollectionId && !isNaN(newOrder) && newOrder !== this.subcollection().order) {
-      this.subcollectionService.updateSubCollection(subcollectionId, { order: newOrder });
+    if (
+      !subcollectionId
+      || newValue === undefined
+      || newValue < 0
+      || isNaN(newValue)
+      || newValue === this.subcollection().order
+    ) {
+        //Escape hatch for invalid values
+        return;
     }
+
+    this.subcollectionService.updateSubCollection(subcollectionId, { order: newValue });
   }
 }

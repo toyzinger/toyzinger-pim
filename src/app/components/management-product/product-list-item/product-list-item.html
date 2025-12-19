@@ -14,10 +14,9 @@
 </td>
 
 <td class="product-list-item__td product-list-item--order">
-  <input
-    type="number"
+  <app-form-order-list
     [value]="product().order"
-    (blur)="updateOrder($event)"
+    (valueChange)="updateOrder($event)"
   />
 </td>
 
