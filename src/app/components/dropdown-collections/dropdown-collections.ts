@@ -22,7 +22,6 @@ export class DropdownCollections implements OnInit {
 
   label = input<string>('Collection');
   placeholder = input<string>('Select a collection');
-  id = input<string>('collection-select');
   language = input<'en' | 'es'>('en'); // Language for collection names
 
   // ============ COMPUTED VALUES ==================

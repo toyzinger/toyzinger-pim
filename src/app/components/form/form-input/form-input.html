@@ -2,16 +2,40 @@
   @if (label()) {
     <label class="form__label" [attr.for]="id()">{{ label() }}</label>
   }
-  <input
-    #inputEl
-    class="form__input"
-    [type]="type()"
-    [id]="id()"
-    [value]="value()"
-    (input)="onInput($event)"
-    (blur)="onBlur()"
-    [placeholder]="placeholder()"
-    [required]="required()"
-    [disabled]="disabled()"
-  />
+  <div class="form__input-wrapper">
+    <input
+      #inputEl
+      class="form__input"
+      [type]="type()"
+      [id]="id()"
+      [value]="value()"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+      [placeholder]="placeholder()"
+      [required]="required()"
+      [disabled]="disabled()"
+    />
+    @if (type() === 'number') {
+      <div class="form__number-controls">
+        <button
+          type="button"
+          class="form__number-btn form__number-btn--up"
+          (click)="increment()"
+          [disabled]="disabled()"
+          tabindex="-1"
+        >
+          <span class="material-icons-outlined">keyboard_arrow_up</span>
+        </button>
+        <button
+          type="button"
+          class="form__number-btn form__number-btn--down"
+          (click)="decrement()"
+          [disabled]="disabled()"
+          tabindex="-1"
+        >
+          <span class="material-icons-outlined">keyboard_arrow_down</span>
+        </button>
+      </div>
+    }
+  </div>
 </div>

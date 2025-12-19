@@ -22,7 +22,6 @@ export class DropdownSubCollections implements OnInit {
 
   label = input<string>('SubCollection');
   placeholder = input<string>('Select a subcollection');
-  id = input<string>('subcollection-select');
   language = input<'en' | 'es'>('en'); // Language for subcollection names
 
   // Prevents update Servic value, use Output instead to get value

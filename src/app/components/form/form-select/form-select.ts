@@ -12,9 +12,11 @@ export interface SelectOption {
   styleUrl: '../form.scss',
 })
 export class FormSelect {
+  // Generate unique ID for each instance
+  readonly id = `form-select-${Math.random().toString(36).substring(2, 11)}`;
+
   // Inputs
   label = input<string>('');
-  id = input<string>('');
   required = input<boolean>(false);
   disabled = input<boolean>(false);
   options = input<SelectOption[]>([]);
@@ -29,5 +31,19 @@ export class FormSelect {
   onChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     this.value.set(target.value);
+  }
+
+  openSelect() {
+    if (this.disabled()) return;
+    const selectElement = document.getElementById(this.id) as HTMLSelectElement | null;
+    if (!selectElement) return;
+
+    try {
+      // Try modern showPicker() API
+      (selectElement as any).showPicker();
+    } catch (error) {
+      // Fallback to focus if showPicker not supported or fails
+      selectElement.focus();
+    }
   }
 }

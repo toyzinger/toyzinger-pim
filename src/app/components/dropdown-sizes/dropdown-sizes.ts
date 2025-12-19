@@ -19,7 +19,6 @@ export class DropdownSizes implements OnInit {
   // ============ INPUTS ==================
 
   label = input<string>('Size');
-  id = input<string>('size-select');
   placeholder = input<string>('Select a size');
 
   // ============ COMPUTED VALUES ==================

@@ -36,5 +36,20 @@ export class FormInput {
   focus() {
     this.inputElement()?.nativeElement.focus();
   }
+
+  // Number input controls
+  increment() {
+    if (this.type() !== 'number' || this.disabled()) return;
+
+    const currentValue = Number(this.value()) || 0;
+    this.value.set(currentValue + 1);
+  }
+
+  decrement() {
+    if (this.type() !== 'number' || this.disabled()) return;
+
+    const currentValue = Number(this.value()) || 0;
+    this.value.set(currentValue - 1);
+  }
 }
 

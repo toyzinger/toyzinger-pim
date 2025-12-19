@@ -19,7 +19,6 @@ export class DropdownManufacturers implements OnInit {
   // ============ INPUTS ==================
 
   label = input<string>('Manufacturer');
-  id = input<string>('manufacturer-select');
   placeholder = input<string>('Select a manufacturer');
 
   // ============ COMPUTED VALUES ==================

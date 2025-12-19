@@ -1,5 +1,7 @@
 @use '../../../styles/variables' as *;
 
+$input-funtionallity-bg: rgba($gray-500, 0.3);
+
 .form {
   &__group {
     position: relative;
@@ -35,6 +37,63 @@
     }
   }
 
+  &__input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  &__input[type='number'] {
+    // Hide native spinners
+    -moz-appearance: textfield;
+    padding-right: 2.5rem;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  &__number-controls {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid $gray-700;
+  }
+
+  &__number-btn {
+    flex: 1;
+    width: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: $color-text-light;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: $input-funtionallity-bg;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .material-icons-outlined {
+      font-size: 1.25rem;
+    }
+
+    &--up {
+      border-bottom: 1px solid $gray-700;
+    }
+  }
+
   &__textarea {
     resize: none;
     min-height: 100px;
@@ -43,18 +102,7 @@
 
   &__select-container {
     position: relative;
-
-    &::after {
-      font-family: 'Material Icons Outlined';
-      content: 'arrow_drop_down';
-      position: absolute;
-      right: 0.5rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.5rem;
-      color: $color-text-light;
-      pointer-events: none;
-    }
+    width: 100%;
   }
 
   &__select {
@@ -63,10 +111,40 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     cursor: pointer;
+    padding-right: 2.5rem;
 
     // Placeholder style when no selection (disabled option selected)
     &--isplaceholder {
       color: rgba($color-text-light, 0.4);
+    }
+  }
+
+  &__select-arrow {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-left: 1px solid $gray-700;
+    color: $color-text-light;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+
+    .material-icons-outlined {
+      font-size: 1.25rem;
+    }
+
+    &:hover {
+      background-color: $input-funtionallity-bg;
+    }
+
+    &--disabled {
+      opacity: 0.4;
     }
   }
 

@@ -20,7 +20,6 @@ export class DropdownFranchises implements OnInit {
 
   label = input<string>('Franchise');
   placeholder = input<string>('Select a franchise');
-  id = input<string>('franchise-select');
   language = input<'en' | 'es'>('en');
 
   // ============ COMPUTED VALUES ==================
