@@ -1,10 +1,13 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import { Component, inject, signal, computed, effect, input } from '@angular/core';
 import { DimensionNode, SPECIAL_DIM_FOLDERS } from '../../features/dimensions/dimensions.model';
 import { DimensionFoldersService } from '../../features/dimensions/dimension-folders.service';
 import { FranchiseService } from '../../features/dimensions/franchise/franchise.service';
 import { CollectionService } from '../../features/dimensions/collection/collection.service';
 import { SubCollectionService } from '../../features/dimensions/subcollection/subcollection.service';
+import { ProductsService } from '../../features/products/products.service';
+import { ImagesService } from '../../features/pimages/pimages.service';
 import { DimensionFoldersItem } from './dimension-folders-item/dimension-folders-item';
+import { ContextType } from '../../features/global/global.model';
 
 @Component({
   selector: 'app-dimension-folders',
@@ -17,6 +20,17 @@ export class DimensionFolders {
   private franchiseService = inject(FranchiseService);
   private collectionService = inject(CollectionService);
   private subCollectionService = inject(SubCollectionService);
+  private productsService = inject(ProductsService);
+  private imagesService = inject(ImagesService);
+
+  // ============ INPUTS ==================
+
+  /**
+   * Mode to determine which counts to show
+   * 'products' - Show product counts
+   * 'images' - Show image counts
+   */
+  mode = input<ContextType>('products');
 
   // ============ UI STATE ==================
 
@@ -115,6 +129,44 @@ export class DimensionFolders {
     }
 
     return activeIds;
+  });
+
+  // Map of node IDs to their item counts (products or images)
+  nodeCounts = computed<Map<string, number>>(() => {
+    const counts = new Map<string, number>();
+    const currentMode = this.mode();
+
+    if (currentMode === 'products') {
+      const products = this.productsService.products();
+
+      // Count unassigned products (no subcollection)
+      const unassignedCount = products.filter(p => !p.subCollectionId).length;
+      counts.set(SPECIAL_DIM_FOLDERS.UNASSIGNED, unassignedCount);
+
+      // Count products per subcollection
+      for (const product of products) {
+        if (product.subCollectionId) {
+          const count = counts.get(product.subCollectionId) || 0;
+          counts.set(product.subCollectionId, count + 1);
+        }
+      }
+    } else {
+      const images = this.imagesService.images();
+
+      // Count unassigned images (no subcollection)
+      const unassignedCount = images.filter(img => !img.subcollectionId).length;
+      counts.set(SPECIAL_DIM_FOLDERS.UNASSIGNED, unassignedCount);
+
+      // Count images per subcollection
+      for (const image of images) {
+        if (image.subcollectionId) {
+          const count = counts.get(image.subcollectionId) || 0;
+          counts.set(image.subcollectionId, count + 1);
+        }
+      }
+    }
+
+    return counts;
   });
 
   constructor() {

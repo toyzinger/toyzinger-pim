@@ -1,4 +1,4 @@
 <aside class="sidebar" [style.width.px]="width()">
-  <app-dimension-folders></app-dimension-folders>
+  <app-dimension-folders [mode]="folderMode()"></app-dimension-folders>
   <div class="sidebar__resizer" (mousedown)="onResizeStart($event)"></div>
 </aside>

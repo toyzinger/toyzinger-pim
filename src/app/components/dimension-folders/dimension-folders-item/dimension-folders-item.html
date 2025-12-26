@@ -28,6 +28,9 @@
     <span class="dimensions-menu-item__name">
       {{ node().name }}
       @if (node().type === 'collection' && node().years) { ({{ node().years }})}
+      @if (node().isDroppable) {
+        <span class="dimensions-menu-item__count">({{ itemCount() }})</span>
+      }
     </span>
   </div>
 
@@ -39,6 +42,7 @@
       [allNodes]="allNodes()"
       [activeNodeIds]="activeNodeIds()"
       [expandedNodeIds]="expandedNodeIds()"
+      [nodeCounts]="nodeCounts()"
       [level]="level() + 1"
       (nodeSelected)="nodeSelected.emit($event)"
       (nodeToggled)="nodeToggled.emit($event)"

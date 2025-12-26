@@ -17,6 +17,7 @@ export class DimensionFoldersItem {
   allNodes = input.required<DimensionNode[]>();
   activeNodeIds = input.required<Set<string>>();
   expandedNodeIds = input.required<Set<string>>();
+  nodeCounts = input.required<Map<string, number>>();
   level = input<number>(0);
 
   // ============ OUTPUTS ==================
@@ -54,6 +55,19 @@ export class DimensionFoldersItem {
 
     // subcollection
     return 'label';
+  });
+
+  // Get count for nodes that should display counts (subcollections and unassigned)
+  itemCount = computed<number>(() => {
+    const node = this.node();
+
+    // Only show counts for droppable nodes (subcollections and unassigned)
+    if (!node.isDroppable) {
+      return 0;
+    }
+
+    const counts = this.nodeCounts();
+    return counts.get(node.id) || 0;
   });
 
   // ============ EVENT HANDLERS ==================

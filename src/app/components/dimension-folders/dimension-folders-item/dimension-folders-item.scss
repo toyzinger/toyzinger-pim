@@ -9,6 +9,7 @@
     border-radius: 4px;
     transition: background-color 0.2s;
     user-select: none;
+    border: 2px solid transparent;
 
     &:hover {
       background-color: $color-bg-light;
@@ -67,6 +68,13 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  &__count {
+    margin-left: 0.5rem;
+    font-size: 0.85rem;
+    color: $gray-500;
+    font-weight: 500;
   }
 
 }
